@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Navbar from "@/modules/portal/components/Navbar";
 
 export default function Layout({
