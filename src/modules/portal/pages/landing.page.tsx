@@ -1,6 +1,10 @@
+import HeroPortal from "@/modules/portal/components/portal/hero.portal";
+
 const ModulePortalLandingPage = () => {
     return (
-        <div></div>
+        <>
+            <HeroPortal/>
+        </>
     )
 }
 
