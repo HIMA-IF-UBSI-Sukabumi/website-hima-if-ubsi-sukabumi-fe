@@ -21,7 +21,7 @@ const HeroPortal = () => {
             </div>
 
             <div
-                className="relative z-30 text-center px-4 sm:px-6 md:px-8 lg:px-12 translate-y-[-4rem] lg:translate-y-0">
+                className="relative z-30 text-center px-4 sm:px-6 md:px-8 lg:px-12 -translate-y-16 lg:translate-y-0">
                 <h1
                     className="text-white font-extrabold leading-tight text-3xl sm:text-4xl md:text-6xl xl:text-7xl"
                     style={{textShadow: '14px 7px 0px rgba(0,0,0,0.20)'}}

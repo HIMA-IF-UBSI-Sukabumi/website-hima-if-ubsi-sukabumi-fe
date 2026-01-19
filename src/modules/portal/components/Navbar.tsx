@@ -30,7 +30,7 @@ const Navbar = () => {
 
                 <div className="flex items-center gap-3">
                     <img src="/assets/logo.webp" className={'w-16 h-16'} alt="Logo HIMA-IF"/>
-                    <div className="leading-tight hidden sm:block">
+                    <div className="leading-tight block">
                         <p className="text-lg font-extrabold">HIMA-IF</p>
                         <p className="text-sm text-gray-500">UBSI PSDKU Sukabumi</p>
                     </div>
@@ -53,7 +53,7 @@ const Navbar = () => {
                     ))}
 
                     {/*<a*/}
-                    {/*    href="https://dslr-master.linkbee.id"*/}
+                    {/*    href="/"*/}
                     {/*    target="_blank"*/}
                     {/*    className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"*/}
                     {/*>*/}
@@ -90,7 +90,7 @@ const Navbar = () => {
                         ))}
 
                         {/*<a*/}
-                        {/*  href="https://dslr-master.linkbee.id"*/}
+                        {/*  href="/"*/}
                         {/*  target="_blank"*/}
                         {/*  className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"*/}
                         {/*>*/}
