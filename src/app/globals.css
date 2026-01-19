@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 @import "tailwindcss";
+
 @plugin "@tailwindcss/typography";
 
 @theme {
     --font-poppins: 'Poppins', sans-serif;
     --font-weight-extrablack: 1000;
 
-    /*--color-primary: */
+    --color-primary: oklch(0.3717 0.1575 274.32);
+    --color-secondary: oklch(0.6732 0.0584 270.05);
+    --color-tertiary: oklch(0.9037 0 129.63);
+    --color-black: oklch(0.2794 0.0034 345.46);
 }

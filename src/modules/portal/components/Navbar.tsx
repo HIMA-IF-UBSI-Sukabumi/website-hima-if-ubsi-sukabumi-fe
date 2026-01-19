@@ -23,14 +23,15 @@ const Navbar = () => {
     const [open, setOpen] = useState(false)
 
     return (
-        <div className="relative md:fixed md:top-6 md:left-1/2 md:-translate-x-1/2 w-full md:w-[95%] md:max-w-5xl z-50">
+        <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 w-[95%] max-w-5xl">
             <nav
-                className="flex items-center justify-between bg-white/90 px-4 py-3 shadow-lg md:rounded-full backdrop-blur-md">
+                className="flex items-center justify-between rounded-full bg-white/90 px-6 py-3 shadow-lg shadow-black backdrop-blur-md">
+
                 <div className="flex items-center gap-3">
-                    <img src="/assets/logo-himaif.webp" className={'w-16 h-16'} alt="Logo HIMA-IF"/>
+                    <img src="/assets/logo-himaif.webp" className={'w-16 h-16 pointer-events-none'} alt="Logo HIMA-IF"/>
                     <div className="leading-tight block">
-                        <p className="text-lg font-extrabold">HIMA-IF</p>
-                        <p className="text-sm text-gray-500">UBSI PSDKU Sukabumi</p>
+                        <h1 className="text-xl font-extrablack text-black">HIMA-IF</h1>
+                        <p className="text-sm text-black">UBSI PSDKU Sukabumi</p>
                     </div>
                 </div>
 
@@ -79,8 +80,8 @@ const Navbar = () => {
                                 className={cn(
                                     'rounded-xl px-4 py-2 text-sm transition',
                                     pathname === menu.href
-                                        ? 'bg-gray-300 font-medium'
-                                        : 'font-medium hover:bg-gray-300'
+                                        ? 'bg-gray-200 font-medium'
+                                        : 'text-gray-600 hover:bg-gray-100'
                                 )}
                             >
                                 {menu.label}
