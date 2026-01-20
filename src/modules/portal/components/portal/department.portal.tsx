@@ -1,9 +1,23 @@
+import Link from "next/link";
+
 const DepartmentPortal = () => {
     const departmentLists = [
-        'Sinergi Publik',
-        'Humanika',
-        'Intelektual',
-        'Smartlink'
+        {
+            name: 'Sinergi Publik',
+            href: '/'
+        },
+        {
+            name: 'Humanika',
+            href: '/'
+        },
+        {
+            name: 'Intelektual',
+            href: '/'
+        },
+        {
+            name: 'Smartlink',
+            href: '/'
+        }
     ]
 
     return (
@@ -14,12 +28,13 @@ const DepartmentPortal = () => {
 
                     <div className={'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4'}>
                         {departmentLists.map((department, i) => (
-                            <div
-                                key={i}
-                                className={'border-t-3 border-t-secondary px-24 py-16 flex flex-col items-center justify-center bg-linear-to-b from-tertiary/50 to-white'}
-                            >
-                                <h1 className={'text-4xl font-extrablack text-center uppercase text-primary'}>{department}</h1>
-                            </div>
+                            <Link href={department.href} key={i}>
+                                <div
+                                    className={'border-t-3 border-t-secondary px-24 py-16 flex flex-col items-center justify-center bg-linear-to-b from-tertiary/50 to-white'}
+                                >
+                                    <h1 className={'text-4xl font-extrablack text-center uppercase text-primary'}>{department.name}</h1>
+                                </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
