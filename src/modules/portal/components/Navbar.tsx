@@ -43,7 +43,7 @@ const Navbar = () => {
                             className={cn(
                                 'rounded-full px-4 py-2 text-sm transition',
                                 pathname === menu.href
-                                    ? 'bg-gray-300 font-medium'
+                                    ? 'bg-gray-300 font-bold'
                                     : 'font-medium hover:bg-gray-300'
                             )}
                         >
