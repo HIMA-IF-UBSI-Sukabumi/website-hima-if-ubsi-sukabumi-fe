@@ -1,5 +1,6 @@
 import type {Metadata} from "next";
 import "./globals.css";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
     title: "HIMA-IF UBSI PSDKU Sukabumi",
@@ -17,6 +18,7 @@ export default function RootLayout({
             className={`font-poppins antialiased`}
         >
         <div className={'w-full min-h-screen'}>
+            <NextTopLoader color={'#2C2F91'}/>
             {children}
         </div>
         </body>
