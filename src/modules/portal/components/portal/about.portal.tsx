@@ -80,26 +80,28 @@ const AboutPortal = () => {
                         </div>
 
 
-                        <p className="text-black font-semibold mb-2">
-                            Membangun Keharmonisan dan Kerjasama
-                        </p>
-                        <p className="text-black mb-4">
-                            antar seluruh Mahasiswa Himpunan Mahasiswa Informatika.
-                        </p>
+                        <div className={'text-center'}>
+                            <p className="text-black font-semibold mb-2">
+                                Membangun Keharmonisan dan Kerjasama
+                            </p>
+                            <p className="text-black mb-4">
+                                antar seluruh Mahasiswa Himpunan Mahasiswa Informatika.
+                            </p>
 
-                        <p className="text-black font-semibold mb-2">
-                            Menjadi
-                        </p>
-                        <p className="text-black mb-4">
-                            wadah aspirasi bagi seluruh mahasiswa Himpunan Mahasiswa Informatika.
-                        </p>
+                            <p className="text-black font-semibold mb-2">
+                                Menjadi
+                            </p>
+                            <p className="text-black mb-4">
+                                wadah aspirasi bagi seluruh mahasiswa Himpunan Mahasiswa Informatika.
+                            </p>
 
-                        <p className="text-black font-semibold mb-2">
-                            Meningkatkan
-                        </p>
-                        <p className="text-black">
-                            kemampuan dan pengetahuan mahasiswa jurusan Informatika.
-                        </p>
+                            <p className="text-black font-semibold mb-2">
+                                Meningkatkan
+                            </p>
+                            <p className="text-black">
+                                kemampuan dan pengetahuan mahasiswa jurusan Informatika.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

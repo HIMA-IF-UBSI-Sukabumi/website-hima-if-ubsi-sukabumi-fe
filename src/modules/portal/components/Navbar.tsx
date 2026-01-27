@@ -11,7 +11,7 @@ type Menu = {
     href: string
 }
 
-const menus: Menu[] = [
+export const menus: Menu[] = [
     {label: 'Beranda', href: '/'},
     {label: 'Tentang', href: '/about'},
     {label: 'Kegiatan', href: '/activities'},
