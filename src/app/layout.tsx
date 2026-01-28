@@ -18,7 +18,7 @@ export default function RootLayout({
             className={`font-poppins antialiased`}
         >
         <div className={'w-full min-h-screen'}>
-            <NextTopLoader color={'#2C2F91'}/>
+            <NextTopLoader color={'#2C2F91'} showSpinner={false}/>
             {children}
         </div>
         </body>

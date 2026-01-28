@@ -2,18 +2,18 @@
 
 import {usePathname} from "next/navigation";
 
-const CabinetPortal = () => {
+const CabinetLanding = () => {
     const pathname = usePathname();
 
     return (
         <section className={'relative overflow-hidden mt-14 md:mt-0'}>
             <img
-                src={'/assets/dust-2.webp'}
+                src={'/assets/aurora-blob.webp'}
                 className={'absolute -left-120 top-0 -z-20 w-auto'}
             />
 
             <img
-                src={'/assets/dust-2.webp'}
+                src={'/assets/aurora-blob.webp'}
                 className={'absolute -right-120 top-0 -z-20 w-auto'}
             />
 
@@ -80,4 +80,4 @@ const CabinetPortal = () => {
     )
 }
 
-export default CabinetPortal;
+export default CabinetLanding;

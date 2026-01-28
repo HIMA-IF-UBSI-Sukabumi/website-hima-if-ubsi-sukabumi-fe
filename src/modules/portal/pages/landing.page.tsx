@@ -1,15 +1,15 @@
-import HeroPortal from "@/modules/portal/components/portal/hero.portal";
-import AboutPortal from "@/modules/portal/components/portal/about.portal";
-import CabinetPortal from "@/modules/portal/components/portal/cabinet.portal";
-import DepartmentPortal from "@/modules/portal/components/portal/department.portal";
+import HeroLanding from "@/modules/portal/components/landing/hero.landing";
+import AboutLanding from "@/modules/portal/components/landing/about.landing";
+import CabinetLanding from "@/modules/portal/components/landing/cabinet.landing";
+import DepartmentLanding from "@/modules/portal/components/landing/department.landing";
 
 const ModulePortalLandingPage = () => {
     return (
         <>
-            <HeroPortal/>
-            <AboutPortal/>
-            <CabinetPortal/>
-            <DepartmentPortal/>
+            <HeroLanding/>
+            <AboutLanding/>
+            <CabinetLanding/>
+            <DepartmentLanding/>
         </>
     )
 }

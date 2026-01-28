@@ -1,8 +1,8 @@
-const HeroPortal = () => {
+const HeroLanding = () => {
     return (
         <section
             className="relative min-h-screen flex flex-col items-center justify-center bg-cover bg-center overflow-hidden"
-            style={{backgroundImage: "url('/assets/bg-landing.webp')"}}
+            style={{backgroundImage: "url('/assets/aurora.webp')"}}
         >
             <div
                 className="relative z-20 mt-8 sm:mt-12 flex flex-row items-center justify-center gap-4 pointer-events-none">
@@ -35,4 +35,4 @@ const HeroPortal = () => {
     );
 };
 
-export default HeroPortal;
+export default HeroLanding;

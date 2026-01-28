@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const DepartmentPortal = () => {
+const DepartmentLanding = () => {
     const departmentLists = [
         {
             name: 'Sinergi Publik',
@@ -43,4 +43,4 @@ const DepartmentPortal = () => {
     )
 }
 
-export default DepartmentPortal
+export default DepartmentLanding

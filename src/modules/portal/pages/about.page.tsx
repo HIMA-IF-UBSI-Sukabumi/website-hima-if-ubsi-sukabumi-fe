@@ -1,9 +1,9 @@
-import CabinetPortal from "@/modules/portal/components/portal/cabinet.portal";
+import CabinetLanding from "@/modules/portal/components/landing/cabinet.landing";
 
 const ModulePortalAboutPage = () => {
     return (
         <>
-            <CabinetPortal/>
+            <CabinetLanding/>
         </>
     );
 }

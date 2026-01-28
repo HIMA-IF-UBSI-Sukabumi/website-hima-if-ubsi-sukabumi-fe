@@ -6,10 +6,10 @@ export const metadata: Metadata = {
     description: "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi",
 }
 
-const Landing = () => {
+const Page = () => {
     return (
         <ModulePortalLandingPage/>
     )
 }
 
-export default Landing
+export default Page

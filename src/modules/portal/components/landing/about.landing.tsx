@@ -1,11 +1,11 @@
 import Link from "next/link";
 import {HiArrowUpRight} from "react-icons/hi2";
 
-const AboutPortal = () => {
+const AboutLanding = () => {
     return (
         <section className={'relative overflow-hidden'}>
             <img
-                src={'/assets/dust.webp'}
+                src={'/assets/aurora-glow.webp'}
                 className={'absolute right-0 top-0 -z-20 w-auto'}
             />
 
@@ -109,4 +109,4 @@ const AboutPortal = () => {
     )
 }
 
-export default AboutPortal;
+export default AboutLanding;
