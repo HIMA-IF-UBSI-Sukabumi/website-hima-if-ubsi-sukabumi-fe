@@ -15,15 +15,6 @@ type Menu = {
 export const menus: Menu[] = [
     {label: 'Beranda', href: '/'},
     {label: 'Tentang', href: '/about'},
-    {
-        label: 'Pengurus',
-        href: '/',
-        submenu: [
-            {label: 'BPH', href: '/pengurus/bph'},
-            {label: 'Divisi', href: '/pengurus/divisi'},
-            {label: 'Anggota', href: '/pengurus/anggota'},
-        ],
-    },
     {label: 'Kegiatan', href: '/activities'},
     {label: 'Berita', href: '/news'},
 ]
@@ -34,14 +25,14 @@ const Navbar = () => {
     const [submenuOpen, setSubmenuOpen] = useState<string | null>(null)
 
     return (
-        <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 w-[95%] max-w-5xl">
+        <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 w-[95%] max-w-[880px]">
             <nav
                 className="flex items-center justify-between rounded-full bg-white/90 px-6 py-3 shadow-lg shadow-black backdrop-blur-md">
 
                 <div className="flex items-center gap-3">
                     <img src="/assets/logo-himaif.webp" className={'w-16 h-16 pointer-events-none'} alt="Logo HIMA-IF"/>
                     <div className="leading-tight block">
-                        <h1 className="text-xl font-extrablack text-black">HIMA-IF</h1>
+                        <h1 className="text-xl font-black text-black">HIMA-IF</h1>
                         <p className="text-sm text-black">UBSI PSDKU Sukabumi</p>
                     </div>
                 </div>

@@ -32,7 +32,7 @@ const DepartmentLanding = () => {
                                 <div
                                     className={'border-t-3 border-t-secondary px-24 py-16 flex flex-col items-center justify-center bg-linear-to-b from-tertiary/50 to-white'}
                                 >
-                                    <h1 className={'text-4xl font-extrablack text-center uppercase text-primary'}>{department.name}</h1>
+                                    <h1 className={'text-4xl font-black text-center uppercase text-primary'}>{department.name}</h1>
                                 </div>
                             </Link>
                         ))}

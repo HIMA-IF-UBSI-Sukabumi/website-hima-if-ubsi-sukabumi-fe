@@ -6,7 +6,6 @@
 
 @theme {
     --font-poppins: 'Poppins', sans-serif;
-    --font-weight-extrablack: 1000;
 
     --color-primary: oklch(0.3717 0.1575 274.32);
     --color-secondary: oklch(0.6732 0.0584 270.05);

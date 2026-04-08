@@ -1,4 +1,4 @@
-import AboutPengurus from "@/modules/portal/components/pengurus/about.pengurus";
+import AboutPengurus from "@/modules/portal/pages/section/pengurus/about.pengurus";
 
 type PageProps = {
     slug: string;

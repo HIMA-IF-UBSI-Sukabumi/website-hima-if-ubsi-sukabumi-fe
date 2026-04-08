@@ -16,7 +16,7 @@ const Footer = () => {
                         className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 pointer-events-none"
                     />
                     <div className="flex flex-col leading-tight">
-                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-extrablack tracking-wide bg-linear-to-b from-white to-black/10 bg-clip-text text-transparent">HIMA–IF</h2>
+                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-wide bg-linear-to-b from-white to-black/10 bg-clip-text text-transparent">HIMA–IF</h2>
                         <p className="text-sm sm:text-base md:text-xl tracking-wide opacity-90">UBSI PSDKU Sukabumi</p>
                     </div>
                 </div>

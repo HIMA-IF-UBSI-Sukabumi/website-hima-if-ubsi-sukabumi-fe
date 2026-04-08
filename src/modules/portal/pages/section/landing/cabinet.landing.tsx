@@ -23,7 +23,7 @@ const CabinetLanding = () => {
                 <h3 className="text-3xl text-secondary font-thin">Periode Tahun 2026</h3>
                 <div className={'flex flex-col items-center'}>
                     <div>
-                        <h1 className="text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-extrablack uppercase text-black tracking-wide leading-none">
+                        <h1 className="text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-black uppercase text-black tracking-wide leading-none">
                             Anvayadhistana
                         </h1>
                     </div>
@@ -42,7 +42,7 @@ const CabinetLanding = () => {
                     )}
 
                     <div className={'max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 px-0 md:px-8'}>
-                        <div className={'border border-tertiary rounded-b-4xl px-16 w-full'}>
+                        <div className={'border border-tertiary rounded-t-4xl px-16 w-full'}>
                             <div className={'flex flex-col items-center justify-center py-24 gap-4 h-full'}>
                                 <h1 className={'font-black text-5xl italic underline text-secondary'}>VISI</h1>
                                 <p>
