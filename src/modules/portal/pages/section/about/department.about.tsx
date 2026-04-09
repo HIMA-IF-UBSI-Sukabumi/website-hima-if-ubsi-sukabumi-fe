@@ -1,6 +1,9 @@
+import CardDepartment from "@/modules/portal/components/CardDepartment";
+import {DEPARTMENT_DATA} from "@/constants/department";
+
 const DepartmentAbout = () => {
     return (
-        <section className="relative overflow-hidden flex flex-col items-center">
+        <section className="relative overflow-hidden flex flex-col items-center py-16">
 
             <div className="relative inline-block">
 
@@ -16,6 +19,21 @@ const DepartmentAbout = () => {
                     </h1>
                 </div>
 
+            </div>
+
+            <div className="w-full max-w-6xl mx-auto px-4">
+                <div className="grid grid-cols-2 gap-4 justify-items-start">
+                    {DEPARTMENT_DATA && DEPARTMENT_DATA.map((item, i) => (
+                        <CardDepartment
+                            key={i}
+                            id={i + 1}
+                            title={item.title}
+                            description={item.description}
+                            logo={item.logo}
+                            color={item.color}
+                        />
+                    ))}
+                </div>
             </div>
         </section>
     )
