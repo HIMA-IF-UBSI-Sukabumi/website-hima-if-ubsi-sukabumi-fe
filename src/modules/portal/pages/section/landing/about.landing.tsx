@@ -19,11 +19,11 @@ const AboutLanding = () => {
                         Tentang
                     </h3>
 
-                    <h1 className="text-5xl font-black text-black sm:text-7xl">
+                    <h1 className="text-5xl font-extrabold text-black sm:text-7xl">
                         HIMA-IF
                     </h1>
 
-                    <p className="mt-4 text-lg text-black">
+                    <p className="mt-4 text-lg  font-medium text-black">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod mauris et nunc semper
                         sollicitudin. Fusce auctor, leo ac vulputate semper.
                     </p>
@@ -32,7 +32,7 @@ const AboutLanding = () => {
                         href="/about"
                         className="group flex items-center justify-between bg-gray-300 pl-6 rounded-full w-40 h-11.25 transition-all hover:bg-gray-400"
                     >
-                        <span className="text-black font-medium">Telusuri!</span>
+                        <span className="text-black font-regular">Telusuri!</span>
 
                         <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center">
                             <HiArrowUpRight className="text-white"/>
@@ -43,7 +43,7 @@ const AboutLanding = () => {
 
                 <div className="max-w-6xl mx-auto px-6 relative order-1 md:order-2">
                     <div className="relative max-w-xl border border-tertiary rounded-b-4xl px-12 py-14 bg-transparent">
-                        <p className="text-black leading-relaxed text-center">
+                        <p className="text-black leading-relaxed text-center font-medium">
                             Bergerak Bersama mahasiswa Informatika demi mewujudkan Himpunan
                             Mahasiswa Informatika Kampus Sukabumi Sebagai Organisasi yang lebih
                             maju dalam bidang teknologi dan informatika.
@@ -80,7 +80,7 @@ const AboutLanding = () => {
                         </div>
 
 
-                        <div className={'text-center'}>
+                        <div className={'text-center font-medium'}>
                             <p className="text-black font-semibold mb-2">
                                 Membangun Keharmonisan dan Kerjasama
                             </p>

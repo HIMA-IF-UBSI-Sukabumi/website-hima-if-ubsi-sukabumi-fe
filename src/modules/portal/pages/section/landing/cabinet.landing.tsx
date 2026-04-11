@@ -20,7 +20,7 @@ const CabinetLanding = () => {
             <div
                 className="relative flex flex-col items-center justify-center mx-auto max-w-7xl px-4 py-24 md:py-48 sm:px-6 lg:px-8 gap-8 text-center"
             >
-                <h3 className="text-3xl text-secondary font-thin">Periode Tahun 2026</h3>
+                <h3 className="text-3xl text-secondary font-light">Periode Tahun 2026</h3>
                 <div className={'flex flex-col items-center'}>
                     <div>
                         <h1 className="text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-black uppercase text-black tracking-wide leading-none">

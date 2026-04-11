@@ -20,7 +20,7 @@ const CardBph = ({imageUrl, title, name}: CardBphProps) => {
 
             <div className="absolute bottom-0 w-full p-5 flex flex-col items-center justify-end z-10">
                 <h3
-                    className="text-white font-extrabold text-2xl tracking-wide uppercase text-center mb-1"
+                    className="text-white font-semibold text-2xl tracking-wide uppercase text-center mb-1"
                     style={{
                         textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000',
                     }}
