@@ -23,7 +23,7 @@ const CabinetLanding = () => {
                 <h3 className="text-3xl text-secondary font-light">Periode Tahun 2026</h3>
                 <div className={'flex flex-col items-center'}>
                     <div>
-                        <h1 className="text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-black uppercase text-black tracking-wide leading-none">
+                        <h1 className="font-archivo text-4xl sm:text-6xl md:text-7xl xl:text-8xl uppercase text-black tracking-wide leading-none">
                             Anvayadhistana
                         </h1>
                     </div>

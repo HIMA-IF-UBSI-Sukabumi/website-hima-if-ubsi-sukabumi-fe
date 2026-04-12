@@ -19,11 +19,11 @@ const AboutLanding = () => {
                         Tentang
                     </h3>
 
-                    <h1 className="text-5xl font-extrabold text-black sm:text-7xl">
+                    <h1 className="text-5xl font-archivo text-black sm:text-7xl">
                         HIMA-IF
                     </h1>
 
-                    <p className="mt-4 text-lg  font-medium text-black">
+                    <p className="mt-4 text-2xl font-medium text-black">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod mauris et nunc semper
                         sollicitudin. Fusce auctor, leo ac vulputate semper.
                     </p>

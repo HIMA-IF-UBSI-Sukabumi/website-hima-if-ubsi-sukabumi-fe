@@ -20,13 +20,13 @@ const HeroLanding = () => {
 
             <div className="relative z-20 text-center px-4 sm:px-6 md:px-8 lg:px-12">
                 <h1
-                    className="text-primary font-extrabold leading-tight text-[84px] uppercase"
+                    className="text-primary font-archivo font-extrabold leading-tight text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl uppercase"
                 >
                     Himpunan Mahasiswa <br/>
                     Informatika
                 </h1>
 
-                <p className="mt-4 text-secondary font-extrabold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+                <p className="mt-4 text-secondary font-archivo xs:text-md sm:text-lg md:text-2xl">
                     Universitas Bina Sarana Informatika <br/>
                     PSDKU Sukabumi
                 </p>

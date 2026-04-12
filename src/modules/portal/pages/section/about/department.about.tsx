@@ -31,6 +31,7 @@ const DepartmentAbout = () => {
                             description={item.description}
                             logo={item.logo}
                             color={item.color}
+                            href={'/department/' + item.slug}
                         />
                     ))}
                 </div>
