@@ -1,25 +1,7 @@
 import Link from "next/link";
+import {DEPARTMENT_DATA} from "@/constants/department";
 
 const DepartmentLanding = () => {
-    const departmentLists = [
-        {
-            name: 'Sinergi Publik',
-            href: '/'
-        },
-        {
-            name: 'Humanika',
-            href: '/'
-        },
-        {
-            name: 'Intelektual',
-            href: '/'
-        },
-        {
-            name: 'Smartlink',
-            href: '/'
-        }
-    ]
-
     return (
         <section className={'w-full py-28'}>
             <div className={'max-w-7xl mx-auto px-6'}>
@@ -27,12 +9,12 @@ const DepartmentLanding = () => {
                     <h1 className={'text-3xl uppercase text-secondary'}>Departmen</h1>
 
                     <div className={'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4'}>
-                        {departmentLists.map((department, i) => (
-                            <Link href={department.href} key={i}>
+                        {DEPARTMENT_DATA.map((department, i) => (
+                            <Link href={'/department/' + department.slug} key={i}>
                                 <div
                                     className={'border-t-3 border-t-secondary px-24 py-16 flex flex-col items-center justify-center bg-linear-to-b from-tertiary/50 to-white'}
                                 >
-                                    <h1 className={'text-4xl font-black text-center uppercase text-primary'}>{department.name}</h1>
+                                    <h1 className={'text-4xl font-black text-center uppercase text-primary'}>{department.title}</h1>
                                 </div>
                             </Link>
                         ))}
