@@ -15,7 +15,7 @@ type CarouselProps = {
     interval?: number;
 }
 
-const Carousel = ({items, autoSlide, interval}: CarouselProps) => {
+const Carousel = ({items, autoSlide = true, interval = 7000}: CarouselProps) => {
     const [current, setCurrent] = useState(0);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const Carousel = ({items, autoSlide, interval}: CarouselProps) => {
     };
 
     return (
-        <div className="relative w-full h-105 overflow-hidden rounded-3xl">
+        <div className="relative w-full h-125 overflow-hidden rounded-3xl">
             {items?.map((item, index) => (
                 <div
                     key={index}
@@ -54,15 +54,16 @@ const Carousel = ({items, autoSlide, interval}: CarouselProps) => {
                     <div className="absolute inset-0 bg-primary/70"/>
 
                     <div
-                        className="absolute left-10 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-md p-8 rounded-2xl max-w-3xl shadow-lg">
+                        className="absolute left-16 top-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-md p-8 rounded-2xl min-w-2xl max-w-3xl shadow-lg">
                         <span className="text-xs  bg-primary font-black text-white px-3 py-1 rounded-full capitalize">
-                          Upcoming Event
+                          UPCOMING EVENT
                         </span>
-                        <h2 className="text-3xl font-extrabold mt-4 text-black">
+                        <h2 className="text-4xl mt-4 font-archivo capitalize">
                             {item.title}
                         </h2>
-                        <p className="text-gray-600 mt-3">{item.description}</p>
-                        <button className="mt-6 px-5 py-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
+                        <p className="text-gray-600 text-xl font-medium mt-3">{item.description}</p>
+                        <button
+                            className="mt-6 px-5 py-2 bg-gray-200 font-bold rounded-full hover:bg-gray-300 transition">
                             Details
                         </button>
                     </div>
@@ -71,18 +72,18 @@ const Carousel = ({items, autoSlide, interval}: CarouselProps) => {
 
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-2 rounded-full"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-2 rounded-full z-50 cursor-pointer"
             >
                 <FiArrowLeft/>
             </button>
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-2 rounded-full"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-2 rounded-full z-50 cursor-pointer"
             >
                 <FiArrowRight/>
             </button>
 
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-50 cursor-pointer">
                 {items?.map((_, index) => (
                     <div
                         key={index}

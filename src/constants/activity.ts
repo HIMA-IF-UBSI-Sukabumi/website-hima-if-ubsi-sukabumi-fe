@@ -5,5 +5,10 @@ export const CAROUSEL_DATA: CarouselItem[] = [
         title: 'HIMA-IF Got Talent',
         description: 'lorem ipsum dolor sit amet',
         image: '/assets/carousel-image.png',
+    },
+    {
+        title: 'Lorem ipsum dolor',
+        description: 'lorem ipsum dolor sit amet',
+        image: '/assets/carousel-image.png',
     }
 ]
