@@ -9,7 +9,7 @@ import axios, {
 import {useEffect, useMemo} from "react";
 
 const defaultClientBuilder = (): CreateAxiosDefaults => ({
-    baseURL: process.env.API_URL,
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: {
         "Content-Type": "application/json",
     },
