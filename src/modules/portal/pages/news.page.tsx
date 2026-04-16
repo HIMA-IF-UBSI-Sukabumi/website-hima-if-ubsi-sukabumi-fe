@@ -13,8 +13,8 @@ const ModulePortalNewsPage = () => {
                     date={'2027-08-19'}
                 />
 
-                <div className="flex flex-col gap-4">
-                    {[...Array(5)].map((_, i) => (
+                <div className="flex flex-col gap-4 min-h-100 max-h-115 overflow-y-auto">
+                    {[...Array(10)].map((_, i) => (
                         <CardNewsCompact
                             key={i}
                             title={'News Security Protocol'}
