@@ -10,7 +10,7 @@ type CardEventProps = {
 
 const CardEvent = ({title, description, image, date, tag}: CardEventProps) => {
     return (
-        <div className="w-full max-w-sm bg-white rounded-3xl shadow-md overflow-hidden">
+        <div className="w-full bg-white rounded-3xl shadow-md overflow-hidden">
             <div className="relative">
                 <img
                     src={image}
