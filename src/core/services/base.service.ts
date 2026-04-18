@@ -126,10 +126,9 @@ export interface PaginationRequestParams {
 }
 
 export interface PaginatedResponse<T> {
-    limit: number
-    page: number
-    pages: number
-    sortedBy: number
-    total: number
+    path: string,
+    per_page: number,
+    next_cursor: number,
+    prev_cursor: number,
     data: T[]
 }

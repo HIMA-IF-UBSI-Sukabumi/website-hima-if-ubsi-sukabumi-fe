@@ -1,20 +1,38 @@
 'use client'
 
-import Carousel from "@/modules/portal/components/Carousel";
+import Carousel, {CarouselItem} from "@/modules/portal/components/Carousel";
 import {CAROUSEL_DATA} from "@/constants/activity";
 import CardEvent from "@/modules/portal/components/CardEvent";
 import {EVENT_DATA} from "@/constants/event";
 import useAxios from "@/core/hooks/use-axios";
 import {useQuery} from "@tanstack/react-query";
 import {eventService} from "@/modules/portal/services/api/event.service";
+import {getStorageUrl} from "@/lib/utils";
 
 const ModulePortalActivityPage = () => {
     const axios = useAxios();
+    const storageUrl = getStorageUrl();
 
-    const activity = useQuery({
-        queryKey: ['activity-data'],
-        queryFn: async () => await eventService.findAll(axios)
+    const implementedEvent = useQuery({
+        queryKey: ['implemented-event-data'],
+        queryFn: async () => await eventService.findAll(axios, true, null)
     })
+
+    const upcomingEvent = useQuery({
+        queryKey: ['upcoming-event-data'],
+        queryFn: async () => await eventService.findAll(axios, false, 'upcoming')
+    })
+
+    const soonEvent = useQuery({
+        queryKey: ['soon-event-data'],
+        queryFn: async () => await eventService.findAll(axios, false, 'soon')
+    })
+
+    const carouselData: CarouselItem[] | undefined = soonEvent.data?.data.length === 0 ? [] : soonEvent.data?.data.map((event) => ({
+        title: event.title,
+        image: `${storageUrl}/${event.image}`,
+        description: event.description,
+    }))
 
     return (
         <section
@@ -22,7 +40,11 @@ const ModulePortalActivityPage = () => {
         >
             <div className="relative flex items-center justify-center w-full">
                 <div className="w-full md:max-w-5xl lg:max-w-6xl">
-                    <Carousel items={CAROUSEL_DATA}/>
+                    {soonEvent.isLoading ? (
+                        <div className="relative w-full h-80 sm:h-100 md:h-112.5 lg:h-125 overflow-hidden rounded-2xl md:rounded-3xl bg-gray-200 animate-pulse"></div>
+                    ) : soonEvent.data?.data.length === 0 ? null : (
+                        <Carousel items={carouselData ?? []}/>
+                    )}
                 </div>
             </div>
 
@@ -34,7 +56,7 @@ const ModulePortalActivityPage = () => {
                     Don't Miss Out
                 </p>
 
-                {activity.isLoading ? (
+                {implementedEvent.isLoading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6">
                         {[...Array(3)].map((_, i) => (
                             <div
@@ -43,7 +65,7 @@ const ModulePortalActivityPage = () => {
                             />
                         ))}
                     </div>
-                ) : activity.data?.data.length === 0 ? (
+                ) : implementedEvent.data?.data.length === 0 ? (
                     <div className="flex flex-col items-center justify-center mt-10 text-center px-4">
                         <p className="text-base md:text-lg font-semibold text-gray-700">
                             Belum ada kegiatan
@@ -54,12 +76,12 @@ const ModulePortalActivityPage = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6 px-4">
-                        {activity.data?.data.map((event: any, i: number) => (
+                        {implementedEvent.data?.data.map((event: any, i: number) => (
                             <CardEvent
                                 key={i}
                                 title={event.title}
                                 description={event.description}
-                                image={"/assets/event-image.png"}
+                                image={`${storageUrl}/${event.image}`}
                                 date={event.start_date}
                                 tag={event.status}
                             />
@@ -76,18 +98,38 @@ const ModulePortalActivityPage = () => {
                     Don't Miss Out
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6">
-                    {EVENT_DATA.map((event, i) => (
-                        <CardEvent
-                            key={i}
-                            title={event.name}
-                            description={event.description}
-                            image={event.image}
-                            date={event.date}
-                            tag={event.tag}
-                        />
-                    ))}
-                </div>
+                {upcomingEvent.isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6">
+                        {[...Array(3)].map((_, i) => (
+                            <div
+                                key={i}
+                                className="w-full h-64 bg-gray-200 animate-pulse rounded-3xl"
+                            />
+                        ))}
+                    </div>
+                ) : upcomingEvent.data?.data.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center mt-10 text-center px-4">
+                        <p className="text-base md:text-lg font-semibold text-gray-700">
+                            Belum ada kegiatan
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            Nantikan event menarik lainnya 🚀
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6 px-4">
+                        {upcomingEvent.data?.data.map((event: any, i: number) => (
+                            <CardEvent
+                                key={i}
+                                title={event.title}
+                                description={event.description}
+                                image={`${storageUrl}/${event.image}`}
+                                date={event.start_date}
+                                tag={event.status}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     )
