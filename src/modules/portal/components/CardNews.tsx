@@ -31,9 +31,9 @@ const CardNews = ({title, description, image, date, onClick}: CardNewsProps) => 
                     {title}
                 </h2>
 
-                <p className="text-gray-500 mt-3 line-clamp-3">
-                    {description}
-                </p>
+                <div dangerouslySetInnerHTML={{__html: description || ''}} className="text-gray-500 mt-3 line-clamp-3">
+
+                </div>
 
                 <div className="flex items-center justify-between mt-6">
                     <div className="flex items-center gap-2 text-gray-400 text-sm">

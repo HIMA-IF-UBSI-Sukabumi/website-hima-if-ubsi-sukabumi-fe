@@ -5,7 +5,7 @@ import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
 
 export type CarouselItem = {
     title: string;
-    description: string;
+    description: string | null;
     image: string;
 }
 

@@ -8,3 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 export const getStorageUrl = () => {
     return process.env.NEXT_PUBLIC_STORAGE_URL;
 }
+
+export function formatTimestamp(timestamp: string) {
+    return new Date(timestamp).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    });
+}

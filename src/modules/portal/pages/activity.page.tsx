@@ -6,7 +6,7 @@ import CardEvent from "@/modules/portal/components/CardEvent";
 import {EVENT_DATA} from "@/constants/event";
 import useAxios from "@/core/hooks/use-axios";
 import {useQuery} from "@tanstack/react-query";
-import {eventService} from "@/modules/portal/services/api/event.service";
+import {EventResponse, eventService} from "@/modules/portal/services/api/event.service";
 import {getStorageUrl} from "@/lib/utils";
 
 const ModulePortalActivityPage = () => {
@@ -28,9 +28,9 @@ const ModulePortalActivityPage = () => {
         queryFn: async () => await eventService.findAll(axios, false, 'soon')
     })
 
-    const carouselData: CarouselItem[] | undefined = soonEvent.data?.data.length === 0 ? [] : soonEvent.data?.data.map((event) => ({
+    const carouselData: CarouselItem[] | undefined = soonEvent.data?.data.length === 0 ? [] : soonEvent.data?.data.map((event: EventResponse) => ({
         title: event.title,
-        image: `${storageUrl}/${event.image}`,
+        image: `${storageUrl}/${event.carousel_images}`,
         description: event.description,
     }))
 
@@ -53,7 +53,7 @@ const ModulePortalActivityPage = () => {
                     Kegiatan/Acara Terlaksana
                 </h1>
                 <p className="text-secondary text-sm md:text-base">
-                    Don't Miss Out
+                    Don&#39;t Miss Out
                 </p>
 
                 {implementedEvent.isLoading ? (
@@ -76,12 +76,12 @@ const ModulePortalActivityPage = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6 px-4">
-                        {implementedEvent.data?.data.map((event: any, i: number) => (
+                        {implementedEvent.data?.data.map((event: EventResponse, i: number) => (
                             <CardEvent
                                 key={i}
                                 title={event.title}
-                                description={event.description}
-                                image={`${storageUrl}/${event.image}`}
+                                description={event?.description}
+                                image={`${storageUrl}/${event.cover_image}`}
                                 date={event.start_date}
                                 tag={event.status}
                             />
@@ -95,7 +95,7 @@ const ModulePortalActivityPage = () => {
                     Acara Mendatang
                 </h1>
                 <p className="text-secondary text-sm md:text-base">
-                    Don't Miss Out
+                    Don&#39;t Miss Out
                 </p>
 
                 {upcomingEvent.isLoading ? (
@@ -118,12 +118,12 @@ const ModulePortalActivityPage = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6 px-4">
-                        {upcomingEvent.data?.data.map((event: any, i: number) => (
+                        {upcomingEvent.data?.data.map((event: EventResponse, i: number) => (
                             <CardEvent
                                 key={i}
                                 title={event.title}
                                 description={event.description}
-                                image={`${storageUrl}/${event.image}`}
+                                image={`${storageUrl}/${event.cover_image}`}
                                 date={event.start_date}
                                 tag={event.status}
                             />

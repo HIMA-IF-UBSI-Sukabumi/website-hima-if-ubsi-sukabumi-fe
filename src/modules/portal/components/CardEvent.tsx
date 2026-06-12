@@ -2,7 +2,7 @@ import {FiCalendar} from "react-icons/fi";
 
 type CardEventProps = {
     title: string;
-    description: string;
+    description?: string | null;
     image: string;
     date: string;
     tag: string;

@@ -12,14 +12,27 @@ export const eventService = {
     })
 }
 
-export interface EventResponse {
+export interface EventImage {
     id: string;
+    imageable_type: string;
+    imageable_id: string;
+    image_url: string;
+    usage: 'cover' | 'carousel' | 'gallery';
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface EventResponse {
     title: string;
-    description: string;
+    description: string | null;
     start_date: string;
     end_date: string;
-    is_published: boolean;
+    published_at: string | null;
     status: 'pending' | 'approved' | 'rejected' | 'published';
     is_implemented: boolean;
-    image: string;
+    slug: string | null;
+    cover_image: string;
+    carousel_images: string[];
+    galler_image: string[];
 }
