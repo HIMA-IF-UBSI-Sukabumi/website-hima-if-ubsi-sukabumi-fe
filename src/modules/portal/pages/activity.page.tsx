@@ -1,9 +1,7 @@
 'use client'
 
 import Carousel, {CarouselItem} from "@/modules/portal/components/Carousel";
-import {CAROUSEL_DATA} from "@/constants/activity";
 import CardEvent from "@/modules/portal/components/CardEvent";
-import {EVENT_DATA} from "@/constants/event";
 import useAxios from "@/core/hooks/use-axios";
 import {useQuery} from "@tanstack/react-query";
 import {EventResponse, eventService} from "@/modules/portal/services/api/event.service";
