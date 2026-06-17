@@ -44,8 +44,8 @@ const CardDepartment = ({id, title, description, logo, color, href}: CardAboutPr
                         {title}
                     </h2>
 
-                    <p className="text-[#475569] text-base md:text-lg leading-relaxed">
-                        {description}
+                    <p className="text-[#475569] text-base md:text-lg leading-relaxed text-justify">
+                        {description.slice(0, 250) + ' ...'}
                     </p>
                 </div>
             </div>

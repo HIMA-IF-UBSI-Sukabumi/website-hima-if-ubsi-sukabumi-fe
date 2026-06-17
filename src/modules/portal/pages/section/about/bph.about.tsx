@@ -1,4 +1,3 @@
-import React from 'react';
 import CardBph from "@/modules/portal/components/CardBph";
 import {BPH_DATA} from "@/constants/bph";
 
