@@ -10,30 +10,30 @@ export const BPH_DATA: BphDataProps[] = [
         id: 1,
         title: "Ketua Himpunan",
         name: "Amanda Shofia Afifa",
-        image: "/assets/pengurus/15240134-amanda-shofia-afifa.jpg"
+        image: "/assets/pengurus/BPH-Amanda.webp"
     },
     {
         id: 2,
         title: "Wakil Ketua Himpunan",
         name: "Khairino Rizky Putra D.",
-        image: "/assets/pengurus/15240581-khairino-rizky-putra-d.jpg"
+        image: "/assets/pengurus/BPH-Khairino.webp"
     },
     {
         id: 3,
         title: "Bendahara",
         name: "Adzkya Alfataa Himayatul Ummah",
-        image: "/assets/pengurus/15250445-adzkya-alfataa-himayatul-ummah.png"
+        image: "/assets/pengurus/BPH-Adzkya.webp"
     },
     {
         id: 4,
         title: "Sekretaris 1",
         name: "Ardelia Nafeeza Ridwan",
-        image: "/assets/pengurus/15250130-ardelia-nafeeza-ridwan.png"
+        image: "/assets/pengurus/BPH-Ardelia.webp"
     },
     {
         id: 5,
         title: "Sekretaris 2",
         name: "Gladisya Harumi Negeri",
-        image: "/assets/pengurus/15250352-gladisya-harumi-negeri.jpg"
+        image: "/assets/pengurus/BPH-Gladisya.webp"
     },
 ];

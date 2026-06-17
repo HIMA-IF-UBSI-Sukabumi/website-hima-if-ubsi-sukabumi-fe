@@ -24,8 +24,7 @@ const AboutLanding = () => {
                     </h1>
 
                     <p className="mt-4 text-2xl font-medium text-black">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod mauris et nunc semper
-                        sollicitudin. Fusce auctor, leo ac vulputate semper.
+                        HIMAIF (Himpunan Mahasiswa Informatika) adalah organisasi mahasiswa yang menjadi wadah pengembangan akademik, non-akademik, dan kepemimpinan. HIMAIF juga berfungsi sebagai penghubung mahasiswa dengan kampus dan pihak luar untuk mendukung kolaborasi, pengembangan diri, dan kontribusi di bidang Informatika.
                     </p>
 
                     <Link
