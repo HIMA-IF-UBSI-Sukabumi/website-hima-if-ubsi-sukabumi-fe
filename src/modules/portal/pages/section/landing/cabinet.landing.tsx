@@ -36,8 +36,7 @@ const CabinetLanding = () => {
 
                     {pathname === '/about' && (
                         <p className="mt-4 mb-8 max-w-3xl text-lg md:text-2xl text-black text-center">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut euismod mauris et nunc semper
-                            sollicitudin. Fusce auctor, leo ac vulputate semper.
+                            Kabinet <strong>ANVAYADHISTANA</strong> merupakan kepengurusan Himpunan Mahasiswa Informatika (HIMAIF) periode 2026/2027 yang berfokus pada penguatan sistem organisasi yang aktif, kolaboratif, dan relevan dengan kebutuhan mahasiswa Informatika melalui pengembangan program kerja, inovasi, dan penguatan sumber daya manusia.
                         </p>
                     )}
 
@@ -46,8 +45,7 @@ const CabinetLanding = () => {
                             <div className={'flex flex-col items-center justify-center py-24 gap-4 h-full'}>
                                 <h1 className={'font-black text-5xl italic underline text-secondary'}>VISI</h1>
                                 <p>
-                                    Mewujudkan HIMA-IF sebagai himpunan yang aktif, kolaboratif, dan relevan dengan
-                                    kebutuhan mahasiswa Informatika
+                                    “Mewujudkan HIMAIF sebagai himpunan yang <strong>aktif, kolaboratif, dan relevan</strong> dengan kebutuhan mahasiswa Informatika.”
                                 </p>
                             </div>
                         </div>
