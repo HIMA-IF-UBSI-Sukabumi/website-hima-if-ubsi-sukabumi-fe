@@ -24,6 +24,7 @@ export interface EventImage {
 }
 
 export interface EventResponse {
+    id?: string;
     title: string;
     description: string | null;
     start_date: string;
@@ -32,7 +33,9 @@ export interface EventResponse {
     status: 'pending' | 'approved' | 'rejected' | 'published';
     is_implemented: boolean;
     slug: string | null;
-    cover_image: string;
+    cover_image: string | null;
     carousel_images: string[];
     galler_image: string[];
+    location?: string | null;
+    time_filter?: string | null;
 }

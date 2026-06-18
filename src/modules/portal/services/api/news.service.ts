@@ -27,4 +27,5 @@ export interface NewsResponse {
 
     category: string[];
     cover: string | null;
+    slug?: string | null;
 }

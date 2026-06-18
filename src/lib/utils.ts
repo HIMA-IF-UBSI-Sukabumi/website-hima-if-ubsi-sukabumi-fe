@@ -16,3 +16,16 @@ export function formatTimestamp(timestamp: string) {
         year: 'numeric',
     });
 }
+
+export const formatDate = (dateStr: string) => {
+    try {
+        return new Date(dateStr).toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+    } catch {
+        return dateStr;
+    }
+};

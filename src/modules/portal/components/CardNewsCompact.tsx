@@ -1,17 +1,18 @@
 import {FiClock} from "react-icons/fi";
+import Link from "next/link";
 
 type CardNewsCompactProps = {
     title: string;
     category: string;
     image: string;
     date: string;
+    href?: string;
     onClick?: () => void;
 }
 
-const CardNewsCompact = ({title, category, image, date, onClick}: CardNewsCompactProps) => {
-    return (
+const CardNewsCompact = ({title, category, image, date, href, onClick}: CardNewsCompactProps) => {
+    const content = (
         <div
-            onClick={onClick}
             className="w-full flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 transition cursor-pointer"
         >
             <div className="w-16 h-16 min-w-16 rounded-2xl overflow-hidden">
@@ -37,7 +38,13 @@ const CardNewsCompact = ({title, category, image, date, onClick}: CardNewsCompac
                 </div>
             </div>
         </div>
-    )
+    );
+
+    if (href) {
+        return <Link href={href} className="block">{content}</Link>;
+    }
+
+    return <div onClick={onClick}>{content}</div>;
 }
 
 export default CardNewsCompact;

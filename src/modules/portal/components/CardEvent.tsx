@@ -1,4 +1,5 @@
 import {FiCalendar} from "react-icons/fi";
+import Link from "next/link";
 
 type CardEventProps = {
     title: string;
@@ -6,11 +7,12 @@ type CardEventProps = {
     image: string;
     date: string;
     tag: string;
+    href?: string;
 }
 
-const CardEvent = ({title, description, image, date, tag}: CardEventProps) => {
-    return (
-        <div className="w-full bg-white rounded-3xl shadow-md overflow-hidden">
+const CardEvent = ({title, description, image, date, tag, href}: CardEventProps) => {
+    const content = (
+        <div className="w-full bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer">
             <div className="relative">
                 <img
                     src={image}
@@ -34,12 +36,18 @@ const CardEvent = ({title, description, image, date, tag}: CardEventProps) => {
                     {title}
                 </h3>
 
-                <p className="text-gray-500 mt-2 text-sm leading-relaxed">
+                <p className="text-gray-500 mt-2 text-sm leading-relaxed line-clamp-2">
                     {description}
                 </p>
             </div>
         </div>
-    )
+    );
+
+    if (href) {
+        return <Link href={href} className="block">{content}</Link>;
+    }
+
+    return content;
 }
 
 export default CardEvent;

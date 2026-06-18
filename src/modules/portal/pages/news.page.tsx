@@ -6,6 +6,7 @@ import useAxios from "@/core/hooks/use-axios";
 import {formatTimestamp, getStorageUrl} from "@/lib/utils";
 import {useQuery} from "@tanstack/react-query";
 import {newsService} from "@/modules/portal/services/api/news.service";
+import {dummyNews} from "@/constants/dummy-news";
 
 const ModulePortalNewsPage = () => {
     const axios = useAxios();
@@ -16,7 +17,8 @@ const ModulePortalNewsPage = () => {
         queryFn: async () => await newsService.findAll(axios, null)
     });
 
-    const news = data?.data ?? [];
+    const apiNews = data?.data ?? [];
+    const news = apiNews.length > 0 ? apiNews : dummyNews;
 
     const latestNews = news[0];
     const otherNews = news.slice(1);
@@ -33,7 +35,7 @@ const ModulePortalNewsPage = () => {
         );
     }
 
-    if (isError) {
+    if (isError && dummyNews.length === 0) {
         return (
             <section className="mt-38 pb-20 max-w-6xl mx-auto px-4">
                 <h1 className="text-2xl font-black">Berita & Artikel Terbaru</h1>
@@ -64,6 +66,14 @@ const ModulePortalNewsPage = () => {
         );
     }
 
+    const getNewsImage = (item: typeof news[number]) =>
+        item.cover
+            ? `${storageUrl}/${item.cover}`
+            : `https://picsum.photos/seed/${item.id}/900/500`;
+
+    const getNewsHref = (item: typeof news[number]) =>
+        `/news/${item.slug ?? item.id}`;
+
     return (
         <section className="overflow-hidden mt-38 pb-20 max-w-6xl mx-auto px-4">
             <h1 className="text-2xl font-black">Berita & Artikel Terbaru</h1>
@@ -72,8 +82,9 @@ const ModulePortalNewsPage = () => {
                 <CardNews
                     title={latestNews.title}
                     description={latestNews.content}
-                    image={`${storageUrl}/${latestNews.cover}`}
+                    image={getNewsImage(latestNews)}
                     date={formatTimestamp(latestNews.created_at)}
+                    href={getNewsHref(latestNews)}
                 />
 
                 <div className="flex flex-col gap-4 min-h-100 max-h-115 overflow-y-auto">
@@ -82,8 +93,9 @@ const ModulePortalNewsPage = () => {
                             key={item.id}
                             title={item.title}
                             category={item.category?.[0] ?? '-'}
-                            image={`${storageUrl}/${item.cover}`}
+                            image={getNewsImage(item)}
                             date={formatTimestamp(item.created_at)}
+                            href={getNewsHref(item)}
                         />
                     ))}
                 </div>
