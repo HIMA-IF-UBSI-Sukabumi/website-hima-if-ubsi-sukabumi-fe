@@ -6,7 +6,6 @@ import useAxios from "@/core/hooks/use-axios";
 import {useQuery} from "@tanstack/react-query";
 import {EventResponse, eventService} from "@/modules/portal/services/api/event.service";
 import {getStorageUrl} from "@/lib/utils";
-import {dummyEvents} from "@/constants/dummy-events";
 
 const ModulePortalActivityPage = () => {
     const axios = useAxios();
