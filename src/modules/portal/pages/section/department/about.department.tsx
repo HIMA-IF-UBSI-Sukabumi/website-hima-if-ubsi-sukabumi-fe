@@ -52,7 +52,7 @@ const AboutDepartment = ({data, activeTab, setActiveTab}: Props) => {
                             backgroundColor: activeTab === "program" ? data?.color : undefined
                         }}
                     >
-                        Program
+                        Program Kerja
                     </button>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import AboutDepartment from "@/modules/portal/pages/section/department/about.dep
 import {DEPARTMENT_DATA} from "@/constants/department";
 import {useState} from "react";
 import MemberDepartment from "@/modules/portal/pages/section/department/member.department";
+import ProkerDepartment from "@/modules/portal/pages/section/department/proker.department";
 
 type PageProps = {
     slug: string;
@@ -22,11 +23,7 @@ const ModulePortalDepartmentPage = ({slug}: PageProps) => {
             />
 
             {activeTab === "team" && <MemberDepartment data={departmentData}/>}
-            {activeTab === "program" && (
-                <section className={'relative overflow-hidden flex flex-col items-center pb-20'}>
-                    belom ada
-                </section>
-            )}
+            {activeTab === "program" && <ProkerDepartment data={departmentData}/>}
         </>
     )
 }

@@ -6,6 +6,7 @@ import useAxios from "@/core/hooks/use-axios";
 import {useQuery} from "@tanstack/react-query";
 import {EventResponse, eventService} from "@/modules/portal/services/api/event.service";
 import {getStorageUrl} from "@/lib/utils";
+import {dummyEvents} from "@/constants/dummy-events";
 
 const ModulePortalActivityPage = () => {
     const axios = useAxios();
@@ -26,11 +27,16 @@ const ModulePortalActivityPage = () => {
         queryFn: async () => await eventService.findAll(axios, false, 'soon')
     })
 
-    const carouselData: CarouselItem[] | undefined = soonEvent.data?.data.length === 0 ? [] : soonEvent.data?.data.map((event: EventResponse) => ({
+    const implementedData: EventResponse[] = implementedEvent.data?.data?.length ? implementedEvent.data.data : [];
+    const upcomingData: EventResponse[] = upcomingEvent.data?.data?.length ? upcomingEvent.data.data : [];
+    const soonData: EventResponse[] = soonEvent.data?.data?.length ? soonEvent.data.data : [];
+
+    const carouselData: CarouselItem[] = soonData.map((event: EventResponse) => ({
         title: event.title,
-        image: `${storageUrl}/${event.carousel_images}`,
+        image: `${storageUrl}/${event.cover_image}`,
         description: event.description,
-    }))
+        href: `/activity/${event.slug}`,
+    }));
 
     return (
         <section
@@ -39,9 +45,10 @@ const ModulePortalActivityPage = () => {
             <div className="relative flex items-center justify-center w-full">
                 <div className="w-full md:max-w-5xl lg:max-w-6xl">
                     {soonEvent.isLoading ? (
-                        <div className="relative w-full h-80 sm:h-100 md:h-112.5 lg:h-125 overflow-hidden rounded-2xl md:rounded-3xl bg-gray-200 animate-pulse"></div>
-                    ) : soonEvent.data?.data.length === 0 ? null : (
-                        <Carousel items={carouselData ?? []}/>
+                        <div
+                            className="relative w-full h-80 sm:h-100 md:h-112.5 lg:h-125 overflow-hidden rounded-2xl md:rounded-3xl bg-gray-200 animate-pulse"></div>
+                    ) : carouselData.length === 0 ? null : (
+                        <Carousel items={carouselData}/>
                     )}
                 </div>
             </div>
@@ -63,7 +70,7 @@ const ModulePortalActivityPage = () => {
                             />
                         ))}
                     </div>
-                ) : implementedEvent.data?.data.length === 0 ? (
+                ) : implementedData.length === 0 ? (
                     <div className="flex flex-col items-center justify-center mt-10 text-center px-4">
                         <p className="text-base md:text-lg font-semibold text-gray-700">
                             Belum ada kegiatan
@@ -74,14 +81,15 @@ const ModulePortalActivityPage = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6 px-4">
-                        {implementedEvent.data?.data.map((event: EventResponse, i: number) => (
+                        {implementedData.map((event: EventResponse, i: number) => (
                             <CardEvent
-                                key={i}
+                                key={event.id ?? i}
                                 title={event.title}
                                 description={event?.description}
-                                image={`${storageUrl}/${event.cover_image}`}
+                                image={getStorageUrl() + '/' + event.cover_image}
                                 date={event.start_date}
                                 tag={event.status}
+                                href={`/activity/${event.slug}`}
                             />
                         ))}
                     </div>
@@ -105,7 +113,7 @@ const ModulePortalActivityPage = () => {
                             />
                         ))}
                     </div>
-                ) : upcomingEvent.data?.data.length === 0 ? (
+                ) : upcomingData.length === 0 ? (
                     <div className="flex flex-col items-center justify-center mt-10 text-center px-4">
                         <p className="text-base md:text-lg font-semibold text-gray-700">
                             Belum ada kegiatan
@@ -116,14 +124,15 @@ const ModulePortalActivityPage = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6 gap-4 md:gap-6 px-4">
-                        {upcomingEvent.data?.data.map((event: EventResponse, i: number) => (
+                        {upcomingData.map((event: EventResponse, i: number) => (
                             <CardEvent
-                                key={i}
+                                key={event.id ?? i}
                                 title={event.title}
                                 description={event.description}
-                                image={`${storageUrl}/${event.cover_image}`}
+                                image={getStorageUrl() + '/' + event.cover_image}
                                 date={event.start_date}
                                 tag={event.status}
+                                href={`/activity/${event.slug}`}
                             />
                         ))}
                     </div>

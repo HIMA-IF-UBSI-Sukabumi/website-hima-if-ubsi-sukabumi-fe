@@ -31,10 +31,12 @@ const Footer = () => {
                     ))}
                 </nav>
                 <div className="mt-6 flex gap-4">
-                    <a className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"><FaInstagram
-                        className="w-6 h-6 sm:w-7 sm:h-7"/></a>
-                    <a className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center"><HiOutlineEnvelope
-                        className="w-6 h-6 sm:w-7 sm:h-7"/></a>
+                    <a href={'https://www.instagram.com/himaif.ubsismi'} target={"_blank"} className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center">
+                        <FaInstagram className="w-6 h-6 sm:w-7 sm:h-7"/>
+                    </a>
+                    <a href={'mailto:himaif.smi@bsi.ac.id'} className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center">
+                        <HiOutlineEnvelope className="w-6 h-6 sm:w-7 sm:h-7"/>
+                    </a>
                 </div>
             </div>
         </footer>
