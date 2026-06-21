@@ -27,37 +27,16 @@ const ModulePortalActivityPage = () => {
         queryFn: async () => await eventService.findAll(axios, false, 'soon')
     })
 
-    // Use dummy data as fallback when API returns empty
-    const implementedData: EventResponse[] =
-        implementedEvent.data?.data?.length
-            ? implementedEvent.data.data
-            : dummyEvents.filter((e) => e.is_implemented);
-
-    const upcomingData: EventResponse[] =
-        upcomingEvent.data?.data?.length
-            ? upcomingEvent.data.data
-            : dummyEvents.filter((e) => !e.is_implemented);
-
-    const soonData: EventResponse[] =
-        soonEvent.data?.data?.length
-            ? soonEvent.data.data
-            : dummyEvents.filter((e) => !e.is_implemented).slice(0, 2);
+    const implementedData: EventResponse[] = implementedEvent.data?.data?.length ? implementedEvent.data.data : [];
+    const upcomingData: EventResponse[] = upcomingEvent.data?.data?.length ? upcomingEvent.data.data : [];
+    const soonData: EventResponse[] = soonEvent.data?.data?.length ? soonEvent.data.data : [];
 
     const carouselData: CarouselItem[] = soonData.map((event: EventResponse) => ({
         title: event.title,
-        image: event.cover_image
-            ? `${storageUrl}/${event.cover_image}`
-            : `https://picsum.photos/seed/${event.id ?? event.slug}/1200/600`,
+        image: `${storageUrl}/${event.cover_image}`,
         description: event.description,
+        href: `/activity/${event.slug}`,
     }));
-
-    const getEventImage = (event: EventResponse) =>
-        event.cover_image
-            ? `${storageUrl}/${event.cover_image}`
-            : `https://picsum.photos/seed/${event.id ?? event.slug}/600/400`;
-
-    const getEventHref = (event: EventResponse) =>
-        `/activity/${event.slug ?? event.id}`;
 
     return (
         <section
@@ -66,7 +45,8 @@ const ModulePortalActivityPage = () => {
             <div className="relative flex items-center justify-center w-full">
                 <div className="w-full md:max-w-5xl lg:max-w-6xl">
                     {soonEvent.isLoading ? (
-                        <div className="relative w-full h-80 sm:h-100 md:h-112.5 lg:h-125 overflow-hidden rounded-2xl md:rounded-3xl bg-gray-200 animate-pulse"></div>
+                        <div
+                            className="relative w-full h-80 sm:h-100 md:h-112.5 lg:h-125 overflow-hidden rounded-2xl md:rounded-3xl bg-gray-200 animate-pulse"></div>
                     ) : carouselData.length === 0 ? null : (
                         <Carousel items={carouselData}/>
                     )}
@@ -106,10 +86,10 @@ const ModulePortalActivityPage = () => {
                                 key={event.id ?? i}
                                 title={event.title}
                                 description={event?.description}
-                                image={getEventImage(event)}
+                                image={getStorageUrl() + '/' + event.cover_image}
                                 date={event.start_date}
                                 tag={event.status}
-                                href={getEventHref(event)}
+                                href={`/activity/${event.slug}`}
                             />
                         ))}
                     </div>
@@ -149,10 +129,10 @@ const ModulePortalActivityPage = () => {
                                 key={event.id ?? i}
                                 title={event.title}
                                 description={event.description}
-                                image={getEventImage(event)}
+                                image={getStorageUrl() + '/' + event.cover_image}
                                 date={event.start_date}
                                 tag={event.status}
-                                href={getEventHref(event)}
+                                href={`/activity/${event.slug}`}
                             />
                         ))}
                     </div>

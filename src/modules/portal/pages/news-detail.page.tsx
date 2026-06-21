@@ -2,28 +2,56 @@
 
 import {FiClock, FiArrowLeft, FiTag} from "react-icons/fi";
 import Link from "next/link";
-import {dummyNews} from "@/constants/dummy-news";
-import {formatTimestamp} from "@/lib/utils";
+import {useQuery} from "@tanstack/react-query";
+import useAxios from "@/core/hooks/use-axios";
+import {newsService} from "@/modules/portal/services/api/news.service";
+import {getStorageUrl} from "@/lib/utils";
 import {notFound} from "next/navigation";
 
 type NewsDetailPageProps = {
     slug: string;
-}
+};
 
 const ModulePortalNewsDetailPage = ({slug}: NewsDetailPageProps) => {
-    const news = dummyNews.find((n) => (n.slug ?? n.id) === slug);
+    const axios = useAxios();
+    const storageUrl = getStorageUrl();
+
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ["news-detail", slug],
+        queryFn: async () => await newsService.findBySlug(axios, slug),
+    });
+
+    if (isLoading) {
+        return (
+            <section className="mt-32 max-w-5xl mx-auto px-4 animate-pulse py-4">
+                <div className="h-4 w-40 bg-gray-200 rounded mb-6"/>
+                <div className="h-8 w-3/4 bg-gray-200 rounded mb-4"/>
+                <div className="h-96 bg-gray-200 rounded-3xl"/>
+            </section>
+        );
+    }
+
+    if (isError) {
+        return (
+            <section className="mt-32 text-center">
+                <h2 className="text-xl font-bold text-red-500">
+                    Gagal memuat berita
+                </h2>
+            </section>
+        );
+    }
+
+    const news = data?.news;
 
     if (!news) {
         notFound();
     }
 
-    const otherNews = dummyNews
-        .filter((n) => (n.slug ?? n.id) !== slug)
-        .slice(0, 3);
+    const relatedNews = news.related_news ?? [];
 
     return (
         <section className="mt-32 pb-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Back Button */}
+
             <Link
                 href="/news"
                 className="inline-flex items-center gap-2 text-secondary hover:text-primary transition font-medium text-sm mb-8"
@@ -33,10 +61,9 @@ const ModulePortalNewsDetailPage = ({slug}: NewsDetailPageProps) => {
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                {/* Main Content */}
+
                 <div className="lg:col-span-2">
-                    {/* Category Badges */}
-                    {news.category.length > 0 && (
+                    {news.category?.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                             {news.category.map((cat) => (
                                 <span
@@ -50,37 +77,30 @@ const ModulePortalNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                         </div>
                     )}
 
-                    {/* Title */}
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-archivo font-black text-black leading-tight">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-archivo font-bold text-black leading-tight">
                         {news.title}
                     </h1>
 
-                    {/* Meta */}
                     <div className="flex items-center gap-2 mt-4 text-sm text-secondary">
                         <FiClock className="w-4 h-4"/>
-                        <span>{formatTimestamp(news.created_at)}</span>
+                        <span>{news.published_at}</span>
                     </div>
 
-                    {/* Cover Image */}
                     <div className="mt-6 rounded-3xl overflow-hidden border border-smoky shadow-md">
                         <img
-                            src={news.cover
-                                ? `${process.env.NEXT_PUBLIC_STORAGE_URL}/${news.cover}`
-                                : `https://picsum.photos/seed/${news.id}/900/500`}
+                            src={`${storageUrl}/${news.cover}`}
                             alt={news.title}
                             className="w-full h-64 sm:h-80 md:h-96 object-cover"
                         />
                     </div>
 
-                    {/* Content */}
                     <div
-                        className="mt-8 prose prose-base max-w-none prose-headings:font-archivo prose-headings:text-black prose-p:text-gray-600 prose-p:leading-relaxed prose-blockquote:border-primary prose-blockquote:text-secondary prose-li:text-gray-600 prose-strong:text-black"
+                        className="mt-8 prose max-w-none prose-p:text-gray-600 prose-headings:text-black text-justify"
                         dangerouslySetInnerHTML={{__html: news.content}}
                     />
 
-                    {/* Tags Footer */}
-                    {news.category.length > 0 && (
-                        <div className="mt-10 pt-6 border-t border-gray-100 flex flex-wrap gap-2">
+                    {news.category?.length > 0 && (
+                        <div className="mt-10 pt-6 border-t flex flex-wrap gap-2">
                             {news.category.map((cat) => (
                                 <span
                                     key={cat}
@@ -93,38 +113,41 @@ const ModulePortalNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                     )}
                 </div>
 
-                {/* Sidebar */}
                 <div className="lg:col-span-1">
                     <div className="sticky top-36">
-                        <h2 className="text-base font-black text-black mb-4">
+
+                        <h2 className="text-base font-black mb-4">
                             Berita Lainnya
                         </h2>
+
                         <div className="flex flex-col gap-3">
-                            {otherNews.map((item) => (
+                            {relatedNews.map((item) => (
                                 <Link
                                     key={item.id}
-                                    href={`/news/${item.slug ?? item.id}`}
-                                    className="flex items-start gap-3 p-3 rounded-2xl hover:bg-smoky transition group"
+                                    href={`/news/${item.slug}`}
+                                    className="flex gap-3 p-3 rounded-2xl hover:bg-smoky transition group"
                                 >
-                                    <div className="w-16 h-16 min-w-16 rounded-xl overflow-hidden flex-shrink-0">
+                                    <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                                         <img
-                                            src={item.cover
-                                                ? `${process.env.NEXT_PUBLIC_STORAGE_URL}/${item.cover}`
-                                                : `https://picsum.photos/seed/${item.id}/200/200`}
-                                            alt={item.title}
+                                            src={`${storageUrl}/${item.cover}`
+                                            }
                                             className="w-full h-full object-cover"
+                                            alt={item.title}
                                         />
                                     </div>
+
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-semibold text-primary tracking-wide uppercase mb-1">
-                                            {item.category[0] ?? 'HIMA NEWS'}
+                                        <p className="text-xs font-semibold text-primary uppercase mb-1">
+                                            {item.category?.[0] ?? "NEWS"}
                                         </p>
-                                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary transition">
+
+                                        <h3 className="text-sm font-semibold line-clamp-2 group-hover:text-primary">
                                             {item.title}
                                         </h3>
+
                                         <div className="flex items-center gap-1 mt-1 text-gray-400 text-xs">
                                             <FiClock className="w-3 h-3"/>
-                                            <span>{formatTimestamp(item.created_at)}</span>
+                                            <span>{item.published_at}</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -137,6 +160,7 @@ const ModulePortalNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                         >
                             Lihat semua berita →
                         </Link>
+
                     </div>
                 </div>
             </div>

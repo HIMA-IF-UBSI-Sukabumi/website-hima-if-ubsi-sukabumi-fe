@@ -23,36 +23,39 @@ const BphAbout = () => {
             </div>
 
             <div className="flex flex-col items-center gap-6 md:gap-8 w-full max-w-5xl px-4 mt-8">
-                <div className="flex flex-col md:flex-row justify-center gap-6 w-full">
+                <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
                     {BPH_DATA.slice(0, 2).map((item) => (
-                        <CardBph
-                            key={item.id} 
-                            title={item.title} 
-                            name={item.name} 
-                            imageUrl={item.image}
-                        />
+                        <div key={item.id} className="flex justify-center w-full md:w-auto">
+                            <CardBph
+                                title={item.title}
+                                name={item.name}
+                                imageUrl={item.image}
+                            />
+                        </div>
                     ))}
                 </div>
 
                 <div className="flex justify-center w-full z-10">
                     {BPH_DATA.slice(2, 3).map((item) => (
-                        <CardBph
-                            key={item.id} 
-                            title={item.title} 
-                            name={item.name} 
-                            imageUrl={item.image}
-                        />
+                        <div key={item.id} className="flex justify-center w-full">
+                            <CardBph
+                                title={item.title}
+                                name={item.name}
+                                imageUrl={item.image}
+                            />
+                        </div>
                     ))}
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-center gap-6 w-full">
+                <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
                     {BPH_DATA.slice(3, 5).map((item) => (
-                        <CardBph
-                            key={item.id} 
-                            title={item.title} 
-                            name={item.name} 
-                            imageUrl={item.image}
-                        />
+                        <div key={item.id} className="flex justify-center w-full md:w-auto">
+                            <CardBph
+                                title={item.title}
+                                name={item.name}
+                                imageUrl={item.image}
+                            />
+                        </div>
                     ))}
                 </div>
             </div>

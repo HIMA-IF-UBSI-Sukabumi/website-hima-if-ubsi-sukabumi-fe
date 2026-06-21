@@ -9,7 +9,11 @@ export const eventService = {
     ) => simpleRequest<PaginatedResponse<EventResponse>>('GET', '/events')(client, {
         is_implemented,
         time_filter,
-    })
+    }),
+    findBySlug: (
+        client: AxiosInstance,
+        slug: string,
+    ) => simpleRequest<DetailEventResponse>('GET', `/events/${slug}`)(client),
 }
 
 export interface EventImage {
@@ -38,4 +42,39 @@ export interface EventResponse {
     galler_image: string[];
     location?: string | null;
     time_filter?: string | null;
+}
+
+export interface DetailEventResponse {
+    event: {
+        id?: string,
+        title: string,
+        description: string,
+        start_date: string,
+        end_date: string,
+        published_at: string,
+        is_implemented: string,
+        status: string,
+        form_link: string,
+        parent_slug: string,
+        proker_slug: string,
+        current_slug: string,
+        tags: string,
+        cover_image: string,
+        carousel_images: string,
+        gallery_images: string,
+        location: string,
+        related_events: RelatedEventResponse[]
+    },
+}
+
+export interface RelatedEventResponse {
+    id?: string;
+    title: string,
+    description: string,
+    published_at: string,
+    status: string,
+    parent_slug: string,
+    proker_slug: string,
+    current_slug: string,
+    cover_image: string,
 }

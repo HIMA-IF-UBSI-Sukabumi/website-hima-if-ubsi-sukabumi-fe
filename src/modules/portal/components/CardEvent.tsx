@@ -36,8 +36,8 @@ const CardEvent = ({title, description, image, date, tag, href}: CardEventProps)
                     {title}
                 </h3>
 
-                <p className="text-gray-500 mt-2 text-sm leading-relaxed line-clamp-2">
-                    {description}
+                <p className="text-gray-500 mt-2 text-sm leading-relaxed line-clamp-2" dangerouslySetInnerHTML={{__html: description ?? ''}}>
+
                 </p>
             </div>
         </div>

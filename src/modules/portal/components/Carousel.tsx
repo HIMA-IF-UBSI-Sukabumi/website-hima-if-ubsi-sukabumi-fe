@@ -2,11 +2,13 @@
 
 import {useEffect, useState} from "react";
 import {FiArrowLeft, FiArrowRight} from "react-icons/fi";
+import Link from "next/link";
 
 export type CarouselItem = {
     title: string;
     description: string | null;
     image: string;
+    href: string;
 }
 
 type CarouselProps = {
@@ -51,24 +53,27 @@ const Carousel = ({items, autoSlide = true, interval = 7000}: CarouselProps) => 
                         alt={item.title}
                     />
 
-                    <div className="absolute inset-0 bg-primary/70 md:bg-primary/60" />
+                    <div className="absolute inset-0 bg-primary/70 md:bg-primary/60"/>
 
-                    <div className="absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-5 md:p-8 rounded-2xl w-[85%] sm:w-[80%] max-w-sm md:max-w-xl lg:max-w-2xl shadow-lg">
-                        <span className="text-[10px] md:text-xs bg-primary font-black text-white px-2 py-1 md:px-3 md:py-1 rounded-full capitalize">
-                          UPCOMING EVENT
-                        </span>
+                    <div className="absolute inset-0 flex items-center justify-center md:justify-start md:pl-16">
+                        <div
+                            className="bg-white/80 backdrop-blur-md p-5 md:p-8 rounded-2xl w-[85%] sm:w-[80%] max-w-sm md:max-w-xl lg:max-w-2xl shadow-lg">
+                            <span
+                                className="text-[10px] md:text-xs bg-primary font-black text-white px-2 py-1 md:px-3 md:py-1 rounded-full capitalize">
+                                UPCOMING EVENT
+                            </span>
 
-                        <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl mt-3 md:mt-4 font-archivo capitalize font-bold leading-tight">
-                            {item.title}
-                        </h2>
+                            <h2 className="text-md sm:text-xl md:text-2xl lg:text-3xl mt-3 md:mt-4 font-archivo capitalize font-bold leading-tight">
+                                {item.title}
+                            </h2>
 
-                        <p className="text-secondary text-xs sm:text-sm md:text-lg font-medium mt-2 md:mt-3 line-clamp-2 md:line-clamp-none">
-                            {item.description}
-                        </p>
-
-                        <button className="mt-4 md:mt-6 px-4 md:px-5 py-2 text-xs sm:text-base bg-gray-200 font-bold rounded-full hover:bg-gray-300 transition">
-                            Details
-                        </button>
+                            <Link
+                                href={item.href}
+                                className="mt-6 inline-flex px-4 md:px-5 py-2 text-xs sm:text-base bg-gray-200 font-bold rounded-full hover:bg-gray-300 transition"
+                            >
+                                Lihat Detail
+                            </Link>
+                        </div>
                     </div>
                 </div>
             ))}
@@ -77,13 +82,13 @@ const Carousel = ({items, autoSlide = true, interval = 7000}: CarouselProps) => 
                 onClick={prevSlide}
                 className="hidden md:block absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full z-50 transition shadow-sm"
             >
-                <FiArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+                <FiArrowLeft className="w-4 h-4 md:w-5 md:h-5"/>
             </button>
             <button
                 onClick={nextSlide}
                 className="hidden md:block absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full z-50 transition shadow-sm"
             >
-                <FiArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+                <FiArrowRight className="w-4 h-4 md:w-5 md:h-5"/>
             </button>
 
             <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-50">

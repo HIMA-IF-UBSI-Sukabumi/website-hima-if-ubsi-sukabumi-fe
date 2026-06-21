@@ -7,10 +7,18 @@ export const newsService = {
         author_id: string | null,
     ) => simpleRequest<PaginatedResponse<NewsResponse>>('GET', 'news')(client, {
         author_id
-    })
+    }),
+    findBySlug: (
+        client: AxiosInstance,
+        slug: string,
+    ) => simpleRequest<DetailNewsResponse>('GET', `news/${slug}`)(client)
 }
 
 export interface NewsResponse {
+    news: News
+}
+
+export interface News {
     id: string;
     title: string;
     content: string;
@@ -28,4 +36,32 @@ export interface NewsResponse {
     category: string[];
     cover: string | null;
     slug?: string | null;
+}
+
+export interface DetailNewsResponse {
+    news: NewsDetail;
+}
+
+export interface NewsDetail {
+    id: string;
+    title: string;
+    slug: string;
+    content: string;
+    author: string;
+    published_at: string;
+    status: string;
+    category: string[];
+    cover: string;
+    created_at: string;
+    updated_at: string;
+    related_news: RelatedNews[];
+}
+
+export interface RelatedNews {
+    id: string;
+    title: string;
+    slug: string;
+    cover: string;
+    published_at: string;
+    category: string[];
 }

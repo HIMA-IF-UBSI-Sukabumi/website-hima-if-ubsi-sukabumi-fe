@@ -1,4 +1,4 @@
-import ModulePortalEventDetailPage from "@/modules/portal/pages/event-detail.page";
+import ModulePortalEventDetailPage from "@/modules/portal/pages/activity-detail.page";
 import {Metadata} from "next";
 import {dummyEvents} from "@/constants/dummy-events";
 
