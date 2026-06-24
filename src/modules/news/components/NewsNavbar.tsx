@@ -1,11 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import {useState, useEffect, useRef} from 'react'
-import {HiBars3, HiXMark, HiMagnifyingGlass, HiChevronDown} from 'react-icons/hi2'
-import {FaInstagram} from 'react-icons/fa6'
-import {HiOutlineEnvelope} from 'react-icons/hi2'
-import {NEWS_CATEGORIES} from '@/modules/news/services/api/news.service'
+import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import { HiBars3, HiXMark, HiMagnifyingGlass, HiChevronDown } from 'react-icons/hi2'
+import { FaInstagram } from 'react-icons/fa6'
+import { HiOutlineEnvelope } from 'react-icons/hi2'
+import { useQuery } from '@tanstack/react-query'
+import useAxios from '@/core/hooks/use-axios'
+import { newsService, Category } from '@/modules/news/services/api/news.service'
 
 type NewsNavbarProps = {
     onSearch?: (query: string) => void
@@ -19,7 +22,9 @@ const TICKER_MESSAGES = [
     'Informasi terkini seputar dunia informatika dan akademik',
 ]
 
-const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProps) => {
+const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarProps) => {
+    const axios = useAxios()
+    const pathname = usePathname()
     const [mobileOpen, setMobileOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
@@ -27,6 +32,20 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
     const [scrolled, setScrolled] = useState(false)
     const [mobileCatOpen, setMobileCatOpen] = useState(false)
     const searchRef = useRef<HTMLInputElement>(null)
+
+    // ── Fetch categories dari API ──
+    const { data: categoriesData } = useQuery({
+        queryKey: ['news-categories'],
+        queryFn: async () => await newsService.findCategories(axios),
+        staleTime: 10 * 60 * 1000,
+    })
+    const categories: Category[] = categoriesData?.categories ?? []
+
+    // Deteksi active category: dari prop (news-list filter) ATAU dari URL path (/category/[slug])
+    const pathCategorySlug = pathname?.startsWith('/category/')
+        ? pathname.replace('/category/', '').split('/')[0]
+        : null
+    const effectiveActiveCategory = activeCategory ?? pathCategorySlug
 
     const now = new Date()
     const dateStr = now.toLocaleDateString('id-ID', {
@@ -70,6 +89,10 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
         setMobileCatOpen(false)
     }
 
+    const activeCategoryName = effectiveActiveCategory
+        ? categories.find(c => c.slug === effectiveActiveCategory)?.name ?? effectiveActiveCategory
+        : 'Semua'
+
     const mainSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
     return (
@@ -85,7 +108,7 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                         <p
                             key={tickerIndex}
                             className="truncate animate-[fadeIn_0.5s_ease] font-medium"
-                            style={{animation: 'fadeIn 0.5s ease'}}
+                            style={{ animation: 'fadeIn 0.5s ease' }}
                         >
                             {TICKER_MESSAGES[tickerIndex]}
                         </p>
@@ -135,7 +158,7 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                     >
                         <div
                             className="flex items-center w-full bg-smoky rounded-full px-4 py-2 gap-2 focus-within:ring-2 focus-within:ring-primary/30 transition">
-                            <HiMagnifyingGlass className="w-4 h-4 text-gray-400 shrink-0"/>
+                            <HiMagnifyingGlass className="w-4 h-4 text-gray-400 shrink-0" />
                             <input
                                 type="text"
                                 value={searchQuery}
@@ -154,13 +177,13 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                             rel="noopener noreferrer"
                             className="hidden sm:flex w-8 h-8 items-center justify-center rounded-full hover:bg-smoky transition text-gray-500 hover:text-primary"
                         >
-                            <FaInstagram className="w-4 h-4"/>
+                            <FaInstagram className="w-4 h-4" />
                         </a>
                         <a
                             href="mailto:himaif.smi@bsi.ac.id"
                             className="hidden sm:flex w-8 h-8 items-center justify-center rounded-full hover:bg-smoky transition text-gray-500 hover:text-primary"
                         >
-                            <HiOutlineEnvelope className="w-4 h-4"/>
+                            <HiOutlineEnvelope className="w-4 h-4" />
                         </a>
 
                         {/* Mobile search toggle */}
@@ -168,7 +191,7 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                             onClick={() => setSearchOpen(!searchOpen)}
                             className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-smoky transition"
                         >
-                            <HiMagnifyingGlass className="w-5 h-5 text-gray-600"/>
+                            <HiMagnifyingGlass className="w-5 h-5 text-gray-600" />
                         </button>
 
                         {/* Mobile hamburger */}
@@ -177,8 +200,8 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                             className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-smoky transition"
                         >
                             {mobileOpen
-                                ? <HiXMark className="w-5 h-5 text-gray-600"/>
-                                : <HiBars3 className="w-5 h-5 text-gray-600"/>
+                                ? <HiXMark className="w-5 h-5 text-gray-600" />
+                                : <HiBars3 className="w-5 h-5 text-gray-600" />
                             }
                         </button>
                     </div>
@@ -190,7 +213,7 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                         <form onSubmit={handleSearch}>
                             <div
                                 className="flex items-center w-full bg-smoky rounded-full px-4 py-2.5 gap-2 focus-within:ring-2 focus-within:ring-primary/30 transition">
-                                <HiMagnifyingGlass className="w-4 h-4 text-gray-400 shrink-0"/>
+                                <HiMagnifyingGlass className="w-4 h-4 text-gray-400 shrink-0" />
                                 <input
                                     ref={searchRef}
                                     type="text"
@@ -210,35 +233,44 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                 <div className="max-w-7xl mx-auto px-4">
                     {/* Desktop categories */}
                     <div className="hidden md:flex items-center gap-1 overflow-x-auto scrollbar-hide py-0.5">
-                        {NEWS_CATEGORIES.map((cat) => {
-                            const isActive = activeCategory === cat.value
+                        {/* "Semua" button */}
+                        <Link
+                            href={'/'}
+                            className={`px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition border-b-2 ${effectiveActiveCategory === null
+                                ? 'text-primary border-primary'
+                                : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
+                                }`}
+                        >
+                            Semua
+                        </Link>
+
+                        {/* Dynamic categories dari API */}
+                        {categories.map((cat) => {
+                            const isActive = effectiveActiveCategory === cat.slug
                             return (
-                                <button
-                                    key={cat.label}
-                                    onClick={() => handleCategory(cat.value)}
-                                    className={`px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition border-b-2 ${
-                                        isActive
-                                            ? 'text-primary border-primary'
-                                            : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
-                                    }`}
+                                <Link
+                                    key={cat.id}
+                                    href={`/category/${cat.slug}`}
+                                    className={`px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition border-b-2 ${isActive
+                                        ? 'text-primary border-primary'
+                                        : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
+                                        }`}
                                 >
-                                    {cat.label}
-                                </button>
+                                    {cat.name}
+                                </Link>
                             )
                         })}
                     </div>
 
-                    {/* Mobile categories — collapsed dropdown */}
+                    {/* Mobile categories — collapsed dropdown trigger */}
                     <div className="md:hidden flex items-center justify-between py-2">
                         <button
                             onClick={() => setMobileCatOpen(!mobileCatOpen)}
                             className="flex items-center gap-2 text-sm font-semibold text-gray-700 py-1"
                         >
-                            <span>
-                                {NEWS_CATEGORIES.find(c => c.value === activeCategory)?.label || 'Semua'}
-                            </span>
+                            <span>{activeCategoryName}</span>
                             <HiChevronDown
-                                className={`w-4 h-4 transition-transform ${mobileCatOpen ? 'rotate-180' : ''}`}/>
+                                className={`w-4 h-4 transition-transform ${mobileCatOpen ? 'rotate-180' : ''}`} />
                         </button>
                         <span className="text-xs text-gray-400">Kategori</span>
                     </div>
@@ -265,20 +297,30 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                         </a>
                         <div className="border-t border-gray-100 mt-2 pt-3">
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-2">Kategori</p>
-                            {NEWS_CATEGORIES.map((cat) => {
-                                const isActive = activeCategory === cat.value
+                            {/* Semua */}
+                            <Link
+                                href={'/'}
+                                className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${effectiveActiveCategory === null
+                                    ? 'bg-primary text-white'
+                                    : 'text-gray-600 hover:bg-smoky'
+                                    }`}
+                            >
+                                Semua
+                            </Link>
+                            {/* Dynamic */}
+                            {categories.map((cat) => {
+                                const isActive = effectiveActiveCategory === cat.slug
                                 return (
-                                    <button
-                                        key={cat.label}
-                                        onClick={() => handleCategory(cat.value)}
-                                        className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                                            isActive
-                                                ? 'bg-primary text-white'
-                                                : 'text-gray-600 hover:bg-smoky'
-                                        }`}
+                                    <Link
+                                        key={cat.id}
+                                        href={`/category/${cat.slug}`}
+                                        className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${isActive
+                                            ? 'bg-primary text-white'
+                                            : 'text-gray-600 hover:bg-smoky'
+                                            }`}
                                     >
-                                        {cat.label}
-                                    </button>
+                                        {cat.name}
+                                    </Link>
                                 )
                             })}
                         </div>
@@ -289,14 +331,14 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-2 text-sm text-gray-500 hover:text-primary transition"
                             >
-                                <FaInstagram className="w-4 h-4"/>
+                                <FaInstagram className="w-4 h-4" />
                                 Instagram
                             </a>
                             <a
                                 href="mailto:himaif.smi@bsi.ac.id"
                                 className="flex items-center gap-2 text-sm text-gray-500 hover:text-primary transition"
                             >
-                                <HiOutlineEnvelope className="w-4 h-4"/>
+                                <HiOutlineEnvelope className="w-4 h-4" />
                                 Email
                             </a>
                         </div>
@@ -308,20 +350,30 @@ const NewsNavbar = ({onSearch, onCategoryChange, activeCategory}: NewsNavbarProp
             {mobileCatOpen && !mobileOpen && (
                 <div className="md:hidden bg-white border-b border-gray-100 shadow-md">
                     <div className="max-w-7xl mx-auto px-4 py-2 grid grid-cols-3 gap-1">
-                        {NEWS_CATEGORIES.map((cat) => {
-                            const isActive = activeCategory === cat.value
+                        {/* Semua */}
+                        <button
+                            onClick={() => handleCategory(null)}
+                            className={`px-3 py-2 rounded-xl text-xs font-semibold text-center transition ${effectiveActiveCategory === null
+                                ? 'bg-primary text-white'
+                                : 'bg-smoky text-gray-600 hover:bg-primary/10 hover:text-primary'
+                                }`}
+                        >
+                            Semua
+                        </button>
+                        {/* Dynamic */}
+                        {categories.map((cat) => {
+                            const isActive = effectiveActiveCategory === cat.slug
                             return (
-                                <button
-                                    key={cat.label}
-                                    onClick={() => handleCategory(cat.value)}
-                                    className={`px-3 py-2 rounded-xl text-xs font-semibold text-center transition ${
-                                        isActive
-                                            ? 'bg-primary text-white'
-                                            : 'bg-smoky text-gray-600 hover:bg-primary/10 hover:text-primary'
-                                    }`}
+                                <Link
+                                    key={cat.id}
+                                    href={`/category/${cat.slug}`}
+                                    className={`px-3 py-2 rounded-xl text-xs font-semibold text-center transition ${isActive
+                                        ? 'bg-primary text-white'
+                                        : 'bg-smoky text-gray-600 hover:bg-primary/10 hover:text-primary'
+                                        }`}
                                 >
-                                    {cat.label}
-                                </button>
+                                    {cat.name}
+                                </Link>
                             )
                         })}
                     </div>

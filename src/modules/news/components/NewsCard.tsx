@@ -3,7 +3,7 @@ import {FiClock, FiTag} from 'react-icons/fi'
 
 type NewsCardProps = {
     title: string
-    description: string
+    description?: string
     image: string
     date: string
     category?: string
@@ -44,10 +44,12 @@ const NewsCard = ({
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight line-clamp-3 group-hover:text-tertiary transition duration-300">
                         {title}
                     </h2>
-                    <div
-                        className="mt-3 text-sm text-white/70 line-clamp-2 leading-relaxed"
-                        dangerouslySetInnerHTML={{__html: description}}
-                    />
+                    {description && (
+                        <div
+                            className="mt-3 text-sm text-white/70 line-clamp-2 leading-relaxed"
+                            dangerouslySetInnerHTML={{__html: description}}
+                        />
+                    )}
                     <div className="flex items-center gap-2 mt-4 text-xs text-white/50">
                         <FiClock className="w-3.5 h-3.5"/>
                         <span>{date}</span>
@@ -90,10 +92,12 @@ const NewsCard = ({
                 <h3 className="text-sm sm:text-base font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-primary transition duration-200">
                     {title}
                 </h3>
-                <div
-                    className="mt-2 text-xs text-gray-500 line-clamp-2 leading-relaxed flex-1"
-                    dangerouslySetInnerHTML={{__html: description}}
-                />
+                {description && (
+                    <div
+                        className="mt-2 text-xs text-gray-500 line-clamp-2 leading-relaxed flex-1"
+                        dangerouslySetInnerHTML={{__html: description}}
+                    />
+                )}
                 <div className="flex items-center gap-1.5 mt-3 text-xs text-gray-400 pt-3 border-t border-gray-50">
                     <FiClock className="w-3 h-3"/>
                     <span>{date}</span>

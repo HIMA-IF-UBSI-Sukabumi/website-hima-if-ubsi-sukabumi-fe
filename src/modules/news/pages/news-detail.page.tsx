@@ -2,7 +2,7 @@
 
 import {useQuery} from '@tanstack/react-query'
 import useAxios from '@/core/hooks/use-axios'
-import {newsService} from '@/modules/news/services/api/news.service'
+import {newsService, NEWS_CATEGORIES} from '@/modules/news/services/api/news.service'
 import {getStorageUrl, formatTimestamp} from '@/lib/utils'
 import {notFound} from 'next/navigation'
 import Link from 'next/link'
@@ -105,18 +105,13 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"/>
 
-                {/* Category badges over cover */}
-                {news.category?.length > 0 && (
+                {/* Category badge over cover */}
+                {news.category && (
                     <div className="absolute bottom-6 left-4 sm:left-8 flex flex-wrap gap-2">
-                        {news.category.map((cat) => (
-                            <span
-                                key={cat}
-                                className="inline-flex items-center gap-1 text-xs font-bold bg-primary text-white px-3 py-1 rounded-full"
-                            >
-                                <FiTag className="w-2.5 h-2.5"/>
-                                {cat}
-                            </span>
-                        ))}
+                        <span className="inline-flex items-center gap-1 text-xs font-bold bg-primary text-white px-3 py-1 rounded-full">
+                            <FiTag className="w-2.5 h-2.5"/>
+                            {news.category.name}
+                        </span>
                     </div>
                 )}
             </div>
@@ -179,17 +174,22 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                             dangerouslySetInnerHTML={{__html: news.content}}
                         />
 
-                        {/* Tags */}
-                        {news.category?.length > 0 && (
+                        {/* Tag Kategori */}
+                        {news.category && (
                             <div className="mt-10 pt-6 border-t border-gray-100 flex flex-wrap gap-2">
-                                {news.category.map((cat) => (
-                                    <Link
-                                        key={cat}
-                                        href={`/?category=${cat}`}
-                                        className="text-xs font-semibold text-secondary bg-smoky hover:bg-primary/10 hover:text-primary px-3 py-1.5 rounded-full transition"
+                                <Link
+                                    href={`/category/${news.category.slug}`}
+                                    className="text-xs font-semibold text-secondary bg-smoky hover:bg-primary/10 hover:text-primary px-3 py-1.5 rounded-full transition"
+                                >
+                                    #{news.category.name}
+                                </Link>
+                                {news.tags?.map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className="text-xs font-medium text-gray-400 bg-gray-50 px-3 py-1.5 rounded-full"
                                     >
-                                        #{cat}
-                                    </Link>
+                                        #{tag}
+                                    </span>
                                 ))}
                             </div>
                         )}
@@ -228,7 +228,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                                             <div key={item.id} className="py-1 first:pt-0 last:pb-0">
                                                 <NewsCardCompact
                                                     title={item.title}
-                                                    category={item.category?.[0]}
+                                                    category={item.category?.name}
                                                     image={`${storageUrl}/${item.cover}`}
                                                     date={item.published_at}
                                                     href={`/${item.slug}`}
@@ -254,13 +254,13 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                                     </h2>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {['Akademik', 'Organisasi', 'Acara', 'Prestasi', 'Teknologi', 'Umum'].map(cat => (
+                                    {NEWS_CATEGORIES.filter(c => c.value !== null).map(cat => (
                                         <Link
-                                            key={cat}
-                                            href={`/?category=${cat}`}
+                                            key={cat.value}
+                                            href={`/category/${cat.value?.toLowerCase()}`}
                                             className="text-xs font-semibold text-gray-600 bg-smoky hover:bg-primary hover:text-white px-3 py-1.5 rounded-full transition"
                                         >
-                                            {cat}
+                                            {cat.label}
                                         </Link>
                                     ))}
                                 </div>

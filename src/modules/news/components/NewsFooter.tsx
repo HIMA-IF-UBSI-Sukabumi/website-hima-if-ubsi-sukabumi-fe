@@ -1,12 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import {FaInstagram} from 'react-icons/fa6'
-import {HiOutlineEnvelope} from 'react-icons/hi2'
-import {NEWS_CATEGORIES} from '@/modules/news/services/api/news.service'
+import { FaInstagram } from 'react-icons/fa6'
+import { HiOutlineEnvelope } from 'react-icons/hi2'
+import { Category, NEWS_CATEGORIES, newsService } from '@/modules/news/services/api/news.service'
+import useAxios from '@/core/hooks/use-axios'
+import { usePathname } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 
 const NewsFooter = () => {
+    const axios = useAxios()
+    const pathname = usePathname()
     const mainSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+    // ── Fetch categories dari API ──
+    const { data: categoriesData } = useQuery({
+        queryKey: ['news-categories'],
+        queryFn: async () => await newsService.findCategories(axios),
+        staleTime: 10 * 60 * 1000,
+    })
+    const categories: Category[] = categoriesData?.categories ?? []
 
     return (
         <footer className="bg-primary text-white mt-auto">
@@ -43,13 +56,13 @@ const NewsFooter = () => {
                                 rel="noopener noreferrer"
                                 className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
                             >
-                                <FaInstagram className="w-4 h-4"/>
+                                <FaInstagram className="w-4 h-4" />
                             </a>
                             <a
                                 href="mailto:himaif.smi@bsi.ac.id"
                                 className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
                             >
-                                <HiOutlineEnvelope className="w-4 h-4"/>
+                                <HiOutlineEnvelope className="w-4 h-4" />
                             </a>
                         </div>
                     </div>
@@ -60,14 +73,14 @@ const NewsFooter = () => {
                             Kategori Berita
                         </h3>
                         <ul className="space-y-2.5">
-                            {NEWS_CATEGORIES.filter(c => c.value !== null).map((cat) => (
-                                <li key={cat.label}>
+                            {categories.map((cat) => (
+                                <li key={cat.id}>
                                     <Link
-                                        href={`/?category=${cat.value}`}
+                                        href={`/category/${cat.slug}`}
                                         className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group"
                                     >
-                                        <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0"/>
-                                        {cat.label}
+                                        <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
+                                        {cat.name}
                                     </Link>
                                 </li>
                             ))}
@@ -82,31 +95,31 @@ const NewsFooter = () => {
                         <ul className="space-y-2.5">
                             <li>
                                 <Link href="/" className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0"/>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
                                     Beranda Berita
                                 </Link>
                             </li>
                             <li>
                                 <a href={mainSiteUrl} className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0"/>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
                                     Portal HIMA-IF
                                 </a>
                             </li>
                             <li>
                                 <a href={`${mainSiteUrl}/about`} className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0"/>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
                                     Tentang Kami
                                 </a>
                             </li>
                             <li>
                                 <a href={`${mainSiteUrl}/activity`} className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0"/>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
                                     Kegiatan
                                 </a>
                             </li>
                             <li>
                                 <a href="mailto:himaif.smi@bsi.ac.id" className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0"/>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
                                     Kirim Tulisan
                                 </a>
                             </li>
