@@ -1,15 +1,8 @@
-import ModulePortalNewsPage from "@/modules/portal/pages/news.page";
-import {Metadata} from "next";
+import {redirect} from 'next/navigation'
 
-export const metadata: Metadata = {
-    title: "Berita - HIMA-IF UBSI PSDKU Sukabumi",
-    description: "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi",
+const NewsRedirectPage = () => {
+    const newsUrl = process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000'
+    redirect(newsUrl)
 }
 
-const Page = () => {
-    return (
-        <ModulePortalNewsPage/>
-    )
-}
-
-export default Page
+export default NewsRedirectPage

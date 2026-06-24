@@ -16,7 +16,7 @@ export const menus: Menu[] = [
     {label: 'Beranda', href: '/'},
     {label: 'Tentang', href: '/about'},
     {label: 'Kegiatan', href: '/activity'},
-    {label: 'Berita', href: '/news'},
+    {label: 'Berita', href: process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000'},
 ]
 
 const Navbar = () => {

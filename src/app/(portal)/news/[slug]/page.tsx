@@ -1,20 +1,13 @@
-import ModulePortalNewsDetailPage from "@/modules/portal/pages/news-detail.page";
-import {Metadata} from "next";
+import {redirect} from 'next/navigation'
 
 type Props = {
-    params: Promise<{ slug: string }>
+    params: Promise<{slug: string}>
 }
 
-export async function generateMetadata({params}: Props): Promise<Metadata> {
-    return {
-        title: "Berita – HIMA-IF UBSI PSDKU Sukabumi",
-        description: "Berita dan artikel dari HIMA-IF UBSI PSDKU Sukabumi"
-    };
+const NewsSlugRedirectPage = async ({params}: Props) => {
+    const {slug} = await params
+    const newsUrl = process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000'
+    redirect(`${newsUrl}/${slug}`)
 }
 
-const Page = async ({params}: Props) => {
-    const {slug} = await params;
-    return <ModulePortalNewsDetailPage slug={slug}/>;
-};
-
-export default Page;
+export default NewsSlugRedirectPage
