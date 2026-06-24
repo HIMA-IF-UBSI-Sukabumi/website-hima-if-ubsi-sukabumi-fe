@@ -1,26 +1,33 @@
 'use client'
 
-import {useQuery} from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import useAxios from '@/core/hooks/use-axios'
-import {newsService, NEWS_CATEGORIES} from '@/modules/news/services/api/news.service'
-import {getStorageUrl, formatTimestamp} from '@/lib/utils'
-import {notFound} from 'next/navigation'
+import { newsService, NEWS_CATEGORIES, Category } from '@/modules/news/services/api/news.service'
+import { getStorageUrl, formatTimestamp } from '@/lib/utils'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import {FiClock, FiTag, FiArrowLeft, FiShare2} from 'react-icons/fi'
+import { FiClock, FiTag, FiArrowLeft, FiShare2 } from 'react-icons/fi'
 import NewsCardCompact from '@/modules/news/components/NewsCardCompact'
 
 type NewsDetailPageProps = {
     slug: string
 }
 
-const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
+const ModuleNewsDetailPage = ({ slug }: NewsDetailPageProps) => {
     const axios = useAxios()
     const storageUrl = getStorageUrl()
 
-    const {data, isLoading, isError} = useQuery({
+    const { data, isLoading, isError } = useQuery({
         queryKey: ['news-detail', slug],
         queryFn: async () => await newsService.findBySlug(axios, slug),
     })
+
+    const { data: categoriesData } = useQuery({
+        queryKey: ['news-categories'],
+        queryFn: async () => await newsService.findCategories(axios),
+        staleTime: 10 * 60 * 1000,
+    })
+    const categories: Category[] = categoriesData?.categories ?? []
 
     // Estimate reading time
     const estimateReadTime = (html: string) => {
@@ -33,7 +40,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
             navigator.share({
                 title: data?.news?.title ?? '',
                 url: window.location.href,
-            }).catch(() => {})
+            }).catch(() => { })
         } else {
             navigator.clipboard.writeText(window.location.href).then(() => {
                 alert('Link disalin ke clipboard!')
@@ -46,22 +53,22 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
         return (
             <div className="animate-pulse">
                 {/* Cover skeleton */}
-                <div className="w-full h-64 sm:h-80 md:h-[460px] bg-gray-200"/>
+                <div className="w-full h-64 sm:h-80 md:h-[460px] bg-gray-200" />
                 <div className="max-w-5xl mx-auto px-4 py-8">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-4">
-                            <div className="h-4 w-32 bg-gray-200 rounded-full"/>
-                            <div className="h-8 w-3/4 bg-gray-200 rounded-full"/>
-                            <div className="h-4 w-1/2 bg-gray-200 rounded-full"/>
+                            <div className="h-4 w-32 bg-gray-200 rounded-full" />
+                            <div className="h-8 w-3/4 bg-gray-200 rounded-full" />
+                            <div className="h-4 w-1/2 bg-gray-200 rounded-full" />
                             <div className="space-y-2 mt-6">
                                 {[...Array(8)].map((_, i) => (
-                                    <div key={i} className="h-3.5 bg-gray-200 rounded-full" style={{width: `${70 + Math.random() * 30}%`}}/>
+                                    <div key={i} className="h-3.5 bg-gray-200 rounded-full" style={{ width: `${70 + Math.random() * 30}%` }} />
                                 ))}
                             </div>
                         </div>
                         <div className="space-y-3">
                             {[...Array(4)].map((_, i) => (
-                                <div key={i} className="h-20 bg-gray-200 rounded-2xl"/>
+                                <div key={i} className="h-20 bg-gray-200 rounded-2xl" />
                             ))}
                         </div>
                     </div>
@@ -79,7 +86,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                     href="/"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary/90 transition"
                 >
-                    <FiArrowLeft className="w-4 h-4"/>
+                    <FiArrowLeft className="w-4 h-4" />
                     Kembali ke Beranda
                 </Link>
             </div>
@@ -103,13 +110,13 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                     alt={news.title}
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
                 {/* Category badge over cover */}
                 {news.category && (
                     <div className="absolute bottom-6 left-4 sm:left-8 flex flex-wrap gap-2">
                         <span className="inline-flex items-center gap-1 text-xs font-bold bg-primary text-white px-3 py-1 rounded-full">
-                            <FiTag className="w-2.5 h-2.5"/>
+                            <FiTag className="w-2.5 h-2.5" />
                             {news.category.name}
                         </span>
                     </div>
@@ -124,7 +131,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                     href="/"
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:text-primary transition mb-6"
                 >
-                    <FiArrowLeft className="w-4 h-4"/>
+                    <FiArrowLeft className="w-4 h-4" />
                     Kembali ke Beranda Berita
                 </Link>
 
@@ -140,7 +147,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                         {/* Meta row */}
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-sm text-gray-500">
                             <div className="flex items-center gap-1.5">
-                                <FiClock className="w-4 h-4 shrink-0"/>
+                                <FiClock className="w-4 h-4 shrink-0" />
                                 <span>{news.published_at}</span>
                             </div>
                             <span className="text-gray-200">|</span>
@@ -157,21 +164,21 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                                 onClick={handleShare}
                                 className="ml-auto flex items-center gap-1.5 text-xs font-semibold text-primary border border-primary/30 px-3 py-1.5 rounded-full hover:bg-primary/5 transition"
                             >
-                                <FiShare2 className="w-3.5 h-3.5"/>
+                                <FiShare2 className="w-3.5 h-3.5" />
                                 Bagikan
                             </button>
                         </div>
 
                         {/* Divider */}
                         <div className="flex gap-1 mt-5 mb-6">
-                            <div className="h-1 w-12 bg-primary rounded-full"/>
-                            <div className="h-1 flex-1 bg-gray-100 rounded-full"/>
+                            <div className="h-1 w-12 bg-primary rounded-full" />
+                            <div className="h-1 flex-1 bg-gray-100 rounded-full" />
                         </div>
 
                         {/* Article body */}
                         <div
                             className="prose max-w-none prose-p:text-gray-600 prose-p:leading-relaxed prose-headings:text-black prose-headings:font-bold prose-a:text-primary prose-img:rounded-2xl prose-img:shadow-md text-justify"
-                            dangerouslySetInnerHTML={{__html: news.content}}
+                            dangerouslySetInnerHTML={{ __html: news.content }}
                         />
 
                         {/* Tag Kategori */}
@@ -204,7 +211,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                                 onClick={handleShare}
                                 className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-full hover:bg-primary/90 transition shrink-0"
                             >
-                                <FiShare2 className="w-4 h-4"/>
+                                <FiShare2 className="w-4 h-4" />
                                 Bagikan
                             </button>
                         </div>
@@ -218,7 +225,7 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                             {relatedNews.length > 0 && (
                                 <div className="bg-white rounded-3xl border border-gray-100 p-5">
                                     <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-50">
-                                        <div className="w-1 h-4 bg-primary rounded-full"/>
+                                        <div className="w-1 h-4 bg-primary rounded-full" />
                                         <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">
                                             Berita Terkait
                                         </h2>
@@ -248,19 +255,19 @@ const ModuleNewsDetailPage = ({slug}: NewsDetailPageProps) => {
                             {/* Categories box */}
                             <div className="bg-white rounded-3xl border border-gray-100 p-5">
                                 <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-50">
-                                    <div className="w-1 h-4 bg-primary rounded-full"/>
+                                    <div className="w-1 h-4 bg-primary rounded-full" />
                                     <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">
                                         Kategori
                                     </h2>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {NEWS_CATEGORIES.filter(c => c.value !== null).map(cat => (
+                                    {categories.map(cat => (
                                         <Link
-                                            key={cat.value}
-                                            href={`/category/${cat.value?.toLowerCase()}`}
+                                            key={cat.id}
+                                            href={`/category/${cat.slug}`}
                                             className="text-xs font-semibold text-gray-600 bg-smoky hover:bg-primary hover:text-white px-3 py-1.5 rounded-full transition"
                                         >
-                                            {cat.label}
+                                            {cat.name}
                                         </Link>
                                     ))}
                                 </div>
