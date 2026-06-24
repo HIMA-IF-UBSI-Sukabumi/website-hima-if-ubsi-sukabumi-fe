@@ -35,7 +35,8 @@ const MemberDepartment = ({data}: Props) => {
 
             {groupDivision &&
                 Object.entries(groupDivision).map(([division, members]) => {
-                    const count = members.length;
+                  const count = members.length;
+                  console.log(count)
 
                     const gridClass =
                         count === 1
@@ -45,7 +46,7 @@ const MemberDepartment = ({data}: Props) => {
                                 : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
 
                     return (
-                        <div key={division} className="w-full max-w-2xl mb-12">
+                        <div key={division} className="w-full max-w-6xl mb-12">
                             <h3 className="text-center font-bold text-2xl my-10">
                                 {division}
                             </h3>
