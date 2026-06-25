@@ -1,10 +1,10 @@
 'use client'
 
 import Link from "next/link"
-import {usePathname} from "next/navigation"
-import {HiUserCircle, HiBars3, HiXMark, HiArrowUp, HiArrowDown} from "react-icons/hi2"
-import {useState} from "react"
-import {cn} from "@/lib/utils";
+import { usePathname } from "next/navigation"
+import { HiBars3, HiXMark, HiArrowDown } from "react-icons/hi2"
+import { useState } from "react"
+import { cn } from "@/lib/utils";
 
 type Menu = {
     label: string
@@ -13,10 +13,10 @@ type Menu = {
 }
 
 export const menus: Menu[] = [
-    {label: 'Beranda', href: '/'},
-    {label: 'Tentang', href: '/about'},
-    {label: 'Kegiatan', href: '/activity'},
-    {label: 'Berita', href: process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000'},
+    { label: 'Beranda', href: '/' },
+    { label: 'Tentang', href: '/about' },
+    { label: 'Kegiatan', href: '/activity' },
+    { label: 'Berita', href: process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000' },
 ]
 
 const Navbar = () => {
@@ -29,13 +29,16 @@ const Navbar = () => {
             <nav
                 className="flex items-center justify-between rounded-full bg-white/90 px-6 py-3 shadow-lg shadow-black backdrop-blur-md">
 
-                <div className="flex items-center gap-3">
-                    <img src="/assets/logo-himaif.webp" className={'w-16 h-16 pointer-events-none'} alt="Logo HIMA-IF"/>
+                <Link
+                    href={'/'}
+                    className="flex items-center gap-3"
+                >
+                    <img src="/assets/logo-himaif.webp" className={'w-16 h-16 pointer-events-none'} alt="Logo HIMA-IF" />
                     <div className="leading-tight block">
                         <h1 className="text-xl font-black text-black">HIMA-IF</h1>
                         <p className="text-sm text-black">UBSI PSDKU Sukabumi</p>
                     </div>
-                </div>
+                </Link>
 
                 <div className="hidden md:flex items-center gap-2">
                     {menus.map(menu => {
@@ -108,7 +111,7 @@ const Navbar = () => {
                     onClick={() => setOpen(!open)}
                     className="md:hidden rounded-full p-2 hover:bg-gray-100"
                 >
-                    {open ? <HiXMark className="h-6 w-6"/> : <HiBars3 className="h-6 w-6"/>}
+                    {open ? <HiXMark className="h-6 w-6" /> : <HiBars3 className="h-6 w-6" />}
                 </button>
             </nav>
 
@@ -146,7 +149,7 @@ const Navbar = () => {
                                                     submenuOpen === menu.label && 'rotate-180'
                                                 )}
                                             >
-                                                <HiArrowDown/>
+                                                <HiArrowDown />
                                             </span>
                                         </button>
 
