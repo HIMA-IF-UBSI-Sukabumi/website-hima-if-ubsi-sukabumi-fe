@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@opennextjs/cloudflare": "^1.19.11",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/react-query": "^5.90.18",
@@ -45,7 +46,8 @@
     "eslint": "^9",
     "eslint-config-next": "^16.2.9",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.104.0"
   },
   "ignoreScripts": [
     "sharp",
