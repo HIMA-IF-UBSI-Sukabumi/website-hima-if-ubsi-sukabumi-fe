@@ -4,6 +4,9 @@ import ModulePortalLandingPage from "@/modules/portal/pages/landing.page";
 export const metadata: Metadata = {
     title: "Beranda - HIMA-IF UBSI PSDKU Sukabumi",
     description: "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi",
+    alternates: {
+        canonical: '/',
+    },
 }
 
 const Page = () => {

@@ -1,3 +1,4 @@
+import { getNewsUrl } from '@/lib/utils'
 import ModuleNewsCategoryPage from '@/modules/news/pages/news-category.page'
 import {Metadata} from 'next'
 
@@ -8,7 +9,7 @@ type Props = {
 export async function generateMetadata({params}: Props): Promise<Metadata> {
     const {categorySlug} = await params
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080/api'
-    const siteUrl = process.env.NEXT_PUBLIC_NEWS_URL ?? 'http://news.localhost:3000'
+    const siteUrl = getNewsUrl()
     const canonicalUrl = `${siteUrl}/category/${categorySlug}`
 
     // Default fallback
