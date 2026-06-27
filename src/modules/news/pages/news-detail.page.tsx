@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { FiClock, FiTag, FiArrowLeft, FiShare2 } from 'react-icons/fi'
 import NewsCardCompact from '@/modules/news/components/NewsCardCompact'
+import { useMemo } from 'react'
 
 type NewsDetailPageProps = {
     slug: string
@@ -48,6 +49,8 @@ const ModuleNewsDetailPage = ({ slug }: NewsDetailPageProps) => {
         }
     }
 
+    const widths = ["72%", "85%", "91%", "77%", "96%"];
+
     // Loading skeleton
     if (isLoading) {
         return (
@@ -62,7 +65,7 @@ const ModuleNewsDetailPage = ({ slug }: NewsDetailPageProps) => {
                             <div className="h-4 w-1/2 bg-gray-200 rounded-full" />
                             <div className="space-y-2 mt-6">
                                 {[...Array(8)].map((_, i) => (
-                                    <div key={i} className="h-3.5 bg-gray-200 rounded-full" style={{ width: `${70 + Math.random() * 30}%` }} />
+                                    <div key={i} className="h-3.5 bg-gray-200 rounded-full" style={{ width: widths[i & widths.length] }} />
                                 ))}
                             </div>
                         </div>
