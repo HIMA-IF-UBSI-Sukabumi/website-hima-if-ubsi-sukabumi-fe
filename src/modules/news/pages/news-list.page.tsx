@@ -8,7 +8,7 @@ import {formatTimestamp, getStorageUrl} from '@/lib/utils'
 import NewsNavbar from '@/modules/news/components/NewsNavbar'
 import NewsCard from '@/modules/news/components/NewsCard'
 import NewsCardCompact from '@/modules/news/components/NewsCardCompact'
-import {FiRefreshCw, FiSearch, FiInbox, FiTrendingUp, FiStar, FiArrowRight, FiGrid} from 'react-icons/fi'
+import {FiRefreshCw, FiSearch, FiInbox, FiTrendingUp, FiStar, FiArrowRight, FiGrid, FiEye} from 'react-icons/fi'
 import Link from 'next/link'
 
 // ── Empty state inline (untuk section yang belum ada data) ──
@@ -151,26 +151,23 @@ const ModuleNewsListPage = () => {
                 activeCategory={activeCategory}
             />
 
-            <main className="max-w-7xl mx-auto px-4 py-6 sm:py-8 space-y-12">
+            <main className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start">
 
-                {/* ── HERO FEATURED ── */}
-                {!isFiltering && (
-                    <section>
-                        <div className="flex items-center gap-2 mb-5">
-                            <FiStar className="w-4 h-4 text-primary"/>
-                            <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Berita Unggulan</h2>
-                        </div>
+                    {/* ── KOLOM KIRI: Konten Utama ── */}
+                    <div className="space-y-12 min-w-0">
 
-                        {featuredLoading ? (
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 animate-pulse">
-                                <div className="lg:col-span-2 h-80 bg-gray-200 rounded-3xl"/>
-                                <div className="space-y-3">
-                                    {[...Array(4)].map((_, i) => <div key={i} className="h-16 bg-gray-200 rounded-2xl"/>)}
+                        {/* ── HERO FEATURED ── */}
+                        {!isFiltering && (
+                            <section>
+                                <div className="flex items-center gap-2 mb-5">
+                                    <FiStar className="w-4 h-4 text-primary"/>
+                                    <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Berita Unggulan</h2>
                                 </div>
-                            </div>
-                        ) : heroNews ? (
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
-                                <div className="lg:col-span-2">
+
+                                {featuredLoading ? (
+                                    <div className="h-80 bg-gray-200 rounded-3xl animate-pulse"/>
+                                ) : heroNews ? (
                                     <NewsCard
                                         featured
                                         title={heroNews.title}
@@ -179,213 +176,279 @@ const ModuleNewsListPage = () => {
                                         category={heroNews.category?.name}
                                         href={`/${heroNews.slug}`}
                                     />
+                                ) : (
+                                    <SectionEmpty message="Belum ada berita unggulan saat ini"/>
+                                )}
+                            </section>
+                        )}
+
+                        {/* ── FEATURED LAINNYA ── */}
+                        {!isFiltering && heroSidebarNews.length > 0 && (
+                            <section>
+                                <div className="flex items-center gap-2 mb-4">
+                                    <div className="w-1 h-4 bg-primary rounded-full"/>
+                                    <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Featured Lainnya</h2>
                                 </div>
-                                <div className="lg:col-span-1 flex flex-col">
-                                    <div className="bg-white rounded-3xl border border-gray-100 p-4 flex-1">
-                                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-50">
-                                            <div className="w-1 h-4 bg-primary rounded-full"/>
-                                            <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">
-                                                Featured Lainnya
-                                            </h2>
-                                        </div>
-                                        {heroSidebarNews.length > 0 ? (
-                                            <div className="flex flex-col divide-y divide-gray-50">
-                                                {heroSidebarNews.map((item, i) => (
-                                                    <div key={item.id} className="py-1 first:pt-0 last:pb-0">
-                                                        <NewsCardCompact
-                                                            title={item.title}
-                                                            category={item.category?.name}
-                                                            image={`${storageUrl}/${item.cover}`}
-                                                            date={formatTimestamp(item.published_at)}
-                                                            href={`/${item.slug}`}
-                                                            index={i}
-                                                        />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {heroSidebarNews.map((item) => (
+                                        <NewsCard
+                                            key={item.id}
+                                            title={item.title}
+                                            image={`${storageUrl}/${item.cover}`}
+                                            date={formatTimestamp(item.published_at)}
+                                            category={item.category?.name}
+                                            href={`/${item.slug}`}
+                                        />
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* ── POPULAR: MOBILE ONLY (di atas Jelajah Kategori) ── */}
+                        {!isFiltering && popularNewsList.length > 0 && (
+                            <section className="lg:hidden">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <FiTrendingUp className="w-4 h-4 text-primary"/>
+                                    <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Paling Banyak Dibaca</h2>
+                                </div>
+                                <div className="bg-white rounded-3xl border border-gray-100 p-4">
+                                    <div className="flex flex-col divide-y divide-gray-50">
+                                        {popularNewsList.slice(0, 5).map((item, i) => (
+                                            <Link
+                                                key={item.id}
+                                                href={`/${item.slug}`}
+                                                className="group flex items-start gap-3 py-3 first:pt-0 last:pb-0 hover:bg-gray-50/80 rounded-xl transition -mx-2 px-2"
+                                            >
+                                                <span className={`shrink-0 w-6 h-6 rounded-full text-[10px] font-black flex items-center justify-center mt-0.5 ${
+                                                    i === 0 ? 'bg-primary text-white' :
+                                                    i === 1 ? 'bg-secondary text-white' :
+                                                    i === 2 ? 'bg-amber-400 text-white' :
+                                                    'bg-gray-100 text-gray-500'
+                                                }`}>{i + 1}</span>
+                                                <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-gray-100">
+                                                    <img src={`${storageUrl}/${item.cover}`} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300"/>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    {item.category?.name && (
+                                                        <span className="text-[10px] font-bold text-primary uppercase tracking-wide">{item.category.name}</span>
+                                                    )}
+                                                    <p className="text-xs font-bold text-gray-800 leading-snug line-clamp-2 group-hover:text-primary transition mt-0.5">{item.title}</p>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <p className="text-[10px] text-gray-400">{formatTimestamp(item.published_at)}</p>
+                                                        <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                                                            <FiEye className="w-3 h-3"/>
+                                                            {item.view_count.toLocaleString('id-ID')}
+                                                        </span>
                                                     </div>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <p className="text-xs text-gray-400 text-center py-4">
-                                                Belum ada berita unggulan lainnya
-                                            </p>
-                                        )}
+                                                </div>
+                                            </Link>
+                                        ))}
                                     </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <SectionEmpty message="Belum ada berita unggulan saat ini"/>
+                            </section>
                         )}
-                    </section>
-                )}
 
-                {/* ── POPULAR NEWS ── */}
-                {!isFiltering && (
-                    <section>
-                        <div className="flex items-center gap-2 mb-5">
-                            <FiTrendingUp className="w-4 h-4 text-primary"/>
-                            <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">
-                                Paling Banyak Dibaca
-                            </h2>
-                        </div>
+                        {/* ── CATEGORIES QUICK NAV ── */}
+                        {!isFiltering && (
+                            <section>
+                                <div className="flex items-center gap-2 mb-4">
+                                    <FiGrid className="w-4 h-4 text-primary"/>
+                                    <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Jelajah Kategori</h2>
+                                </div>
 
-                        {popularLoading ? (
-                            <div className="grid grid-cols-5 gap-4 animate-pulse">
-                                {[...Array(5)].map((_, i) => <div key={i} className="h-48 bg-gray-200 rounded-2xl"/>)}
+                                {categoriesLoading ? (
+                                    <div className="flex gap-2 animate-pulse">
+                                        {[...Array(5)].map((_, i) => <div key={i} className="h-10 w-24 bg-gray-200 rounded-full"/>)}
+                                    </div>
+                                ) : categoriesList.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {categoriesList.map(cat => (
+                                            <Link
+                                                key={cat.id}
+                                                href={`/category/${cat.slug}`}
+                                                className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-full border border-gray-100 hover:border-primary hover:bg-primary hover:text-white transition-all duration-200 text-sm font-semibold text-gray-700 shadow-sm"
+                                            >
+                                                {cat.name}
+                                                {cat.published_news_count !== undefined && (
+                                                    <span className="text-xs text-gray-400 group-hover:text-white/70 transition">
+                                                        {cat.published_news_count}
+                                                    </span>
+                                                )}
+                                                <FiArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition"/>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <SectionEmpty message="Belum ada kategori tersedia"/>
+                                )}
+                            </section>
+                        )}
+
+                        {/* ── ALL NEWS ── */}
+                        <section>
+                            <div className="flex items-center justify-between mb-5 gap-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1 h-5 bg-primary rounded-full"/>
+                                    <h2 className="font-black text-gray-900">
+                                        {searchQuery
+                                            ? `Hasil Pencarian "${searchQuery}"`
+                                            : activeCategoryName
+                                                ? `Kategori: ${activeCategoryName}`
+                                                : 'Semua Berita'
+                                        }
+                                    </h2>
+                                    <span className="text-xs text-gray-400 font-medium">
+                                        ({allNews.length} dimuat)
+                                    </span>
+                                </div>
+
+                                <div className="hidden sm:flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-gray-100 focus-within:border-primary/40 transition">
+                                    <FiSearch className="w-4 h-4 text-gray-400"/>
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        placeholder="Cari berita..."
+                                        className="text-sm outline-none bg-transparent text-gray-700 placeholder:text-gray-400 w-40"
+                                    />
+                                </div>
                             </div>
-                        ) : popularNewsList.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                                {popularNewsList.slice(0, 5).map((item, i) => (
-                                    <Link
-                                        key={item.id}
-                                        href={`/${item.slug}`}
-                                        className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+
+                            {allNews.length === 0 && (
+                                <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-smoky mb-4">
+                                        <FiInbox className="w-7 h-7 text-gray-400"/>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-gray-800 mb-1">Tidak ada berita ditemukan</h3>
+                                    <p className="text-sm text-gray-500">
+                                        {searchQuery ? `Tidak ada hasil untuk "${searchQuery}"` : 'Belum ada berita di kategori ini'}
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setSearchQuery('')
+                                            setActiveCategory(null)
+                                        }}
+                                        className="mt-5 px-5 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-full hover:bg-primary/5 transition"
                                     >
-                                        <div className="relative overflow-hidden h-36">
-                                            <img
-                                                src={`${storageUrl}/${item.cover}`}
-                                                alt={item.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                            />
-                                            <span className="absolute top-2 left-2 w-7 h-7 rounded-full bg-primary text-white text-xs font-black flex items-center justify-center shadow">
-                                                {i + 1}
-                                            </span>
-                                            {item.category?.name && (
-                                                <span className="absolute bottom-2 left-2 text-[10px] font-bold bg-black/60 text-white px-2 py-0.5 rounded-full">
-                                                    {item.category.name}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="p-3 flex-1">
-                                            <p className="text-xs font-bold text-gray-800 leading-snug line-clamp-2 group-hover:text-primary transition">
-                                                {item.title}
-                                            </p>
-                                            <p className="text-[10px] text-gray-400 mt-1.5">{formatTimestamp(item.published_at)}</p>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <SectionEmpty message="Belum ada data berita populer"/>
-                        )}
-                    </section>
-                )}
+                                        Tampilkan Semua
+                                    </button>
+                                </div>
+                            )}
 
-                {/* ── CATEGORIES QUICK NAV ── */}
-                {!isFiltering && (
-                    <section>
-                        <div className="flex items-center gap-2 mb-4">
-                            <FiGrid className="w-4 h-4 text-primary"/>
-                            <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">Jelajah Kategori</h2>
-                        </div>
+                            {allNews.length > 0 && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                                    {allNews.map((item) => (
+                                        <NewsCard
+                                            key={item.news.id}
+                                            title={item.news.title}
+                                            image={`${storageUrl}/${item.news.cover}`}
+                                            date={formatTimestamp(item.news.created_at)}
+                                            category={item.news.category?.name}
+                                            href={`/${item.news.slug}`}
+                                        />
+                                    ))}
+                                </div>
+                            )}
 
-                        {categoriesLoading ? (
-                            <div className="flex gap-2 animate-pulse">
-                                {[...Array(5)].map((_, i) => <div key={i} className="h-10 w-24 bg-gray-200 rounded-full"/>)}
-                            </div>
-                        ) : categoriesList.length > 0 ? (
-                            <div className="flex flex-wrap gap-2">
-                                {categoriesList.map(cat => (
-                                    <Link
-                                        key={cat.id}
-                                        href={`/category/${cat.slug}`}
-                                        className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-full border border-gray-100 hover:border-primary hover:bg-primary hover:text-white transition-all duration-200 text-sm font-semibold text-gray-700 shadow-sm"
+                            {hasNextPage && (
+                                <div className="flex justify-center mt-10">
+                                    <button
+                                        onClick={() => fetchNextPage()}
+                                        disabled={isFetchingNextPage}
+                                        className="px-8 py-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-full hover:border-primary hover:text-primary transition-all duration-200 shadow-sm hover:shadow-md text-sm disabled:opacity-50"
                                     >
-                                        {cat.name}
-                                        {cat.published_news_count !== undefined && (
-                                            <span className="text-xs text-gray-400 group-hover:text-white/70 transition">
-                                                {cat.published_news_count}
-                                            </span>
-                                        )}
-                                        <FiArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition"/>
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <SectionEmpty message="Belum ada kategori tersedia"/>
-                        )}
-                    </section>
-                )}
-
-                {/* ── ALL NEWS ── */}
-                <section>
-                    <div className="flex items-center justify-between mb-5 gap-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-1 h-5 bg-primary rounded-full"/>
-                            <h2 className="font-black text-gray-900">
-                                {searchQuery
-                                    ? `Hasil Pencarian "${searchQuery}"`
-                                    : activeCategoryName
-                                        ? `Kategori: ${activeCategoryName}`
-                                        : 'Semua Berita'
-                                }
-                            </h2>
-                            <span className="text-xs text-gray-400 font-medium">
-                                ({allNews.length} dimuat)
-                            </span>
-                        </div>
-
-                        <div className="hidden sm:flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-gray-100 focus-within:border-primary/40 transition">
-                            <FiSearch className="w-4 h-4 text-gray-400"/>
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Cari berita..."
-                                className="text-sm outline-none bg-transparent text-gray-700 placeholder:text-gray-400 w-40"
-                            />
-                        </div>
+                                        {isFetchingNextPage ? 'Memuat...' : 'Muat Lebih Banyak'}
+                                    </button>
+                                </div>
+                            )}
+                        </section>
                     </div>
 
-                    {allNews.length === 0 && (
-                        <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
-                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-smoky mb-4">
-                                <FiInbox className="w-7 h-7 text-gray-400"/>
+                    {/* ── KOLOM KANAN: Sidebar Popular ── */}
+                    {!isFiltering && (
+                        <aside className="hidden lg:block">
+                            <div className="sticky top-[130px]">
+                                <div className="bg-white rounded-3xl border border-gray-100 p-5">
+                                    <div className="flex items-center gap-2 mb-5 pb-3 border-b border-gray-50">
+                                        <FiTrendingUp className="w-4 h-4 text-primary"/>
+                                        <h2 className="text-sm font-black text-gray-900 uppercase tracking-wide">
+                                            Paling Banyak Dibaca
+                                        </h2>
+                                    </div>
+
+                                    {popularLoading ? (
+                                        <div className="space-y-3 animate-pulse">
+                                            {[...Array(5)].map((_, i) => (
+                                                <div key={i} className="flex gap-3">
+                                                    <div className="w-16 h-16 bg-gray-200 rounded-xl shrink-0"/>
+                                                    <div className="flex-1 space-y-2 py-1">
+                                                        <div className="h-3 bg-gray-200 rounded-full w-full"/>
+                                                        <div className="h-3 bg-gray-200 rounded-full w-3/4"/>
+                                                        <div className="h-2.5 bg-gray-200 rounded-full w-1/2"/>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : popularNewsList.length > 0 ? (
+                                        <div className="flex flex-col gap-1 divide-y divide-gray-50">
+                                            {popularNewsList.slice(0, 7).map((item, i) => (
+                                                <Link
+                                                    key={item.id}
+                                                    href={`/${item.slug}`}
+                                                    className="group flex items-start gap-3 py-3 first:pt-0 last:pb-0 hover:bg-gray-50/80 rounded-xl transition -mx-2 px-2"
+                                                >
+                                                    {/* Rank badge */}
+                                                    <span className={`shrink-0 w-6 h-6 rounded-full text-[10px] font-black flex items-center justify-center mt-0.5 ${
+                                                        i === 0 ? 'bg-primary text-white' :
+                                                        i === 1 ? 'bg-secondary text-white' :
+                                                        i === 2 ? 'bg-amber-400 text-white' :
+                                                        'bg-gray-100 text-gray-500'
+                                                    }`}>
+                                                        {i + 1}
+                                                    </span>
+
+                                                    {/* Thumbnail */}
+                                                    <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-gray-100">
+                                                        <img
+                                                            src={`${storageUrl}/${item.cover}`}
+                                                            alt={item.title}
+                                                            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                                        />
+                                                    </div>
+
+                                                    {/* Text */}
+                                                    <div className="flex-1 min-w-0">
+                                                        {item.category?.name && (
+                                                            <span className="text-[10px] font-bold text-primary uppercase tracking-wide">
+                                                                {item.category.name}
+                                                            </span>
+                                                        )}
+                                                        <p className="text-xs font-bold text-gray-800 leading-snug line-clamp-2 group-hover:text-primary transition mt-0.5">
+                                                            {item.title}
+                                                        </p>
+                                                        <div className="flex items-center gap-2 mt-1">
+                                                            <p className="text-[10px] text-gray-400">{formatTimestamp(item.published_at)}</p>
+                                                            <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                                                                <FiEye className="w-3 h-3"/>
+                                                                {item.view_count.toLocaleString('id-ID')}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <SectionEmpty message="Belum ada data berita populer"/>
+                                    )}
+                                </div>
                             </div>
-                            <h3 className="text-lg font-bold text-gray-800 mb-1">Tidak ada berita ditemukan</h3>
-                            <p className="text-sm text-gray-500">
-                                {searchQuery ? `Tidak ada hasil untuk "${searchQuery}"` : 'Belum ada berita di kategori ini'}
-                            </p>
-                            <button
-                                onClick={() => {
-                                    setSearchQuery('')
-                                    setActiveCategory(null)
-                                }}
-                                className="mt-5 px-5 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-full hover:bg-primary/5 transition"
-                            >
-                                Tampilkan Semua
-                            </button>
-                        </div>
+                        </aside>
                     )}
-
-                    {allNews.length > 0 && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                            {allNews.map((item) => (
-                                <NewsCard
-                                    key={item.news.id}
-                                    title={item.news.title}
-                                    image={`${storageUrl}/${item.news.cover}`}
-                                    date={formatTimestamp(item.news.created_at)}
-                                    category={item.news.category?.name}
-                                    href={`/${item.news.slug}`}
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {hasNextPage && (
-                        <div className="flex justify-center mt-10">
-                            <button
-                                onClick={() => fetchNextPage()}
-                                disabled={isFetchingNextPage}
-                                className="px-8 py-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-full hover:border-primary hover:text-primary transition-all duration-200 shadow-sm hover:shadow-md text-sm disabled:opacity-50"
-                            >
-                                {isFetchingNextPage ? 'Memuat...' : 'Muat Lebih Banyak'}
-                            </button>
-                        </div>
-                    )}
-                </section>
+                </div>
             </main>
         </div>
     )
 }
 
 export default ModuleNewsListPage
+

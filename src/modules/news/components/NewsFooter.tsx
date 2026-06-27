@@ -130,12 +130,9 @@ const NewsFooter = () => {
 
             {/* Bottom bar */}
             <div className="border-t border-white/10">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/40">
+                <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/40 text-center">
                     <p>
                         © {new Date().getFullYear()} HIMA-IF UBSI PSDKU Sukabumi. Semua hak cipta dilindungi.
-                    </p>
-                    <p>
-                        Portal Berita Resmi
                     </p>
                 </div>
             </div>

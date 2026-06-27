@@ -7,7 +7,7 @@ import { getStorageUrl, formatTimestamp, getNewsUrl } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { FiClock, FiTag, FiArrowLeft, FiShare2 } from 'react-icons/fi'
+import { FiClock, FiTag, FiArrowLeft, FiShare2, FiEye } from 'react-icons/fi'
 import NewsCardCompact from '@/modules/news/components/NewsCardCompact'
 import { useMemo } from 'react'
 
@@ -231,6 +231,11 @@ const ModuleNewsDetailPage = ({ slug }: NewsDetailPageProps) => {
                             </div>
                             <span className="text-gray-200">|</span>
                             <span className="text-gray-400">{readTime} menit baca</span>
+                            <span className="text-gray-200">|</span>
+                            <span className="flex items-center gap-1 text-gray-400">
+                                <FiEye className="w-4 h-4 shrink-0" />
+                                {news.view_count.toLocaleString('id-ID')} kali dilihat
+                            </span>
                             {news.author && (
                                 <>
                                     <span className="text-gray-200">|</span>
