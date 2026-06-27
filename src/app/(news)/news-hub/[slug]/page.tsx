@@ -1,3 +1,4 @@
+import { getNewsUrl } from '@/lib/utils'
 import ModuleNewsDetailPage from '@/modules/news/pages/news-detail.page'
 import {Metadata} from 'next'
 
@@ -17,7 +18,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     const {slug} = await params
     const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080/api'
     const storageUrl = process.env.NEXT_PUBLIC_STORAGE_URL ?? 'http://localhost:8080/storage'
-    const siteUrl = process.env.NEXT_PUBLIC_NEWS_URL ?? 'http://news.localhost:3000'
+    const siteUrl = getNewsUrl()
 
     try {
         const res = await fetch(`${apiUrl}/news/${slug}`, {

@@ -61,7 +61,7 @@ export function proxy(request: NextRequest) {
         if (isLocal) {
             redirect.host = `${mappedSubdomain}.localhost${url.port ? `:${url.port}` : ''}`
         } else {
-            redirect.host = `${mappedSubdomain}.${siteDomain}${url.port ? `:${url.port}` : ''}`
+            redirect.host = `${mappedSubdomain}.${siteDomain}`
         }
 
         redirect.pathname =
