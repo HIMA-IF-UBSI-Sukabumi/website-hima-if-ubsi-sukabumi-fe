@@ -4,7 +4,7 @@ import {useInfiniteQuery, useQuery} from '@tanstack/react-query'
 import {useMemo} from 'react'
 import useAxios from '@/core/hooks/use-axios'
 import {newsService} from '@/modules/news/services/api/news.service'
-import {formatTimestamp, getStorageUrl} from '@/lib/utils'
+import {formatTimestamp, getStorageUrl, getNewsUrl} from '@/lib/utils'
 import NewsNavbar from '@/modules/news/components/NewsNavbar'
 import NewsCard from '@/modules/news/components/NewsCard'
 import NewsCardCompact from '@/modules/news/components/NewsCardCompact'
@@ -94,8 +94,39 @@ const ModuleNewsCategoryPage = ({categorySlug}: NewsCategoryPageProps) => {
         )
     }
 
+    const jsonLdBreadcrumb = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Beranda Berita',
+                item: getNewsUrl(),
+            },
+            {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Kategori',
+                item: getNewsUrl('/category'),
+            },
+            ...(category ? [{
+                '@type': 'ListItem',
+                position: 3,
+                name: category.name,
+                item: getNewsUrl(`/category/${category.slug}`),
+            }] : []),
+        ],
+    }
+
     return (
         <div className="min-h-screen bg-gray-50/50">
+            {/* ── JSON-LD Structured Data ── */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLdBreadcrumb)}}
+            />
+
             <NewsNavbar/>
 
             <main className="max-w-7xl mx-auto px-4 py-6 sm:py-8">

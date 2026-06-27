@@ -3,9 +3,10 @@
 import { useQuery } from '@tanstack/react-query'
 import useAxios from '@/core/hooks/use-axios'
 import { newsService, NEWS_CATEGORIES, Category } from '@/modules/news/services/api/news.service'
-import { getStorageUrl, formatTimestamp } from '@/lib/utils'
+import { getStorageUrl, formatTimestamp, getNewsUrl } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FiClock, FiTag, FiArrowLeft, FiShare2 } from 'react-icons/fi'
 import NewsCardCompact from '@/modules/news/components/NewsCardCompact'
 import { useMemo } from 'react'
@@ -104,15 +105,90 @@ const ModuleNewsDetailPage = ({ slug }: NewsDetailPageProps) => {
     const relatedNews = news.related_news ?? []
     const readTime = estimateReadTime(news.content)
 
+    // ── JSON-LD: NewsArticle + BreadcrumbList ──
+    const newsUrl = `${getNewsUrl()}/${news.slug}`
+    const jsonLdArticle = {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        headline: news.title,
+        description: news.content
+            ? news.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160)
+            : `Baca artikel ${news.title} di HIMA-IF News`,
+        image: news.cover ? [`${storageUrl}/${news.cover}`] : [],
+        datePublished: news.published_at,
+        dateModified: news.updated_at,
+        author: news.author
+            ? [{"@type": 'Person', name: news.author}]
+            : [{"@type": 'Organization', name: 'HIMA-IF UBSI PSDKU Sukabumi'}],
+        publisher: {
+            '@type': 'Organization',
+            name: 'HIMA-IF UBSI PSDKU Sukabumi',
+            url: getNewsUrl(),
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': newsUrl,
+        },
+        articleSection: news.category?.name ?? 'Berita',
+        keywords: [
+            news.category?.name,
+            ...(news.tags ?? []),
+            'HIMA-IF', 'UBSI Sukabumi',
+        ].filter(Boolean).join(', '),
+        url: newsUrl,
+        inLanguage: 'id',
+    }
+    const jsonLdBreadcrumb = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Beranda Berita',
+                item: getNewsUrl(),
+            },
+            ...(news.category ? [{
+                '@type': 'ListItem',
+                position: 2,
+                name: news.category.name,
+                item: `${getNewsUrl()}/category/${news.category.slug}`,
+            }] : []),
+            {
+                '@type': 'ListItem',
+                position: news.category ? 3 : 2,
+                name: news.title,
+                item: newsUrl,
+            },
+        ],
+    }
+
     return (
         <div>
+            {/* ── JSON-LD Structured Data ── */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLdArticle)}}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLdBreadcrumb)}}
+            />
+
             {/* ── CINEMATIC COVER ── */}
             <div className="relative w-full h-56 sm:h-80 md:h-[460px] overflow-hidden">
-                <img
-                    src={`${storageUrl}/${news.cover}`}
-                    alt={news.title}
-                    className="w-full h-full object-cover"
-                />
+                {news.cover ? (
+                    <Image
+                        src={`${storageUrl}/${news.cover}`}
+                        alt={news.title}
+                        fill
+                        priority
+                        className="object-cover"
+                        sizes="100vw"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gray-200" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
                 {/* Category badge over cover */}

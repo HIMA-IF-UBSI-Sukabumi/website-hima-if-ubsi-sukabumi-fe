@@ -7,10 +7,40 @@ export const metadata: Metadata = {
         template: '%s | HIMA-IF News',
     },
     description: 'Portal berita resmi Himpunan Mahasiswa Informatika UBSI PSDKU Sukabumi. Informasi terkini seputar akademik, organisasi, dan kegiatan kampus.',
-    keywords: ['HIMA-IF', 'UBSI', 'Sukabumi', 'berita', 'informatika', 'mahasiswa'],
+    keywords: [
+        'HIMA-IF', 'UBSI', 'Sukabumi', 'berita', 'informatika', 'mahasiswa',
+        'Himpunan Mahasiswa Informatika', 'UBSI PSDKU Sukabumi', 'berita kampus',
+    ],
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-snippet': -1,
+            'max-image-preview': 'large',
+            'max-video-preview': -1,
+        },
+    },
     openGraph: {
         siteName: 'HIMA-IF News',
         locale: 'id_ID',
+        type: 'website',
+        url: '/news-hub',
+        images: [
+            {
+                url: '/favicon.ico',
+                width: 1200,
+                height: 630,
+                alt: 'HIMA-IF News – Portal Berita Resmi HIMA-IF UBSI PSDKU Sukabumi',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        site: '@himaifubsi',
+        title: 'HIMA-IF News – Portal Berita Resmi',
+        description: 'Portal berita resmi Himpunan Mahasiswa Informatika UBSI PSDKU Sukabumi.',
     },
 }
 
