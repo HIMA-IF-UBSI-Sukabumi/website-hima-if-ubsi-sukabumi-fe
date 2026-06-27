@@ -32,9 +32,8 @@ export function proxy(request: NextRequest) {
     /**
      * Base domain from .env
      */
-    const siteDomain = new URL(
-        process.env.NEXT_PUBLIC_SITE_URL!
-    ).hostname
+    const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL!)
+    const siteDomain = siteUrl.hostname
 
     /**
      * Parse current hostname
@@ -61,7 +60,9 @@ export function proxy(request: NextRequest) {
         if (isLocal) {
             redirect.host = `${mappedSubdomain}.localhost${url.port ? `:${url.port}` : ''}`
         } else {
+            redirect.protocol = siteUrl.protocol
             redirect.host = `${mappedSubdomain}.${siteDomain}`
+            redirect.port = ''
         }
 
         redirect.pathname =
