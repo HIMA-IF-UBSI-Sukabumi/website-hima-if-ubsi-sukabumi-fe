@@ -1,29 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server'
+import {
+    parseHost,
+    ROUTE_SUBDOMAINS,
+    SUBDOMAIN_ROUTES,
+} from '@/lib/subdomain'
 
 export function proxy(request: NextRequest) {
-    const hostname = request.headers.get('host') || ''
-    const newsSubdomain = process.env.NEWS_SUBDOMAIN || 'news'
+    const url = request.nextUrl.clone()
+    const pathname = url.pathname
 
-    const isNewsSubdomain =
-        hostname === `${newsSubdomain}.localhost` ||
-        hostname.startsWith(`${newsSubdomain}.localhost:`) ||
-        hostname.startsWith(`${newsSubdomain}.himaifubsismi`)
+    /**
+     * Ignore Next.js internals, APIs and static assets.
+     */
+    if (
+        pathname.startsWith('/_next') ||
+        pathname.startsWith('/api') ||
+        /\.[^/]+$/.test(pathname)
+    ) {
+        return NextResponse.next()
+    }
 
-    if (isNewsSubdomain) {
-        const url = request.nextUrl.clone()
-        const pathname = url.pathname
+    /**
+     * Example:
+     * localhost:3000
+     * news.localhost:3000
+     * himaifubsismi.or.id
+     * news.himaifubsismi.or.id
+     */
+    const host = request.headers.get('host') ?? ''
 
-        if (
-            pathname.startsWith('/_next') ||
-            pathname.startsWith('/api') ||
-            pathname.startsWith('/news-hub') ||
-            /\.[a-z]{2,4}$/i.test(pathname)
-        ) {
-            return NextResponse.next()
+    /**
+     * Base domain from .env
+     */
+    const siteDomain = new URL(
+        process.env.NEXT_PUBLIC_SITE_URL!
+    ).hostname
+
+    /**
+     * Parse current hostname
+     */
+    const { hostname, subdomain, isLocal } = parseHost(
+        host,
+        siteDomain,
+    )
+
+    /**
+     * --------------------------------------------------
+     * Redirect internal folders to subdomains
+     *
+     * /news-hub/article
+     * -> news.domain.com/article
+     * --------------------------------------------------
+     */
+    const firstSegment = pathname.split('/')[1]
+    const mappedSubdomain = ROUTE_SUBDOMAINS[firstSegment]
+
+    if (mappedSubdomain && subdomain !== mappedSubdomain) {
+        const redirect = url.clone()
+
+        if (isLocal) {
+            redirect.host = `${mappedSubdomain}.localhost${url.port ? `:${url.port}` : ''}`
+        } else {
+            redirect.host = `${mappedSubdomain}.${siteDomain}${url.port ? `:${url.port}` : ''}`
         }
 
-        url.pathname = `/news-hub${pathname === '/' ? '' : pathname}`
-        return NextResponse.rewrite(url)
+        redirect.pathname =
+            pathname.replace(`/${firstSegment}`, '') || '/'
+
+        return NextResponse.redirect(redirect)
+    }
+
+    /**
+     * --------------------------------------------------
+     * Rewrite subdomain to internal folder
+     *
+     * news.domain.com/article
+     * -> /news-hub/article
+     * --------------------------------------------------
+     */
+    const mappedFolder = SUBDOMAIN_ROUTES[subdomain]
+
+    if (mappedFolder) {
+        if (!pathname.startsWith(`/${mappedFolder}`)) {
+            url.pathname = `/${mappedFolder}${pathname === '/' ? '' : pathname}`
+
+            return NextResponse.rewrite(url)
+        }
     }
 
     return NextResponse.next()
@@ -31,13 +93,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization)
-         * - favicon.ico
-         * - public assets
-         */
         '/((?!_next/static|_next/image|favicon.ico|assets).*)',
     ],
 }

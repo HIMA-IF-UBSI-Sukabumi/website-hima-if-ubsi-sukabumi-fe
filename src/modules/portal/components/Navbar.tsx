@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { HiBars3, HiXMark, HiArrowDown } from "react-icons/hi2"
 import { useState } from "react"
-import { cn } from "@/lib/utils";
+import { cn, getSubdomainUrl } from "@/lib/utils";
 
 type Menu = {
     label: string
@@ -16,7 +16,7 @@ export const menus: Menu[] = [
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/about' },
     { label: 'Kegiatan', href: '/activity' },
-    { label: 'Berita', href: process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000' },
+    { label: 'Berita', href: getSubdomainUrl('news') },
 ]
 
 const Navbar = () => {

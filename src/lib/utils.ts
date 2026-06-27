@@ -1,5 +1,5 @@
-import {clsx, type ClassValue} from "clsx";
-import {twMerge} from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -7,12 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getStorageUrl = () => {
     return process.env.NEXT_PUBLIC_STORAGE_URL;
-}
-
-export const getNewsUrl = (path?: string) => {
-    const base = process.env.NEXT_PUBLIC_NEWS_URL || 'http://news.localhost:3000'
-    if (!path) return base
-    return `${base}${path.startsWith('/') ? path : `/${path}`}`
 }
 
 export function formatTimestamp(timestamp: string) {
@@ -35,3 +29,17 @@ export const formatDate = (dateStr: string) => {
         return dateStr;
     }
 };
+
+export function getSubdomainUrl(subdomain: string) {
+    const site = new URL(process.env.NEXT_PUBLIC_SITE_URL!)
+
+    if (site.hostname === 'localhost') {
+        return `${site.protocol}//${subdomain}.localhost${site.port ? `:${site.port}` : ''}`
+    }
+
+    return `${site.protocol}//${subdomain}.${site.hostname}${site.port ? `:${site.port}` : ''}`
+}
+
+export const getNewsUrl = (path?: string) => {
+    return getSubdomainUrl('news') + (path?.startsWith('/') ? path : `/${path}` || '')
+}
