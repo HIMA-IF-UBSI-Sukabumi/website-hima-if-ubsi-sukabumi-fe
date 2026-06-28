@@ -1,19 +1,76 @@
+'use client';
+
+import { useRef } from "react";
 import Link from "next/link";
 import {HiArrowUpRight} from "react-icons/hi2";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 const AboutLanding = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useGSAP(() => {
+        // Slide up left content
+        gsap.from(".about-content > *", {
+            scrollTrigger: {
+                trigger: ".about-content",
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            y: 40,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power3.out"
+        });
+
+        // Scale up Vision bubble
+        gsap.from(".vision-box", {
+            scrollTrigger: {
+                trigger: ".vision-box",
+                start: "top 85%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            scale: 0.8,
+            y: 40,
+            duration: 1.2,
+            ease: "back.out(1.5)"
+        });
+
+        // Scale up Mission bubble
+        gsap.from(".mission-box", {
+            scrollTrigger: {
+                trigger: ".mission-box",
+                start: "top 85%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            scale: 0.8,
+            y: 40,
+            duration: 1.2,
+            ease: "back.out(1.5)"
+        });
+    }, { scope: containerRef });
+
     return (
-        <section className={'relative overflow-hidden'}>
+        <section ref={containerRef} className={'relative overflow-hidden'}>
             <img
                 src={'/assets/aurora-glow.webp'}
                 className={'absolute right-0 top-0 -z-20 w-auto'}
+                alt=""
             />
 
             <div
                 className="relative flex flex-col-reverse md:flex-row items-center justify-between mx-auto max-w-7xl px-4 py-24 md:py-48 sm:px-6 lg:px-8 gap-8 md:gap-16"
             >
                 <div
-                    className="w-full md:w-1/2 flex flex-col gap-4 order-2 md:order-1 items-center text-center md:items-start md:text-left"
+                    className="about-content w-full md:w-1/2 flex flex-col gap-4 order-2 md:order-1 items-center text-center md:items-start md:text-left"
                 >
                     <h3 className="text-lg font-medium text-secondary mb-8">
                         Tentang
@@ -41,7 +98,7 @@ const AboutLanding = () => {
 
 
                 <div className="max-w-6xl mx-auto px-6 relative order-1 md:order-2">
-                    <div className="relative max-w-xl border border-tertiary rounded-b-4xl px-12 py-14 bg-transparent">
+                    <div className="vision-box relative max-w-xl border border-tertiary rounded-b-4xl px-12 py-14 bg-transparent">
                         <p className="text-black leading-relaxed text-center font-medium">
                             Bergerak Bersama mahasiswa Informatika demi mewujudkan Himpunan
                             Mahasiswa Informatika Kampus Sukabumi Sebagai Organisasi yang lebih
@@ -63,7 +120,7 @@ const AboutLanding = () => {
                     </div>
 
                     <div
-                        className="relative max-w-xl ml-auto mt-40 border border-tertiary rounded-t-4xl px-12 py-14 bg-transparent"
+                        className="mission-box relative max-w-xl ml-auto mt-40 border border-tertiary rounded-t-4xl px-12 py-14 bg-transparent"
                     >
                         <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 z-20">
                             <div className="relative w-28 h-28 rounded-full">

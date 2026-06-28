@@ -1,12 +1,18 @@
+'use client';
+
+import { useRef } from "react";
 import {DepartmentDataProps} from "@/constants/department";
 import CardBph from "@/modules/portal/components/CardBph";
 import CardMember from "@/modules/portal/components/CardMember";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 type Props = {
     data?: DepartmentDataProps;
 };
 
 const MemberDepartment = ({data}: Props) => {
+    const containerRef = useRef<HTMLDivElement>(null);
     const leader = data?.team?.find(member => member.isLeader);
     const members = data?.team?.filter(member => !member.isLeader) || [];
 
@@ -21,10 +27,34 @@ const MemberDepartment = ({data}: Props) => {
         return acc;
     }, {} as Record<string, typeof members>);
 
+    useGSAP(() => {
+        if (!data) return;
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        if (leader && document.querySelector(".leader-container")) {
+            tl.from(".leader-container", {
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            });
+        }
+
+        if (document.querySelector(".division-container")) {
+            gsap.from(".division-container", {
+                opacity: 0,
+                y: 45,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+        }
+    }, { scope: containerRef, dependencies: [data?.slug] });
+
     return (
-        <section className="relative overflow-hidden flex flex-col items-center pb-20 px-4">
+        <section ref={containerRef} className="relative overflow-hidden flex flex-col items-center pb-20 px-4">
             {leader && (
-                <div className="flex justify-center mb-10 w-full">
+                <div className="leader-container flex justify-center mb-10 w-full">
                     <CardBph
                         imageUrl={leader.img}
                         title={leader.division}
@@ -36,7 +66,6 @@ const MemberDepartment = ({data}: Props) => {
             {groupDivision &&
                 Object.entries(groupDivision).map(([division, members]) => {
                   const count = members.length;
-                  console.log(count)
 
                     const gridClass =
                         count === 1
@@ -46,7 +75,7 @@ const MemberDepartment = ({data}: Props) => {
                                 : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
 
                     return (
-                        <div key={division} className="w-full max-w-6xl mb-12">
+                        <div key={division} className="division-container w-full max-w-6xl mb-12">
                             <h3 className="text-center font-bold text-2xl my-10">
                                 {division}
                             </h3>

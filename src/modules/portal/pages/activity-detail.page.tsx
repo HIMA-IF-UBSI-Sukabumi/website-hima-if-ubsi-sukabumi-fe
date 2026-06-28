@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from "react";
 import {
     FiArrowLeft,
     FiCalendar,
@@ -13,6 +14,8 @@ import useAxios from "@/core/hooks/use-axios";
 import {eventService, RelatedEventResponse} from "@/modules/portal/services/api/event.service";
 import {notFound} from "next/navigation";
 import {formatTimestamp, formatDate, getStorageUrl} from "@/lib/utils";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 type EventDetailPageProps = {
     slug: string;
@@ -33,6 +36,7 @@ const statusColor: Record<string, string> = {
 };
 
 const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
     const axios = useAxios();
     const storageUrl = getStorageUrl();
 
@@ -42,6 +46,77 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
     });
 
     const eventData = event.data?.event;
+
+    useGSAP(() => {
+        if (!eventData) return;
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        if (document.querySelector(".back-link")) {
+            tl.from(".back-link", {
+                opacity: 0,
+                x: -20,
+                duration: 0.6
+            });
+        }
+
+        if (document.querySelector(".detail-badge")) {
+            tl.from(".detail-badge", {
+                opacity: 0,
+                y: 10,
+                stagger: 0.1,
+                duration: 0.5
+            }, "-=0.4");
+        }
+
+        if (document.querySelector(".detail-title")) {
+            tl.from(".detail-title", {
+                opacity: 0,
+                y: 20,
+                duration: 0.6
+            }, "-=0.4");
+        }
+
+        if (document.querySelector(".detail-image-wrapper")) {
+            tl.from(".detail-image-wrapper", {
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            }, "-=0.4");
+        }
+
+        if (document.querySelector(".detail-description")) {
+            tl.from(".detail-description", {
+                opacity: 0,
+                y: 25,
+                duration: 0.8
+            }, "-=0.5");
+        }
+
+        if (document.querySelector(".detail-info-card")) {
+            tl.from(".detail-info-card", {
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            }, "-=0.8");
+        }
+
+        if (document.querySelector(".detail-register-btn")) {
+            tl.from(".detail-register-btn", {
+                opacity: 0,
+                y: 20,
+                duration: 0.6
+            }, "-=0.5");
+        }
+
+        if (document.querySelector(".related-events-section")) {
+            tl.from(".related-events-section", {
+                opacity: 0,
+                y: 30,
+                duration: 0.8
+            }, "-=0.6");
+        }
+    }, { scope: containerRef, dependencies: [eventData?.id] });
 
     if (event.isLoading) {
         return (
@@ -128,10 +203,10 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
     const relatedEvents = eventData.related_events ?? [];
 
     return (
-        <section className="mt-32 pb-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section ref={containerRef} className="mt-32 pb-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Link
                 href="/activity"
-                className="inline-flex items-center gap-2 text-secondary hover:text-primary transition font-medium text-sm mb-8"
+                className="back-link inline-flex items-center gap-2 text-secondary hover:text-primary transition font-medium text-sm mb-8"
             >
                 <FiArrowLeft className="w-4 h-4"/>
                 Kembali ke Kegiatan
@@ -143,27 +218,27 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
 
                         {eventStatus === "upcoming" && (
                             <span
-                                className="inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full bg-primary text-white">
+                                className="detail-badge inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full bg-primary text-white">
                                 🚀 Upcoming Event
                             </span>
                         )}
 
                         {eventStatus === "ongoing" && (
                             <span
-                                className="inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full bg-green-500 text-white">
+                                className="detail-badge inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full bg-green-500 text-white">
                                 🔥 Sedang Berlangsung
                             </span>
                         )}
 
                         {eventStatus === "past" && (
                             <span
-                                className="inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full bg-gray-200 text-gray-700">
+                                className="detail-badge inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full bg-gray-200 text-gray-700">
                                 ✅ Selesai
                             </span>
                         )}
 
                         <span
-                            className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full ${
+                            className={`detail-badge inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full ${
                                 statusColor[eventData.status] ??
                                 "bg-gray-100 text-gray-600"
                             }`}
@@ -173,11 +248,11 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
 
                     </div>
 
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-archivo font-bold text-black leading-tight">
+                    <h1 className="detail-title text-xl sm:text-2xl md:text-3xl font-archivo font-bold text-black leading-tight">
                         {eventData.title}
                     </h1>
 
-                    <div className="mt-6 rounded-3xl overflow-hidden border shadow-md">
+                    <div className="detail-image-wrapper mt-6 rounded-3xl overflow-hidden border shadow-md">
                         <img
                             src={`${storageUrl}/${eventData.cover_image}`}
                             alt={eventData.title}
@@ -186,7 +261,7 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
                     </div>
 
                     {eventData.description && (
-                        <div className="mt-8">
+                        <div className="detail-description mt-8">
                             <div
                                 className="prose prose-sm max-w-none text-justify"
                                 dangerouslySetInnerHTML={{
@@ -199,7 +274,7 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
 
                 <div className="lg:col-span-1">
                     <div className="sticky top-36 space-y-4">
-                        <div className="bg-white rounded-3xl border border-smoky shadow-sm p-6 space-y-5">
+                        <div className="detail-info-card bg-white rounded-3xl border border-smoky shadow-sm p-6 space-y-5">
                             <h2 className="text-base font-black text-black">Detail Acara</h2>
                             <div className="flex items-start gap-3">
                                 <div
@@ -261,14 +336,14 @@ const ModulePortalEventDetailPage = ({slug}: EventDetailPageProps) => {
                                 <a
                                     href={eventData.form_link}
                                     target="_blank"
-                                    className="w-full bg-primary text-white font-bold py-3 rounded-2xl hover:bg-primary/90 transition text-sm flex items-center justify-center gap-2"
+                                    className="detail-register-btn w-full bg-primary text-white font-bold py-3 rounded-2xl hover:bg-primary/90 transition text-sm flex items-center justify-center gap-2"
                                 >
                                     <FiUsers className="w-4 h-4"/>
                                     Daftar Sekarang
                                 </a>
                             )}
 
-                        <div>
+                        <div className="related-events-section">
                             <h2 className="text-base font-black mb-3">
                                 Acara Lainnya
                             </h2>
