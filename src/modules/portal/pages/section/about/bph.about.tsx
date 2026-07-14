@@ -1,66 +1,111 @@
+"use client";
+
 import CardBph from "@/modules/portal/components/CardBph";
-import {BPH_DATA} from "@/constants/bph";
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "@/core/hooks/use-axios";
+import { bphService } from "@/modules/portal/services/api/bph.service";
+import { getStorageUrl } from "@/lib/utils";
 
 const BphAbout = () => {
-    return (
-        <section className="relative overflow-hidden flex flex-col items-center pb-20">
-            <h3 className="text-3xl text-secondary font-thin mb-10">
-                Struktur Kepengurusan
-            </h3>
+  const axios = useAxios();
+  const storageUrl = getStorageUrl();
 
-            <div className="relative inline-block mb-16">
-                <img
-                    src="/assets/aurora-many-blobs.webp"
-                    alt="bg"
-                    className="block w-100 xl:w-125 max-w-full"
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["bph"],
+    queryFn: async () => await bphService.findAll(axios),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  if (isError) {
+    console.error("Failed to fetch BPH data");
+  }
+
+  const bphList = data ?? [];
+  const resolveImage = (path: string) => (path ? `${storageUrl}/${path}` : "");
+
+  return (
+    <section className="relative overflow-hidden flex flex-col items-center pb-20">
+      <h3 className="text-3xl text-secondary font-thin mb-10">
+        Struktur Kepengurusan
+      </h3>
+
+      <div className="relative inline-block mb-16">
+        <img
+          src="/assets/aurora-many-blobs.webp"
+          alt="bg"
+          className="block w-100 xl:w-125 max-w-full"
+        />
+
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-4xl md:text-5xl font-black uppercase text-white tracking-[-2px] leading-[0.9] italic text-center">
+            Badan <br /> Pengurus Harian
+          </h1>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="flex flex-col items-center gap-6 md:gap-8 w-full max-w-5xl px-4 mt-8 animate-pulse">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="w-85 h-100 rounded-3xl bg-gray-200" />
+            ))}
+          </div>
+          <div className="flex justify-center w-full">
+            <div className="w-85 h-100 rounded-3xl bg-gray-200" />
+          </div>
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="w-85 h-100 rounded-3xl bg-gray-200" />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-6 md:gap-8 w-full max-w-5xl px-4 mt-8">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
+            {bphList.slice(0, 2).map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-center w-full md:w-auto"
+              >
+                <CardBph
+                  title={item.title}
+                  name={item.name}
+                  imageUrl={resolveImage(item.image)}
                 />
+              </div>
+            ))}
+          </div>
 
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <h1 className="text-4xl md:text-5xl font-black uppercase text-white tracking-[-2px] leading-[0.9] italic text-center">
-                        Badan <br/> Pengurus Harian
-                    </h1>
-                </div>
-            </div>
+          <div className="flex justify-center w-full z-10">
+            {bphList.slice(2, 3).map((item) => (
+              <div key={item.id} className="flex justify-center w-full">
+                <CardBph
+                  title={item.title}
+                  name={item.name}
+                  imageUrl={resolveImage(item.image)}
+                />
+              </div>
+            ))}
+          </div>
 
-            <div className="flex flex-col items-center gap-6 md:gap-8 w-full max-w-5xl px-4 mt-8">
-                <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
-                    {BPH_DATA.slice(0, 2).map((item) => (
-                        <div key={item.id} className="flex justify-center w-full md:w-auto">
-                            <CardBph
-                                title={item.title}
-                                name={item.name}
-                                imageUrl={item.image}
-                            />
-                        </div>
-                    ))}
-                </div>
-
-                <div className="flex justify-center w-full z-10">
-                    {BPH_DATA.slice(2, 3).map((item) => (
-                        <div key={item.id} className="flex justify-center w-full">
-                            <CardBph
-                                title={item.title}
-                                name={item.name}
-                                imageUrl={item.image}
-                            />
-                        </div>
-                    ))}
-                </div>
-
-                <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
-                    {BPH_DATA.slice(3, 5).map((item) => (
-                        <div key={item.id} className="flex justify-center w-full md:w-auto">
-                            <CardBph
-                                title={item.title}
-                                name={item.name}
-                                imageUrl={item.image}
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    )
-}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
+            {bphList.slice(3, 5).map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-center w-full md:w-auto"
+              >
+                <CardBph
+                  title={item.title}
+                  name={item.name}
+                  imageUrl={resolveImage(item.image)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+};
 
 export default BphAbout;
