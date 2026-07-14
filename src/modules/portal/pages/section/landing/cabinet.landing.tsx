@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "@/core/hooks/use-axios";
 import { kabinetService } from "@/modules/portal/services/api/kabinet.service";
+import { getStorageUrl } from "@/lib/utils";
 
 const CabinetLanding = () => {
   const pathname = usePathname();
@@ -15,7 +16,11 @@ const CabinetLanding = () => {
     staleTime: 10 * 60 * 1000,
   });
 
+  const storageUrl = getStorageUrl();
   const kabinet = data?.data?.find((k) => k.is_active) ?? data?.data?.[0];
+  const logoUrl = kabinet?.logo
+    ? `${storageUrl}/${kabinet.logo}`
+    : "https://placehold.co/1080x1080.png";
 
   const name = kabinet?.name;
   const year = kabinet?.year;
@@ -47,7 +52,7 @@ const CabinetLanding = () => {
           </div>
 
           <img
-            src={"/assets/logo-anvadhistana.webp"}
+            src={logoUrl}
             className={"object-contain pointer-events-none"}
             alt={`Logo Kabinet ${name}`}
           />

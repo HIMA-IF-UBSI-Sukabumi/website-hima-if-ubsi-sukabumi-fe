@@ -15,6 +15,7 @@ export interface KabinetItem {
   is_active: boolean;
   start_date: string;
   end_date: string;
+  logo: string | null;
   visi: string | null;
   misi: string | null;
   description: string | null;
