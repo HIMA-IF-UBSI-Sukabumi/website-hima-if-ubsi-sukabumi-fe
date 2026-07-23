@@ -31,13 +31,22 @@ export const formatDate = (dateStr: string) => {
 };
 
 export function getSubdomainUrl(subdomain: string) {
-    const site = new URL(process.env.NEXT_PUBLIC_SITE_URL!)
+    try {
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+        if (!siteUrl) {
+            // Fallback aman jika env tidak di-set
+            return `https://${subdomain}.himaifubsismi.or.id`
+        }
+        const site = new URL(siteUrl)
 
-    if (site.hostname === 'localhost') {
-        return `${site.protocol}//${subdomain}.localhost${site.port ? `:${site.port}` : ''}`
+        if (site.hostname === 'localhost') {
+            return `${site.protocol}//${subdomain}.localhost${site.port ? `:${site.port}` : ''}`
+        }
+
+        return `${site.protocol}//${subdomain}.${site.hostname}${site.port ? `:${site.port}` : ''}`
+    } catch {
+        return `https://${subdomain}.himaifubsismi.or.id`
     }
-
-    return `${site.protocol}//${subdomain}.${site.hostname}${site.port ? `:${site.port}` : ''}`
 }
 
 export const getNewsUrl = (path?: string) => {

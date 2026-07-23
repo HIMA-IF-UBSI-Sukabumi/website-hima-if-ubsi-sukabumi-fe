@@ -4,10 +4,17 @@ import NextTopLoader from "nextjs-toploader";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    metadataBase: (() => {
+        try {
+            return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://himaifubsismi.or.id')
+        } catch {
+            return new URL('https://himaifubsismi.or.id')
+        }
+    })(),
     title: "HIMA-IF UBSI PSDKU Sukabumi",
     description: "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi",
 };
+
 
 export default function RootLayout({
                                        children,

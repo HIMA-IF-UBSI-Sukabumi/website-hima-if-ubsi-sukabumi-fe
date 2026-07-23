@@ -17,7 +17,17 @@ RUN npm ci
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# NEXT_PUBLIC_* vars harus tersedia saat build time (bukan runtime)
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_STORAGE_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_STORAGE_URL=$NEXT_PUBLIC_STORAGE_URL
+
 RUN npm run build
+
 
 # =========================
 # Runner (Production)

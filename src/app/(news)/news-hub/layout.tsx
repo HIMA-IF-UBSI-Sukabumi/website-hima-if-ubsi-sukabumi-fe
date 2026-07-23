@@ -6,7 +6,9 @@ import { getNewsUrl } from '@/lib/utils'
 export async function generateMetadata(): Promise<Metadata> {
     const siteUrl = getNewsUrl()
     return {
-        metadataBase: new URL(siteUrl),
+        metadataBase: (() => {
+            try { return new URL(siteUrl) } catch { return new URL('https://news.himaifubsismi.or.id') }
+        })(),
         title: {
             default: 'HIMA-IF News – Portal Berita Resmi HIMA-IF UBSI PSDKU Sukabumi',
             template: '%s | HIMA-IF News',
@@ -49,6 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
         },
     }
 }
+
 
 export default function NewsHubLayout({
     children,
