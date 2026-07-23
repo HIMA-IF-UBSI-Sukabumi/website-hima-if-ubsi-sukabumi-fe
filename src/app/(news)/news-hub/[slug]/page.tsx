@@ -1,4 +1,4 @@
-import { getNewsUrl } from '@/lib/utils'
+import { getNewsUrl, getStorageUrl } from '@/lib/utils'
 import ModuleNewsDetailPage from '@/modules/news/pages/news-detail.page'
 import { NewsDetail } from '@/modules/news/services/api/news.service'
 import { Metadata } from 'next'
@@ -39,6 +39,7 @@ async function fetchNews(slug: string): Promise<NewsDetail | null> {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
     const {slug} = await params
+    const storageUrl = getStorageUrl() ?? ''
     const siteUrl = getNewsUrl()
 
     const news = await fetchNews(slug)
@@ -75,6 +76,8 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
         'HIMA-IF', 'UBSI Sukabumi', 'berita informatika',
     ].filter(Boolean) as string[]
 
+    const coverUrl = news.cover ? `${storageUrl}/${news.cover}` : null
+
     return {
         title: pageTitle,
         description,
@@ -92,13 +95,15 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
             authors: news.author ? [news.author] : undefined,
             section: news.category?.name ?? 'Berita',
             tags: news.tags ?? [],
-            // og:image di-generate otomatis oleh opengraph-image.tsx (1200×630, lightweight)
+            ...(coverUrl && {
+                images: [{ url: coverUrl, width: 1200, height: 630, alt: news.title }],
+            }),
         },
         twitter: {
             card: 'summary_large_image',
             title: socialTitle,
             description,
-            // twitter:image di-generate otomatis dari opengraph-image.tsx
+            ...(coverUrl && { images: [coverUrl] }),
         },
     }
 }
