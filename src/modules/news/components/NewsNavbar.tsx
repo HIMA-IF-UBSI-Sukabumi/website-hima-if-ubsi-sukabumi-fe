@@ -31,6 +31,7 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
     const [tickerIndex, setTickerIndex] = useState(0)
     const [scrolled, setScrolled] = useState(false)
     const [mobileCatOpen, setMobileCatOpen] = useState(false)
+    const [dateStr, setDateStr] = useState('')
     const searchRef = useRef<HTMLInputElement>(null)
 
     // ── Fetch categories dari API ──
@@ -47,13 +48,16 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
         : null
     const effectiveActiveCategory = activeCategory ?? pathCategorySlug
 
-    const now = new Date()
-    const dateStr = now.toLocaleDateString('id-ID', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    })
+    useEffect(() => {
+        setDateStr(
+            new Date().toLocaleDateString('id-ID', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            })
+        )
+    }, [])
 
     // Breaking news ticker
     useEffect(() => {
@@ -108,7 +112,6 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
                         <p
                             key={tickerIndex}
                             className="truncate animate-[fadeIn_0.5s_ease] font-medium"
-                            style={{ animation: 'fadeIn 0.5s ease' }}
                         >
                             {TICKER_MESSAGES[tickerIndex]}
                         </p>
@@ -279,52 +282,65 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
 
             {/* Mobile Menu Overlay */}
             {mobileOpen && (
-                <div className="md:hidden bg-white border-b border-gray-100 shadow-lg">
-                    <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-2">Menu</p>
+                <div className="md:hidden bg-white border-b border-gray-100 shadow-lg overflow-x-hidden">
+                    <div className="w-full px-4 py-4 flex flex-col gap-1 overflow-x-hidden">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-2">
+                            Menu
+                        </p>
+            
                         <Link
                             href="/"
                             onClick={() => setMobileOpen(false)}
-                            className="px-4 py-3 rounded-xl text-sm font-semibold hover:bg-smoky transition text-gray-700"
+                            className="w-full px-4 py-3 rounded-xl text-sm font-semibold hover:bg-smoky transition text-gray-700"
                         >
                             🏠 Beranda Berita
                         </Link>
+            
                         <a
                             href={mainSiteUrl}
-                            className="px-4 py-3 rounded-xl text-sm font-semibold hover:bg-smoky transition text-gray-700"
+                            className="w-full px-4 py-3 rounded-xl text-sm font-semibold hover:bg-smoky transition text-gray-700"
                         >
                             ← Kembali ke Portal HIMA-IF
                         </a>
-                        <div className="border-t border-gray-100 mt-2 pt-3">
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-2">Kategori</p>
-                            {/* Semua */}
-                            <Link
-                                href={'/'}
-                                className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${effectiveActiveCategory === null
-                                    ? 'bg-primary text-white'
-                                    : 'text-gray-600 hover:bg-smoky'
-                                    }`}
-                            >
-                                Semua
-                            </Link>
-                            {/* Dynamic */}
-                            {categories.map((cat) => {
-                                const isActive = effectiveActiveCategory === cat.slug
-                                return (
-                                    <Link
-                                        key={cat.id}
-                                        href={`/category/${cat.slug}`}
-                                        className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${isActive
+            
+                        <div className="w-full border-t border-gray-100 mt-2 pt-3">
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 px-2">
+                                Kategori
+                            </p>
+                        
+                            <div className="max-h-48 overflow-y-auto scrollbar-hide flex flex-col gap-1 pr-1">
+                                <Link
+                                    href="/"
+                                    className={`w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
+                                        effectiveActiveCategory === null
                                             ? 'bg-primary text-white'
                                             : 'text-gray-600 hover:bg-smoky'
+                                    }`}
+                                >
+                                    Semua
+                                </Link>
+                        
+                                {categories.map((cat) => {
+                                    const isActive = effectiveActiveCategory === cat.slug
+                        
+                                    return (
+                                        <Link
+                                            key={cat.id}
+                                            href={`/category/${cat.slug}`}
+                                            className={`w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
+                                                isActive
+                                                    ? 'bg-primary text-white'
+                                                    : 'text-gray-600 hover:bg-smoky'
                                             }`}
-                                    >
-                                        {cat.name}
-                                    </Link>
-                                )
-                            })}
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                    )
+                                })}
+                            </div>
                         </div>
-                        <div className="flex gap-3 px-4 mt-3">
+            
+                        <div className="flex flex-wrap gap-3 px-4 mt-3">
                             <a
                                 href="https://www.instagram.com/himaif.ubsismi"
                                 target="_blank"
@@ -334,6 +350,7 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
                                 <FaInstagram className="w-4 h-4" />
                                 Instagram
                             </a>
+            
                             <a
                                 href="mailto:himaif.smi@bsi.ac.id"
                                 className="flex items-center gap-2 text-sm text-gray-500 hover:text-primary transition"
@@ -363,14 +380,16 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
                         {/* Dynamic */}
                         {categories.map((cat) => {
                             const isActive = effectiveActiveCategory === cat.slug
+                        
                             return (
                                 <Link
                                     key={cat.id}
                                     href={`/category/${cat.slug}`}
-                                    className={`px-3 py-2 rounded-xl text-xs font-semibold text-center transition ${isActive
-                                        ? 'bg-primary text-white'
-                                        : 'bg-smoky text-gray-600 hover:bg-primary/10 hover:text-primary'
-                                        }`}
+                                    className={`px-3 py-2 min-h-10 flex items-center justify-center rounded-xl text-xs font-semibold text-center transition ${
+                                        isActive
+                                            ? 'bg-primary text-white'
+                                            : 'bg-smoky text-gray-600 hover:bg-primary/10 hover:text-primary'
+                                    }`}
                                 >
                                     {cat.name}
                                 </Link>
@@ -379,13 +398,6 @@ const NewsNavbar = ({ onSearch, onCategoryChange, activeCategory }: NewsNavbarPr
                     </div>
                 </div>
             )}
-
-            <style jsx global>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(4px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `}</style>
         </header>
     )
 }
