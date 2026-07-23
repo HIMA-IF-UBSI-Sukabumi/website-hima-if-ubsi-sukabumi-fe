@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
+import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
@@ -18,10 +19,12 @@ export default function RootLayout({
         <body
             className={`font-poppins antialiased`}
         >
-        <div className={'w-full min-h-screen'}>
-            <NextTopLoader color={'#2C2F91'} showSpinner={false}/>
-            {children}
-        </div>
+        <Providers>
+            <div className={'w-full min-h-screen'}>
+                <NextTopLoader color={'#2C2F91'} showSpinner={false}/>
+                {children}
+            </div>
+        </Providers>
         </body>
         </html>
     );

@@ -1,19 +1,9 @@
-"use client";
+// Template ini sengaja dibuat minimal.
+// QueryClientProvider sudah dihandle di layout.tsx via <Providers>.
+// Jangan tambahkan 'use client' di sini agar tidak memblokir metadata SSR.
 
-import {queryClient} from '@/lib/queryClient';
-import React from 'react'
-import {QueryClientProvider} from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
-
-const RootTemplate = ({
-                          children
-                      }: Readonly<{ children: React.ReactNode }>) => {
-    return (
-        <QueryClientProvider client={queryClient}>
-            {children}
-            <ReactQueryDevtools initialIsOpen={false}/>
-        </QueryClientProvider>
-    )
+export default function RootTemplate({
+    children,
+}: Readonly<{ children: React.ReactNode }>) {
+    return <>{children}</>
 }
-
-export default RootTemplate
