@@ -1,4 +1,4 @@
-import { getNewsUrl, getStorageUrl } from '@/lib/utils'
+import { getNewsUrl } from '@/lib/utils'
 import ModuleNewsDetailPage from '@/modules/news/pages/news-detail.page'
 import { NewsDetail } from '@/modules/news/services/api/news.service'
 import { Metadata } from 'next'
@@ -11,9 +11,16 @@ type Props = {
 /**
  * Helper: strip HTML tags and truncate to maxLength characters.
  */
-function stripHtml(html: string, maxLength = 160): string {
+function stripHtml(html: string, maxLength = 125): string {
     const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-    return text.length > maxLength ? text.slice(0, maxLength - 3) + '...' : text
+    return text.length > maxLength ? text.slice(0, maxLength - 3).trimEnd() + '...' : text
+}
+
+/**
+ * Truncate text to maxLength with ellipsis.
+ */
+function trunc(text: string, max: number): string {
+    return text.length > max ? text.slice(0, max - 3).trimEnd() + '...' : text
 }
 
 async function fetchNews(slug: string): Promise<NewsDetail | null> {
@@ -32,7 +39,6 @@ async function fetchNews(slug: string): Promise<NewsDetail | null> {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
     const {slug} = await params
-    const storageUrl = getStorageUrl() ?? ''
     const siteUrl = getNewsUrl()
 
     const news = await fetchNews(slug)
@@ -45,11 +51,23 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
         }
     }
 
-    const title = `${news.title} | HIMA-IF News`
+    // ── Title limits ─────────────────────────────────────────────────────────
+    // Page <title>: ≤ 60 chars  →  "Judul Artikel | HIMA-IF News"
+    const titleSuffix = ' | HIMA-IF News'                       // 15 chars
+    const pageTitle = trunc(news.title, 60 - titleSuffix.length) + titleSuffix
+
+    // og:title / twitter:title: ≤ 60 chars (article title only, no suffix)
+    const socialTitle = trunc(news.title, 60)
+
+    // ── Description limit: ≤ 125 chars ───────────────────────────────────────
     const description = news.content
-        ? stripHtml(news.content)
-        : `Baca artikel "${news.title}" di portal berita resmi HIMA-IF UBSI PSDKU Sukabumi.`
-    const coverUrl = news.cover ? `${storageUrl}/${news.cover}` : null
+        ? stripHtml(news.content, 125)
+        : trunc(
+            `Baca artikel "${news.title}" di portal berita resmi HIMA-IF UBSI PSDKU Sukabumi.`,
+            125
+        )
+
+    // ── Canonical & keywords ──────────────────────────────────────────────────
     const canonicalUrl = `${siteUrl}/${slug}`
     const keywords: string[] = [
         news.category?.name,
@@ -58,14 +76,12 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     ].filter(Boolean) as string[]
 
     return {
-        title,
+        title: pageTitle,
         description,
         keywords,
-        alternates: {
-            canonical: canonicalUrl,
-        },
+        alternates: { canonical: canonicalUrl },
         openGraph: {
-            title,
+            title: socialTitle,
             description,
             url: canonicalUrl,
             type: 'article',
@@ -76,25 +92,17 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
             authors: news.author ? [news.author] : undefined,
             section: news.category?.name ?? 'Berita',
             tags: news.tags ?? [],
-            ...(coverUrl && {
-                images: [
-                    {
-                        url: coverUrl,
-                        width: 1200,
-                        height: 630,
-                        alt: news.title,
-                    },
-                ],
-            }),
+            // og:image di-generate otomatis oleh opengraph-image.tsx (1200×630, lightweight)
         },
         twitter: {
             card: 'summary_large_image',
-            title,
+            title: socialTitle,
             description,
-            ...(coverUrl && {images: [coverUrl]}),
+            // twitter:image di-generate otomatis dari opengraph-image.tsx
         },
     }
 }
+
 
 const NewsHubDetailPage = async ({params}: Props) => {
     const {slug} = await params
