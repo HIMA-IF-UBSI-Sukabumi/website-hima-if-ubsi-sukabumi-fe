@@ -11,6 +11,53 @@ export async function generateMetadata(): Promise<Metadata> {
             'berita HIMA-IF', 'berita mahasiswa informatika Sukabumi', 'berita UBSI Sukabumi',
             'portal berita kampus', 'hima informatika ubsi', 'kegiatan mahasiswa informatika',
         ],
+        icons: [
+            {
+                url: '/favicon.ico',
+                sizes: '16x16',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '32x32',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '48x48',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '64x64',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '96x96',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '128x128',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '192x192',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '256x256',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '512x512',
+                type: 'image/x-icon',
+            },
+        ],
         alternates: {
             canonical: siteUrl,
         },

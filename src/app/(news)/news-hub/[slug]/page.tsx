@@ -83,6 +83,53 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
         description,
         keywords,
         alternates: { canonical: canonicalUrl },
+        icons: [
+            {
+                url: '/favicon.ico',
+                sizes: '16x16',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '32x32',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '48x48',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '64x64',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '96x96',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '128x128',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '192x192',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '256x256',
+                type: 'image/x-icon',
+            },
+            {
+                url: '/favicon.ico',
+                sizes: '512x512',
+                type: 'image/x-icon',
+            },
+        ],
         openGraph: {
             title: socialTitle,
             description,
