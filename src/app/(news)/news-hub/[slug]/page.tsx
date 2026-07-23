@@ -94,6 +94,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
             modifiedTime: news.updated_at,
             authors: news.author ? [news.author] : undefined,
             section: news.category?.name ?? 'Berita',
+            images: getStorageUrl() + '/' + news.cover,
             tags: news.tags ?? [],
             ...(coverUrl && {
                 images: [{ url: coverUrl, width: 1200, height: 630, alt: news.title }],

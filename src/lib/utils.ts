@@ -50,5 +50,5 @@ export function getSubdomainUrl(subdomain: string) {
 }
 
 export const getNewsUrl = (path?: string) => {
-    return getSubdomainUrl('news') + (path?.startsWith('/') ? path : `/${path}` || '')
+    return getSubdomainUrl('news') + (path && !path.startsWith('/') ? '/' + path : path || '')
 }
