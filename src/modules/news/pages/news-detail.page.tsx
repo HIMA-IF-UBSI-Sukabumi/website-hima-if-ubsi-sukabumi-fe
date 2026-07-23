@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import useAxios from '@/core/hooks/use-axios'
-import { newsService, NEWS_CATEGORIES, Category } from '@/modules/news/services/api/news.service'
+import { newsService, NEWS_CATEGORIES, Category, NewsDetail } from '@/modules/news/services/api/news.service'
 import { getStorageUrl, formatTimestamp, getNewsUrl } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -13,15 +13,19 @@ import { useMemo } from 'react'
 
 type NewsDetailPageProps = {
     slug: string
+    initialNews?: NewsDetail
 }
 
-const ModuleNewsDetailPage = ({ slug }: NewsDetailPageProps) => {
+const ModuleNewsDetailPage = ({ slug, initialNews }: NewsDetailPageProps) => {
     const axios = useAxios()
     const storageUrl = getStorageUrl()
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ['news-detail', slug],
         queryFn: async () => await newsService.findBySlug(axios, slug),
+        // Gunakan data dari server sebagai initial data — skip loading state di SSR
+        initialData: initialNews ? { news: initialNews } : undefined,
+        staleTime: 60 * 60 * 1000, // Anggap data segar selama 1 jam (sama dengan revalidate)
     })
 
     const { data: categoriesData } = useQuery({
