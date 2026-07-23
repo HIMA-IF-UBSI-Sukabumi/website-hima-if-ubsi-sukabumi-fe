@@ -16,14 +16,21 @@ function stripHtml(html: string, maxLength = 160): string {
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
     const {slug} = await params
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080/api'
-    const storageUrl = process.env.NEXT_PUBLIC_STORAGE_URL ?? 'http://localhost:8080/storage'
+    // Gunakan API_URL (server-only) jika ada, fallback ke NEXT_PUBLIC_API_URL
+    const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080/api'
+    const storageUrl = process.env.STORAGE_URL ?? process.env.NEXT_PUBLIC_STORAGE_URL ?? 'http://localhost:8080/storage'
     const siteUrl = getNewsUrl()
 
     try {
+        // Timeout 5 detik supaya generateMetadata tidak hang saat server fetch lambat
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000)
+
         const res = await fetch(`${apiUrl}/news/${slug}`, {
             next: {revalidate: 60 * 60}, // revalidate every 1 hour
+            signal: controller.signal,
         })
+        clearTimeout(timeoutId)
 
         if (!res.ok) {
             return {
