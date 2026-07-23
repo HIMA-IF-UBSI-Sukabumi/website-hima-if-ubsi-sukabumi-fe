@@ -16,17 +16,38 @@ export async function generateMetadata({params}: { params: Promise<{ slug: strin
         : "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi";
 
     return {
-        title,
+        title: department ? `Departemen ${department.title}` : "Departemen",
         description,
+        keywords: department
+            ? [
+                `Departemen ${department.title}`,
+                `${department.title} HIMA-IF`,
+                "departemen HIMA-IF Sukabumi",
+                "Himpunan Mahasiswa Informatika UBSI Sukabumi",
+            ]
+            : [
+                "departemen HIMA-IF",
+                "Himpunan Mahasiswa Informatika UBSI Sukabumi",
+            ],
         alternates: {
             canonical: `/department/${slug}`,
         },
         openGraph: {
-            title,
+            title: department
+                ? `Departemen ${department.title} | HIMA-IF UBSI PSDKU Sukabumi`
+                : "Departemen | HIMA-IF UBSI PSDKU Sukabumi",
             description,
             url: `/department/${slug}`,
             type: 'website',
-        }
+            locale: 'id_ID',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: department
+                ? `Departemen ${department.title} | HIMA-IF UBSI PSDKU Sukabumi`
+                : "Departemen | HIMA-IF UBSI PSDKU Sukabumi",
+            description,
+        },
     };
 }
 

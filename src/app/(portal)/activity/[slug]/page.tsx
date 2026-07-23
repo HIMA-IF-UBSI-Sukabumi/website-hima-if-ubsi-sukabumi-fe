@@ -21,19 +21,38 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
                 const cleanDesc = event.description
                     ? event.description.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160)
                     : "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi";
-                
+
+                const ogImages = event.thumbnail
+                    ? [{ url: event.thumbnail, alt: event.title }]
+                    : [];
+
                 return {
-                    title: `${event.title} – HIMA-IF UBSI PSDKU Sukabumi`,
+                    title: event.title,
                     description: cleanDesc,
+                    keywords: [
+                        event.title,
+                        "kegiatan HIMA-IF",
+                        "HIMA-IF UBSI Sukabumi",
+                        "event mahasiswa informatika",
+                        "Sukabumi",
+                    ],
                     alternates: {
                         canonical: canonicalUrl,
                     },
                     openGraph: {
-                        title: `${event.title} – HIMA-IF UBSI PSDKU Sukabumi`,
+                        title: `${event.title} | HIMA-IF UBSI PSDKU Sukabumi`,
                         description: cleanDesc,
                         url: canonicalUrl,
                         type: 'article',
-                    }
+                        locale: 'id_ID',
+                        ...(ogImages.length > 0 && { images: ogImages }),
+                    },
+                    twitter: {
+                        card: 'summary_large_image',
+                        title: `${event.title} | HIMA-IF UBSI PSDKU Sukabumi`,
+                        description: cleanDesc,
+                        ...(event.thumbnail && { images: [event.thumbnail] }),
+                    },
                 };
             }
         }
@@ -42,10 +61,27 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     }
 
     return {
-        title: "Kegiatan – HIMA-IF UBSI PSDKU Sukabumi",
-        description: "Website Resmi Himpunan Mahasiswa Informatika Universitas Bina Sarana Informatika PSDKU Sukabumi",
+        title: "Detail Kegiatan",
+        description: "Informasi detail kegiatan Himpunan Mahasiswa Informatika UBSI PSDKU Sukabumi.",
+        keywords: [
+            "kegiatan HIMA-IF",
+            "event mahasiswa informatika",
+            "HIMA-IF UBSI Sukabumi",
+        ],
         alternates: {
             canonical: canonicalUrl,
+        },
+        openGraph: {
+            title: "Detail Kegiatan | HIMA-IF UBSI PSDKU Sukabumi",
+            description: "Informasi detail kegiatan Himpunan Mahasiswa Informatika UBSI PSDKU Sukabumi.",
+            url: canonicalUrl,
+            type: 'article',
+            locale: 'id_ID',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: "Detail Kegiatan | HIMA-IF UBSI PSDKU Sukabumi",
+            description: "Informasi detail kegiatan Himpunan Mahasiswa Informatika UBSI PSDKU Sukabumi.",
         },
     };
 }
