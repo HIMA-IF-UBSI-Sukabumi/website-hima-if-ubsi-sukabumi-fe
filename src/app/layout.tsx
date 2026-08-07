@@ -68,6 +68,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="id">
+        <head>
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `(function(){try{var t=localStorage.getItem('himaif-theme');var s=t==='system'||!t;var dark=t==='dark'||(s&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(dark)document.documentElement.classList.add('dark');}catch(e){}})();`,
+                }}
+            />
+        </head>
         <body
             className={`font-poppins antialiased`}
         >
