@@ -32,7 +32,11 @@ export function proxy(request: NextRequest) {
     /**
      * Base domain from .env
      */
-    const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL!)
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+    const formattedSiteUrl = rawSiteUrl.startsWith('http://') || rawSiteUrl.startsWith('https://') 
+        ? rawSiteUrl 
+        : `http://${rawSiteUrl}`
+    const siteUrl = new URL(formattedSiteUrl)
     const siteDomain = siteUrl.hostname
 
     /**

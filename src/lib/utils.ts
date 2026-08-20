@@ -10,16 +10,26 @@ export const getStorageUrl = () => {
 }
 
 export function formatTimestamp(timestamp: string) {
-    return new Date(timestamp).toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
+    try {
+        const isoStr = timestamp.includes(' ') ? timestamp.replace(' ', 'T') : timestamp;
+        const date = new Date(isoStr);
+        if (isNaN(date.getTime())) return timestamp;
+        return date.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+    } catch {
+        return timestamp;
+    }
 }
 
 export const formatDate = (dateStr: string) => {
     try {
-        return new Date(dateStr).toLocaleDateString('id-ID', {
+        const isoStr = dateStr.includes(' ') ? dateStr.replace(' ', 'T') : dateStr;
+        const date = new Date(isoStr);
+        if (isNaN(date.getTime())) return dateStr;
+        return date.toLocaleDateString('id-ID', {
             weekday: 'long',
             day: 'numeric',
             month: 'long',
