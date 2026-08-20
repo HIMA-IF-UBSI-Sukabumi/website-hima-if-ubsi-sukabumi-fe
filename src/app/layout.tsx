@@ -6,9 +6,11 @@ import { Providers } from "@/components/providers";
 export const metadata: Metadata = {
     metadataBase: (() => {
         try {
-            return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://himaifubsismi.or.id')
+            const rawUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://himaifubsismi.or.id';
+            const formattedUrl = rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `http://${rawUrl}`;
+            return new URL(formattedUrl);
         } catch {
-            return new URL('https://himaifubsismi.or.id')
+            return new URL('https://himaifubsismi.or.id');
         }
     })(),
     title: {
@@ -67,7 +69,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="id">
+        <html lang="id" suppressHydrationWarning>
         <head>
             <script
                 dangerouslySetInnerHTML={{

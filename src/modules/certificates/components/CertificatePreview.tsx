@@ -47,12 +47,12 @@ export const CertificatePreview = ({ data }: CertificatePreviewProps) => {
                 isFullscreen ? 'fixed inset-0 z-50 rounded-none border-none' : 'w-full h-full min-h-[500px] lg:min-h-[640px]'
             }`}
         >
-            {/* Control Bar Header */}
-            <div className="bg-slate-900/80 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between gap-3 text-slate-300">
-                <div className="flex items-center gap-2 text-xs font-semibold">
-                    <FiAward className="w-4 h-4 text-primary" />
+            {/* Control Bar Header (News Primary Theme) */}
+            <div className="bg-primary text-white border-b border-primary/20 px-4 py-3 flex items-center justify-between gap-3 shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-bold">
+                    <FiAward className="w-4 h-4 text-white" />
                     <span className="hidden sm:inline">Pratinjau Sertifikat</span>
-                    <span className="bg-slate-800 text-slate-400 px-2 py-0.5 rounded text-[10px] font-mono">
+                    <span className="bg-white/20 text-white px-2 py-0.5 rounded text-[10px] font-mono">
                         {zoom}%
                     </span>
                 </div>
@@ -172,7 +172,7 @@ export const CertificatePreview = ({ data }: CertificatePreviewProps) => {
                                     <p className="font-mono font-semibold text-slate-900">
                                         No: {data.certificate_number}
                                     </p>
-                                    <p>Diterbitkan: {data.issued_at}</p>
+                                    <p suppressHydrationWarning>Diterbitkan: {data.issued_at}</p>
                                 </div>
 
                                 <div className="flex justify-end gap-6 text-center text-xs">
