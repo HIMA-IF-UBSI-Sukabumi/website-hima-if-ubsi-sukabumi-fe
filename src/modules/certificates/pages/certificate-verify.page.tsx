@@ -103,7 +103,7 @@ export default function ModuleCertificateVerifyPage({ code }: ModuleCertificateV
     if (!certificateData) return null
 
     return (
-        <div className="min-h-screen lg:h-screen bg-gray-50/50 text-slate-900 flex flex-col overflow-x-hidden">
+        <div className="min-h-screen bg-gray-50/50 text-slate-900 flex flex-col overflow-x-hidden">
             {/* Top News Style Navbar */}
             <CertificateNavbar
                 certificateNumber={certificateData.certificate_number}
@@ -113,14 +113,14 @@ export default function ModuleCertificateVerifyPage({ code }: ModuleCertificateV
             />
 
             {/* Main Content Workspace */}
-            <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 lg:overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch h-full">
+            <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex-1 flex flex-col">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-                    {/* Main Left Content: Recipient + Event Cards + Certificate Preview Canvas (NON-SCROLLABLE ON DESKTOP) */}
-                    <div className="lg:col-span-7 xl:col-span-8 flex flex-col h-full min-h-0 overflow-hidden order-1">
+                    {/* Main Left Content: Recipient + Event Cards + Certificate Preview Canvas */}
+                    <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-4 order-1 w-full min-w-0">
 
                         {/* Top Cards: Recipient & Event (News Badge Styling) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0 mb-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 shrink-0">
                             {/* Recipient Card */}
                             <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm hover:shadow-md transition flex flex-col justify-between">
                                 <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100">
@@ -187,14 +187,14 @@ export default function ModuleCertificateVerifyPage({ code }: ModuleCertificateV
                             </div>
                         </div>
 
-                        {/* Certificate Canvas Preview (Fills remaining height smoothly without page scroll) */}
-                        <div className="flex-1 min-h-[380px] lg:min-h-0 h-full overflow-hidden">
+                        {/* Certificate Canvas Preview */}
+                        <div className="w-full">
                             <CertificatePreview data={certificateData} />
                         </div>
                     </div>
 
-                    {/* Right Sidebar: Status, Certificate Info, Signers, Download (SCROLLABLE ON DESKTOP) */}
-                    <div className="lg:col-span-5 xl:col-span-4 h-full lg:overflow-y-auto lg:pr-1 custom-scrollbar order-2">
+                    {/* Right Sidebar: Status, Certificate Info, Signers, Download */}
+                    <div className="lg:col-span-5 xl:col-span-4 space-y-4 order-2 lg:sticky lg:top-20 w-full min-w-0">
                         <CertificateSidebar data={certificateData} />
                     </div>
 
