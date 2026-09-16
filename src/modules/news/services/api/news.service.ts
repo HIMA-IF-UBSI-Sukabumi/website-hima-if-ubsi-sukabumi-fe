@@ -40,7 +40,20 @@ export const newsService = {
     findBySlug: (
         client: AxiosInstance,
         slug: string,
-    ) => simpleRequest<DetailNewsResponse>('GET', `news/${slug}`)(client)
+    ) => simpleRequest<DetailNewsResponse>('GET', `news/${slug}`)(client),
+
+    resolveShortlink: (
+        client: AxiosInstance,
+        shortlink: string,
+    ) => simpleRequest<NewsShortlinkResponse>('GET', `news/s/${shortlink}`)(client),
+}
+
+export interface NewsShortlinkResponse {
+    slug: string;
+    shortlink: string;
+    title: string;
+    news_url: string;
+    url: string;
 }
 
 export interface NewsCategory {

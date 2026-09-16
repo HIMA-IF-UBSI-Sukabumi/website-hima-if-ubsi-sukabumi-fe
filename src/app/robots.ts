@@ -28,6 +28,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
                     disallow: [
                         '/api/',
                         '/_next/',
+                        '/s/',
                     ],
                 },
                 {
@@ -55,6 +56,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
                 disallow: [
                     '/api/',
                     '/_next/',
+                    '/s/',
                 ],
             },
         ],
