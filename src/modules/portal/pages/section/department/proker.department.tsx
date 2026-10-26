@@ -10,9 +10,9 @@ const ProkerDepartment = ({ data }: Props) => {
 
   return (
     <section className="relative overflow-hidden flex flex-col items-center pb-20 px-4">
-      <h2 className="text-3xl font-bold text-secondary mb-10 text-center">
+      {/* <h2 className="text-3xl font-bold text-secondary mb-10 text-center">
         Program Kerja
-      </h2>
+      </h2> */}
 
       <div className="grid grid-cols-1 gap-6 w-full max-w-6xl place-items-center">
         {proker.map((item, i) => (

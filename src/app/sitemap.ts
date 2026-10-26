@@ -122,6 +122,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'weekly',
             priority: 0.8,
         },
+        {
+            url: `${currentBaseUrl}/project`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        },
     ]
 
     // Map department routes
@@ -131,6 +137,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'monthly',
         priority: 0.7,
     }))
+
+    // Fetch dynamic projects
+    const projectRoutes: MetadataRoute.Sitemap = []
+    try {
+        let cursor: string | null = null
+        let collected = 0
+        const MAX_ITEMS = 300
+
+        while (collected < MAX_ITEMS) {
+            const url = new URL(`${apiUrl}/projects`)
+            if (cursor) url.searchParams.set('cursor', cursor)
+
+            const res = await fetch(url.toString(), {
+                next: { revalidate: 60 * 60 },
+            })
+            if (!res.ok) break
+
+            const json = await res.json()
+            const items: Array<{ slug: string; published_at?: string; status: string }> = json?.data ?? []
+            if (items.length === 0) break
+
+            for (const item of items) {
+                if (item.slug && item.status === 'published') {
+                    projectRoutes.push({
+                        url: `${currentBaseUrl}/project/${item.slug}`,
+                        lastModified: item.published_at ? new Date(item.published_at) : new Date(),
+                        changeFrequency: 'weekly',
+                        priority: 0.8,
+                    })
+                }
+            }
+
+            collected += items.length
+            cursor = json?.next_cursor ? String(json.next_cursor) : null
+            if (!cursor) break
+        }
+    } catch {
+        // ignore
+    }
 
     // Fetch dynamic activities/events
     const eventRoutes: MetadataRoute.Sitemap = []
@@ -184,5 +229,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // ignore
     }
 
-    return [...portalStaticRoutes, ...departmentRoutes, ...eventRoutes]
+    return [...portalStaticRoutes, ...departmentRoutes, ...projectRoutes, ...eventRoutes]
 }
