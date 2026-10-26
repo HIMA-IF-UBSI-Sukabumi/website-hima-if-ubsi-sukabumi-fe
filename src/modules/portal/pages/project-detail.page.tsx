@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -44,6 +44,13 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
     const axios = useAxios();
     const [copied, setCopied] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [currentUrl, setCurrentUrl] = useState("");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setCurrentUrl(window.location.href);
+        }
+    }, []);
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ["portal-project-detail", slug],
@@ -96,16 +103,33 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
 
     const otherProjects = project.other_projects ?? [];
 
+    const shareText = `Lihat proyek inovasi "${project.title}" karya mahasiswa HIMA-IF UBSI Sukabumi:`;
+
     const handleCopyLink = () => {
-        if (typeof window !== "undefined") {
-            navigator.clipboard.writeText(window.location.href);
+        const url = currentUrl || (typeof window !== "undefined" ? window.location.href : "");
+        if (typeof navigator !== "undefined" && navigator.clipboard) {
+            navigator.clipboard.writeText(url);
             setCopied(true);
             setTimeout(() => setCopied(false), 2500);
         }
     };
 
-    const currentUrl = typeof window !== "undefined" ? window.location.href : "";
-    const shareText = `Lihat proyek inovasi "${project.title}" karya mahasiswa HIMA-IF UBSI Sukabumi:`;
+    const handleSharePlatform = (platform: "wa" | "twitter" | "linkedin") => {
+        const url = currentUrl || (typeof window !== "undefined" ? window.location.href : "");
+        let targetUrl = "";
+
+        if (platform === "wa") {
+            targetUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${url}`)}`;
+        } else if (platform === "twitter") {
+            targetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+        } else if (platform === "linkedin") {
+            targetUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        }
+
+        if (targetUrl && typeof window !== "undefined") {
+            window.open(targetUrl, "_blank", "noopener,noreferrer");
+        }
+    };
 
     const authorInitials = project.author?.name
         ? project.author.name
@@ -345,37 +369,39 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
                                 Bagikan Proyek
                             </h2>
                             <div className="flex items-center gap-2.5">
-                                <a
-                                    href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${currentUrl}`)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-2xl bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition flex items-center justify-center shadow-sm"
+                                <button
+                                    type="button"
+                                    onClick={() => handleSharePlatform("wa")}
+                                    className="w-10 h-10 rounded-2xl bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition flex items-center justify-center shadow-sm cursor-pointer"
                                     title="Bagikan ke WhatsApp"
+                                    aria-label="Bagikan ke WhatsApp"
                                 >
                                     <FaWhatsapp className="w-4 h-4" />
-                                </a>
-                                <a
-                                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-2xl bg-gray-100 text-gray-700 hover:bg-black hover:text-white transition flex items-center justify-center shadow-sm"
-                                    title="Bagikan ke X"
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleSharePlatform("twitter")}
+                                    className="w-10 h-10 rounded-2xl bg-gray-100 text-gray-700 hover:bg-black hover:text-white transition flex items-center justify-center shadow-sm cursor-pointer"
+                                    title="Bagikan ke X (Twitter)"
+                                    aria-label="Bagikan ke X"
                                 >
                                     <FaXTwitter className="w-4 h-4" />
-                                </a>
-                                <a
-                                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm"
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleSharePlatform("linkedin")}
+                                    className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm cursor-pointer"
                                     title="Bagikan ke LinkedIn"
+                                    aria-label="Bagikan ke LinkedIn"
                                 >
                                     <FaLinkedin className="w-4 h-4" />
-                                </a>
+                                </button>
                                 <button
+                                    type="button"
                                     onClick={handleCopyLink}
-                                    className="w-10 h-10 rounded-2xl bg-gray-50 text-gray-600 hover:bg-primary hover:text-white transition flex items-center justify-center shadow-sm ml-auto"
-                                    title="Salin tautan"
+                                    className="w-10 h-10 rounded-2xl bg-gray-50 text-gray-600 hover:bg-primary hover:text-white transition flex items-center justify-center shadow-sm ml-auto cursor-pointer"
+                                    title="Salin tautan proyek"
+                                    aria-label="Salin tautan proyek"
                                 >
                                     {copied ? <FiCheck className="w-4 h-4 text-green-600" /> : <FiCopy className="w-4 h-4" />}
                                 </button>
