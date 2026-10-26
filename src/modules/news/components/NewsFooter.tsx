@@ -118,6 +118,12 @@ const NewsFooter = () => {
                                 </a>
                             </li>
                             <li>
+                                <a href={`${mainSiteUrl}/project`} className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
+                                    Proyek
+                                </a>
+                            </li>
+                            <li>
                                 <a href="mailto:himaif.smi@bsi.ac.id" className="text-sm text-white/75 hover:text-white transition font-medium flex items-center gap-2 group">
                                     <span className="w-1.5 h-1.5 rounded-full bg-white/30 group-hover:bg-white transition shrink-0" />
                                     Kirim Tulisan

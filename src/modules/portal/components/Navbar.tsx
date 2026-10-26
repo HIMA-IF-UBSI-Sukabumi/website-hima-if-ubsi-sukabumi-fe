@@ -16,6 +16,7 @@ export const menus: Menu[] = [
     { label: 'Beranda', href: '/' },
     { label: 'Tentang', href: '/about' },
     { label: 'Kegiatan', href: '/activity' },
+    { label: 'Proyek', href: '/project' },
     { label: 'Berita', href: getSubdomainUrl('news') },
 ]
 

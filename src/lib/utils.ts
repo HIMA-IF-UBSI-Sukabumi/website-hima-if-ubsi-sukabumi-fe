@@ -9,6 +9,15 @@ export const getStorageUrl = () => {
     return process.env.NEXT_PUBLIC_STORAGE_URL;
 }
 
+export const resolveImageUrl = (imagePath?: string | null): string => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
+    }
+    const storageUrl = getStorageUrl() || '';
+    return `${storageUrl.replace(/\/$/, '')}/${imagePath.replace(/^\//, '')}`;
+};
+
 export function formatTimestamp(timestamp: string) {
     try {
         const isoStr = timestamp.includes(' ') ? timestamp.replace(' ', 'T') : timestamp;
