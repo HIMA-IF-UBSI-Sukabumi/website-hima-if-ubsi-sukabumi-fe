@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useAuthStore, useIsAuthenticated } from "@/core/stores/use-auth-store";
 import { getNglUrl, getSsoLoginUrl } from "@/lib/utils";
 import NglSendForm from "@/modules/ngl/components/NglSendForm";
-import { FiCheck, FiCopy, FiInbox, FiLock, FiLogIn, FiMessageCircle, FiShield } from "react-icons/fi";
+import NglShareLinkModal from "@/modules/ngl/components/NglShareLinkModal";
+import { FiCheck, FiCopy, FiInbox, FiLock, FiLogIn, FiMessageCircle, FiShare2, FiShield } from "react-icons/fi";
 
 interface ModuleNglSendPageProps {
     initialNim?: string;
@@ -15,8 +16,14 @@ const ModuleNglSendPage = ({ initialNim }: ModuleNglSendPageProps) => {
     const user = useAuthStore((s) => s.user);
     const { isLoggedIn } = useIsAuthenticated();
     const [copied, setCopied] = useState(false);
+    const [shareModalOpen, setShareModalOpen] = useState(false);
 
-    const shareUrl = user?.nim ? getNglUrl(`/${user.nim}`) : "";
+    const isAdmin = isLoggedIn && Boolean(user?.roles?.includes("admin"));
+    const shareUrl = isAdmin
+        ? getNglUrl()
+        : user?.nim
+        ? getNglUrl(`/${user.nim}`)
+        : "";
 
     const handleCopyLink = async () => {
         if (!shareUrl) return;
@@ -51,13 +58,13 @@ const ModuleNglSendPage = ({ initialNim }: ModuleNglSendPageProps) => {
                 <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-primary/5 border border-primary/20">
                     <div className="min-w-0">
                         <p className="text-xs font-bold text-primary">
-                            Link NGL Pribadi Anda
+                            {isAdmin ? "Link NGL Resmi HIMA-IF" : "Link NGL Pribadi Anda"}
                         </p>
                         <p className="text-xs text-gray-600 truncate">
                             {shareUrl}
                         </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         <button
                             type="button"
                             onClick={handleCopyLink}
@@ -74,6 +81,14 @@ const ModuleNglSendPage = ({ initialNim }: ModuleNglSendPageProps) => {
                                     Salin Link
                                 </>
                             )}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setShareModalOpen(true)}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gray-900 text-white text-xs font-semibold hover:bg-gray-800 transition cursor-pointer"
+                        >
+                            <FiShare2 className="w-3.5 h-3.5" />
+                            Bagikan ke Medsos
                         </button>
                         <Link
                             href="/inbox"
@@ -150,6 +165,14 @@ const ModuleNglSendPage = ({ initialNim }: ModuleNglSendPageProps) => {
                     </div>
                 </div>
             </section>
+            <NglShareLinkModal
+                isOpen={shareModalOpen}
+                shareUrl={shareUrl}
+                displayName={user?.name}
+                profilePicture={user?.profile_picture}
+                isAdmin={isAdmin}
+                onClose={() => setShareModalOpen(false)}
+            />
         </div>
     );
 };

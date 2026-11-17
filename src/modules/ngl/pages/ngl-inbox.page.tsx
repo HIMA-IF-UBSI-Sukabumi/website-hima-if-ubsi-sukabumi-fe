@@ -4,8 +4,13 @@ import { useState } from "react";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthAxios } from "@/core/hooks/use-auth-axios";
 import { useIsAuthenticated } from "@/core/stores/use-auth-store";
-import { nglService, type NglMessageFilter } from "@/modules/ngl/services/api/ngl.service";
-import NglMessageCard from "@/modules/ngl/components/NglMessageCard";
+import {
+    nglService,
+    type NglMessageFilter,
+    type NglMessageItem,
+} from "@/modules/ngl/services/api/ngl.service";
+import NglMailboxCard from "@/modules/ngl/components/NglMailboxCard";
+import NglMessageModal from "@/modules/ngl/components/NglMessageModal";
 import { getSsoLoginUrl } from "@/lib/utils";
 import { FiInbox, FiLogIn, FiRefreshCw } from "react-icons/fi";
 
@@ -20,9 +25,8 @@ const ModuleNglInboxPage = () => {
     const queryClient = useQueryClient();
 
     const { isLoggedIn, hasHydrated } = useIsAuthenticated();
-
     const [statusFilter, setStatusFilter] = useState<NglMessageFilter>("all");
-    const [markingId, setMarkingId] = useState<string | null>(null);
+    const [selectedMessage, setSelectedMessage] = useState<NglMessageItem | null>(null);
 
     const inboxQuery = useInfiniteQuery({
         queryKey: ["my-ngl-messages", statusFilter],
@@ -38,22 +42,30 @@ const ModuleNglInboxPage = () => {
 
     const markReadMutation = useMutation({
         mutationFn: (id: string) => nglService.markMyMessageRead(authAxios, id),
-        onMutate: (id) => setMarkingId(id),
-        onSettled: () => setMarkingId(null),
-        onSuccess: () => {
+        onSuccess: (res) => {
+            setSelectedMessage((prev) =>
+                prev && prev.id === res.data.id ? res.data : prev
+            );
             queryClient.invalidateQueries({ queryKey: ["my-ngl-messages"] });
         },
     });
+
+    const handleOpenMessage = (msg: NglMessageItem) => {
+        setSelectedMessage(msg);
+        if (!msg.is_read) {
+            markReadMutation.mutate(msg.id);
+        }
+    };
 
     const messages = inboxQuery.data?.pages.flatMap((page) => page.data) ?? [];
 
     if (!hasHydrated) {
         return (
-            <div className="max-w-3xl mx-auto px-4 py-12 space-y-4">
+            <div className="max-w-4xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[1, 2, 3].map((i) => (
                     <div
                         key={i}
-                        className="h-32 rounded-2xl bg-gray-200/70 animate-pulse"
+                        className="h-40 rounded-2xl bg-gray-200/70 animate-pulse"
                     />
                 ))}
             </div>
@@ -86,14 +98,14 @@ const ModuleNglInboxPage = () => {
     }
 
     return (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 className="font-archivo text-2xl text-gray-900">
                         Inbox Pesan Anonim
                     </h1>
                     <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-                        Pesan rahasia yang ditujukan kepada Anda.
+                        Ketuk kotak surat untuk membuka pesan dan membalas ke media sosial.
                     </p>
                 </div>
 
@@ -106,7 +118,7 @@ const ModuleNglInboxPage = () => {
                             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                                 statusFilter === tab.value
                                     ? "bg-white text-primary shadow-xs"
-                                    : "text-gray-600 hover:text-gray-900:text-zinc-200"
+                                    : "text-gray-600 hover:text-gray-900"
                             }`}
                         >
                             {tab.label}
@@ -116,11 +128,11 @@ const ModuleNglInboxPage = () => {
             </div>
 
             {inboxQuery.isLoading ? (
-                <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
                         <div
                             key={i}
-                            className="h-32 rounded-2xl bg-gray-200/70 animate-pulse"
+                            className="h-40 rounded-2xl bg-gray-200/70 animate-pulse"
                         />
                     ))}
                 </div>
@@ -146,15 +158,16 @@ const ModuleNglInboxPage = () => {
                     </p>
                 </div>
             ) : (
-                <div className="space-y-4">
-                    {messages.map((msg) => (
-                        <NglMessageCard
-                            key={msg.id}
-                            message={msg}
-                            onMarkRead={(id) => markReadMutation.mutate(id)}
-                            isMarkingRead={markingId === msg.id}
-                        />
-                    ))}
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {messages.map((msg) => (
+                            <NglMailboxCard
+                                key={msg.id}
+                                message={msg}
+                                onOpen={handleOpenMessage}
+                            />
+                        ))}
+                    </div>
 
                     {inboxQuery.hasNextPage && (
                         <div className="flex justify-center pt-2">
@@ -170,6 +183,11 @@ const ModuleNglInboxPage = () => {
                     )}
                 </div>
             )}
+
+            <NglMessageModal
+                message={selectedMessage}
+                onClose={() => setSelectedMessage(null)}
+            />
         </div>
     );
 };

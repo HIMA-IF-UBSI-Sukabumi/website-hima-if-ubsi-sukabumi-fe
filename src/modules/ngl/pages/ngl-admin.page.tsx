@@ -5,8 +5,13 @@ import Link from "next/link";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthAxios } from "@/core/hooks/use-auth-axios";
 import { useAuthStore, useIsAuthenticated } from "@/core/stores/use-auth-store";
-import { nglService, type NglMessageFilter } from "@/modules/ngl/services/api/ngl.service";
-import NglMessageCard from "@/modules/ngl/components/NglMessageCard";
+import {
+    nglService,
+    type NglMessageFilter,
+    type NglMessageItem,
+} from "@/modules/ngl/services/api/ngl.service";
+import NglMailboxCard from "@/modules/ngl/components/NglMailboxCard";
+import NglMessageModal from "@/modules/ngl/components/NglMessageModal";
 import { getSsoLoginUrl } from "@/lib/utils";
 import { FiInbox, FiLogIn, FiRefreshCw, FiShield } from "react-icons/fi";
 
@@ -25,7 +30,7 @@ const ModuleNglAdminPage = () => {
     const isAdmin = isLoggedIn && Boolean(user?.roles?.includes("admin"));
 
     const [statusFilter, setStatusFilter] = useState<NglMessageFilter>("all");
-    const [markingId, setMarkingId] = useState<string | null>(null);
+    const [selectedMessage, setSelectedMessage] = useState<NglMessageItem | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const adminQuery = useInfiniteQuery({
@@ -42,9 +47,10 @@ const ModuleNglAdminPage = () => {
 
     const markReadMutation = useMutation({
         mutationFn: (id: string) => nglService.markAdminMessageRead(authAxios, id),
-        onMutate: (id) => setMarkingId(id),
-        onSettled: () => setMarkingId(null),
-        onSuccess: () => {
+        onSuccess: (res) => {
+            setSelectedMessage((prev) =>
+                prev && prev.id === res.data.id ? res.data : prev
+            );
             queryClient.invalidateQueries({ queryKey: ["admin-ngl-messages"] });
         },
     });
@@ -54,19 +60,27 @@ const ModuleNglAdminPage = () => {
         onMutate: (id) => setDeletingId(id),
         onSettled: () => setDeletingId(null),
         onSuccess: () => {
+            setSelectedMessage(null);
             queryClient.invalidateQueries({ queryKey: ["admin-ngl-messages"] });
         },
     });
+
+    const handleOpenMessage = (msg: NglMessageItem) => {
+        setSelectedMessage(msg);
+        if (!msg.is_read) {
+            markReadMutation.mutate(msg.id);
+        }
+    };
 
     const messages = adminQuery.data?.pages.flatMap((page) => page.data) ?? [];
 
     if (!hasHydrated) {
         return (
-            <div className="max-w-3xl mx-auto px-4 py-12 space-y-4">
-                {[1, 2].map((i) => (
+            <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[1, 2, 3].map((i) => (
                     <div
                         key={i}
-                        className="h-32 rounded-2xl bg-gray-200/70 animate-pulse"
+                        className="h-40 rounded-2xl bg-gray-200/70 animate-pulse"
                     />
                 ))}
             </div>
@@ -119,7 +133,7 @@ const ModuleNglAdminPage = () => {
     }
 
     return (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-primary">
@@ -129,6 +143,9 @@ const ModuleNglAdminPage = () => {
                     <h1 className="font-archivo text-2xl text-gray-900">
                         Moderasi Pesan Umum NGL
                     </h1>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                        Ketuk kotak surat untuk membaca, membalas ke media sosial, atau menghapus pesan.
+                    </p>
                 </div>
 
                 <div className="inline-flex items-center p-1 rounded-xl bg-gray-100 border border-gray-200/60">
@@ -140,7 +157,7 @@ const ModuleNglAdminPage = () => {
                             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                                 statusFilter === tab.value
                                     ? "bg-white text-primary shadow-xs"
-                                    : "text-gray-600 hover:text-gray-900:text-zinc-200"
+                                    : "text-gray-600 hover:text-gray-900"
                             }`}
                         >
                             {tab.label}
@@ -150,11 +167,11 @@ const ModuleNglAdminPage = () => {
             </div>
 
             {adminQuery.isLoading ? (
-                <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
                         <div
                             key={i}
-                            className="h-32 rounded-2xl bg-gray-200/70 animate-pulse"
+                            className="h-40 rounded-2xl bg-gray-200/70 animate-pulse"
                         />
                     ))}
                 </div>
@@ -180,17 +197,16 @@ const ModuleNglAdminPage = () => {
                     </p>
                 </div>
             ) : (
-                <div className="space-y-4">
-                    {messages.map((msg) => (
-                        <NglMessageCard
-                            key={msg.id}
-                            message={msg}
-                            onMarkRead={(id) => markReadMutation.mutate(id)}
-                            onDelete={(id) => deleteMutation.mutate(id)}
-                            isMarkingRead={markingId === msg.id}
-                            isDeleting={deletingId === msg.id}
-                        />
-                    ))}
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {messages.map((msg) => (
+                            <NglMailboxCard
+                                key={msg.id}
+                                message={msg}
+                                onOpen={handleOpenMessage}
+                            />
+                        ))}
+                    </div>
 
                     {adminQuery.hasNextPage && (
                         <div className="flex justify-center pt-2">
@@ -206,6 +222,13 @@ const ModuleNglAdminPage = () => {
                     )}
                 </div>
             )}
+
+            <NglMessageModal
+                message={selectedMessage}
+                onClose={() => setSelectedMessage(null)}
+                onDelete={(id) => deleteMutation.mutate(id)}
+                isDeleting={Boolean(selectedMessage && deletingId === selectedMessage.id)}
+            />
         </div>
     );
 };
