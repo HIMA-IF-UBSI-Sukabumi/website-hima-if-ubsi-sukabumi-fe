@@ -47,6 +47,21 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         }
     }
 
+    // Serve rules for suaramu & ngl subdomains
+    if (subdomain === 'suaramu' || subdomain === 'ngl') {
+        return {
+            rules: [
+                {
+                    userAgent: '*',
+                    allow: '/',
+                    disallow: ['/api/', '/_next/', '/auth/', '/inbox', '/admin'],
+                },
+            ],
+            sitemap: `${currentBaseUrl}/sitemap.xml`,
+            host: currentBaseUrl,
+        }
+    }
+
     // Serve rules for main portal
     return {
         rules: [
