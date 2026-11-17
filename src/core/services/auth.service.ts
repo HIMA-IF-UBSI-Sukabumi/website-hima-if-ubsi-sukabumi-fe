@@ -9,6 +9,7 @@ export interface AuthUser {
     nim: string;
     status: string;
     roles: string[];
+    profile_picture?: string | null;
 }
 
 export interface AuthExchangeRequest {

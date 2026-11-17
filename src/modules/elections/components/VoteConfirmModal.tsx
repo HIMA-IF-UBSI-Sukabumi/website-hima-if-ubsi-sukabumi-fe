@@ -2,6 +2,7 @@
 
 import type { Candidate } from "@/modules/elections/services/api/elections.service";
 import { resolveImageUrl } from "@/lib/utils";
+import { useLockBodyScroll } from "@/core/hooks/use-lock-body-scroll";
 import { FiAlertTriangle, FiShield, FiX } from "react-icons/fi";
 
 interface VoteConfirmModalProps {
@@ -23,13 +24,15 @@ const VoteConfirmModal = ({
     onConfirm,
     onClose,
 }: VoteConfirmModalProps) => {
+    useLockBodyScroll(Boolean(isOpen && candidate));
+
     if (!isOpen || !candidate) return null;
 
     const imageSrc = resolveImageUrl(candidate.photo_url || candidate.photo);
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs px-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs px-4 overscroll-contain"
             onClick={() => !isSubmitting && onClose()}
         >
             <div

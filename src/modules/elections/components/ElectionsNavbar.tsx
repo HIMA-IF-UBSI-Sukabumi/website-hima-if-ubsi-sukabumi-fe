@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore, useIsAuthenticated } from "@/core/stores/use-auth-store";
 import { useAuthAxios } from "@/core/hooks/use-auth-axios";
 import { authService } from "@/core/services/auth.service";
-import { getSsoLoginUrl } from "@/lib/utils";
+import { getSsoLoginUrl, resolveImageUrl } from "@/lib/utils";
 import { FaInstagram } from "react-icons/fa6";
 import { HiOutlineEnvelope } from "react-icons/hi2";
 import { FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
@@ -142,7 +142,15 @@ const ElectionsNavbar = () => {
                         {isLoggedIn && user ? (
                             <div className="flex items-center gap-2 ml-1">
                                 <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-smoky/70 border border-gray-200/80">
-                                    <FiUser className="w-3.5 h-3.5 text-primary" />
+                                    {user.profile_picture ? (
+                                        <img
+                                            src={resolveImageUrl(user.profile_picture)}
+                                            alt={user.name}
+                                            className="w-6 h-6 rounded-full object-cover shrink-0"
+                                        />
+                                    ) : (
+                                        <FiUser className="w-3.5 h-3.5 text-primary" />
+                                    )}
                                     <div className="text-xs leading-tight">
                                         <p className="font-semibold text-gray-800 truncate max-w-[130px]">
                                             {user.name}
