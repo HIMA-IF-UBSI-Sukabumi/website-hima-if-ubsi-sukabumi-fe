@@ -3,6 +3,8 @@
  */
 export const SUBDOMAIN_ROUTES: Record<string, string> = {
     news: 'news-hub',
+    suaramu: 'elections',
+    ngl: 'ngl',
 }
 
 /**

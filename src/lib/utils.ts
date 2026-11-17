@@ -71,3 +71,20 @@ export function getSubdomainUrl(subdomain: string) {
 export const getNewsUrl = (path?: string) => {
     return getSubdomainUrl('news') + (path && !path.startsWith('/') ? '/' + path : path || '')
 }
+
+export const getSuaramuUrl = (path?: string) => {
+    return getSubdomainUrl('suaramu') + (path && !path.startsWith('/') ? '/' + path : path || '')
+}
+
+export const getNglUrl = (path?: string) => {
+    return getSubdomainUrl('ngl') + (path && !path.startsWith('/') ? '/' + path : path || '')
+}
+
+export const getBackendBaseUrl = () => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+    return apiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '')
+}
+
+export const getSsoLoginUrl = (audience: 'elections' | 'ngl') => {
+    return `${getBackendBaseUrl()}/sso/${audience}`
+}
