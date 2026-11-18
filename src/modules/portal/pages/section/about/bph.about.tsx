@@ -71,6 +71,7 @@ const BphAbout = () => {
                   title={item.title}
                   name={item.name}
                   imageUrl={resolveImage(item.image)}
+                  socialMedia={item.social_media}
                 />
               </div>
             ))}
@@ -83,6 +84,7 @@ const BphAbout = () => {
                   title={item.title}
                   name={item.name}
                   imageUrl={resolveImage(item.image)}
+                  socialMedia={item.social_media}
                 />
               </div>
             ))}
@@ -98,6 +100,7 @@ const BphAbout = () => {
                   title={item.title}
                   name={item.name}
                   imageUrl={resolveImage(item.image)}
+                  socialMedia={item.social_media}
                 />
               </div>
             ))}

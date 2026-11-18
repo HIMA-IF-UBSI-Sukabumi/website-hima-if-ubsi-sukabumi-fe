@@ -1,4 +1,5 @@
 import { simpleRequest } from "@/core/services/base.service";
+import type { SocialMediaLinks } from "@/core/types/social-media";
 import { AxiosInstance } from "axios";
 
 export const departmentService = {
@@ -13,6 +14,7 @@ export interface DepartmentTeamMember {
   img: string | null;
   isLeader: boolean;
   division: string;
+  social_media?: SocialMediaLinks | null;
 }
 
 export interface DepartmentProgram {

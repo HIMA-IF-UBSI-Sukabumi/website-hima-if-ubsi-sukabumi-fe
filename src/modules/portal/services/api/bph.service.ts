@@ -1,4 +1,5 @@
 import { simpleRequest } from "@/core/services/base.service";
+import type { SocialMediaLinks } from "@/core/types/social-media";
 import { AxiosInstance } from "axios";
 
 export const bphService = {
@@ -11,4 +12,5 @@ export interface BphItem {
   title: string;
   name: string;
   image: string;
+  social_media?: SocialMediaLinks | null;
 }

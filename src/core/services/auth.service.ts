@@ -1,4 +1,5 @@
 import { simpleBodyRequest, simpleRequest } from "@/core/services/base.service";
+import type { SocialMediaLinks } from "@/core/types/social-media";
 import type { AxiosInstance } from "axios";
 
 export type SsoAudience = "elections" | "ngl";
@@ -10,6 +11,7 @@ export interface AuthUser {
     status: string;
     roles: string[];
     profile_picture?: string | null;
+    social_media?: SocialMediaLinks | null;
 }
 
 export interface AuthExchangeRequest {

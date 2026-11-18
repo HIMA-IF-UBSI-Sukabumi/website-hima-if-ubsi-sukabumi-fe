@@ -85,6 +85,10 @@ export const getBackendBaseUrl = () => {
     return apiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '')
 }
 
+export const getConsoleUrl = () => {
+    return (process.env.NEXT_PUBLIC_CONSOLE_URL || getBackendBaseUrl()).replace(/\/$/, '')
+}
+
 export const getSsoLoginUrl = (audience: 'elections' | 'ngl') => {
     return `${getBackendBaseUrl()}/sso/${audience}`
 }
