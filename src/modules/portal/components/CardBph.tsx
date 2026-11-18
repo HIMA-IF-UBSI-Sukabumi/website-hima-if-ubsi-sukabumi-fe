@@ -1,12 +1,15 @@
 import React from "react";
+import SocialMediaIcons from "@/components/social-media-icons";
+import type { SocialMediaLinks } from "@/core/types/social-media";
 
 type CardBphProps = {
   imageUrl: string;
   title: string;
   name: string;
+  socialMedia?: SocialMediaLinks | null;
 };
 
-const CardBph = ({ imageUrl, title, name }: CardBphProps) => {
+const CardBph = ({ imageUrl, title, name, socialMedia }: CardBphProps) => {
   return (
     <div className="relative w-85 h-100 rounded-3xl overflow-hidden shadow-md group border border-primary">
       <img
@@ -36,6 +39,11 @@ const CardBph = ({ imageUrl, title, name }: CardBphProps) => {
         >
           {name}
         </p>
+        <SocialMediaIcons
+          links={socialMedia}
+          variant="dark-overlay"
+          className="mt-2.5 justify-center"
+        />
       </div>
     </div>
   );

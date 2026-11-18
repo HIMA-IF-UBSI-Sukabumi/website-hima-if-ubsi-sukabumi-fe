@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxios from "@/core/hooks/use-axios";
 import { projectService, ProjectItem } from "@/modules/portal/services/api/project.service";
 import { formatTimestamp, resolveImageUrl } from "@/lib/utils";
+import SocialMediaIcons from "@/components/social-media-icons";
 import {
     FiArrowLeft,
     FiCalendar,
@@ -19,6 +20,7 @@ import {
     FiChevronLeft,
     FiX,
     FiLayers,
+    FiUsers,
 } from "react-icons/fi";
 import { FaWhatsapp, FaXTwitter, FaLinkedin } from "react-icons/fa6";
 
@@ -340,27 +342,117 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
                         </div>
 
                         {/* Author Info Card */}
-                        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-                            <h2 className="text-base font-black text-black mb-4">
+                        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-3">
+                            <h2 className="text-base font-black text-black">
                                 Tentang Pengembang
                             </h2>
-                            <div className="flex items-center gap-3.5 mb-3">
-                                <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary font-bold text-base flex items-center justify-center shrink-0">
-                                    {authorInitials}
-                                </div>
+                            <div className="flex items-center gap-3.5">
+                                {project.author?.profile_picture ? (
+                                    <img
+                                        src={resolveImageUrl(project.author.profile_picture)}
+                                        alt={project.author.name}
+                                        className="w-12 h-12 rounded-2xl object-cover shrink-0 border border-gray-100"
+                                    />
+                                ) : (
+                                    <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary font-bold text-base flex items-center justify-center shrink-0">
+                                        {authorInitials}
+                                    </div>
+                                )}
                                 <div className="min-w-0">
                                     <h3 className="font-bold text-gray-900 text-sm truncate">
                                         {project.author?.name ?? "Mahasiswa Informatika"}
                                     </h3>
-                                    <p className="text-xs text-gray-400 truncate">
-                                        UBSI PSDKU Sukabumi
+                                    <p className="text-xs text-gray-500 truncate">
+                                        {project.author?.prodi
+                                            ? `${project.author.prodi} • UBSI PSDKU Sukabumi`
+                                            : "UBSI PSDKU Sukabumi"}
                                     </p>
                                 </div>
                             </div>
+                            <SocialMediaIcons links={project.author?.social_media} />
                             <p className="text-xs text-gray-500 leading-relaxed pt-2 border-t border-gray-100">
                                 Bagian dari talenta teknologi dan inovator muda Himpunan Mahasiswa Informatika.
                             </p>
                         </div>
+
+                        {/* Contributors Card */}
+                        {project.contributors && project.contributors.length > 0 && (
+                            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
+                                <h2 className="text-base font-black text-black flex items-center gap-2">
+                                    <FiUsers className="w-4 h-4 text-primary" />
+                                    Tim &amp; Kontributor ({project.contributors.length})
+                                </h2>
+                                <div className="space-y-3">
+                                    {project.contributors.map((contributor, idx) => {
+                                        const avatarUrl = resolveImageUrl(contributor.profile_picture);
+                                        const initials = contributor.name
+                                            .split(" ")
+                                            .slice(0, 2)
+                                            .map((n) => n[0])
+                                            .join("")
+                                            .toUpperCase();
+
+                                        return (
+                                            <div
+                                                key={contributor.user_id ?? `${contributor.name}-${idx}`}
+                                                className="flex items-start gap-3 p-3 rounded-2xl bg-gray-50/80 border border-gray-100"
+                                            >
+                                                {avatarUrl ? (
+                                                    <img
+                                                        src={avatarUrl}
+                                                        alt={contributor.name}
+                                                        className="w-10 h-10 rounded-xl object-cover shrink-0 border border-gray-200"
+                                                    />
+                                                ) : (
+                                                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                                                        {initials || "IF"}
+                                                    </div>
+                                                )}
+
+                                                <div className="min-w-0 flex-1 space-y-1">
+                                                    <div className="flex flex-wrap items-center gap-1.5">
+                                                        {contributor.profile_url ? (
+                                                            <a
+                                                                href={contributor.profile_url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="font-bold text-sm text-gray-900 hover:text-primary transition inline-flex items-center gap-1 truncate"
+                                                            >
+                                                                <span className="truncate">{contributor.name}</span>
+                                                                <FiExternalLink className="w-3 h-3 shrink-0" />
+                                                            </a>
+                                                        ) : (
+                                                            <p className="font-bold text-sm text-gray-900 truncate">
+                                                                {contributor.name}
+                                                            </p>
+                                                        )}
+
+                                                        {contributor.type === "external" && (
+                                                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-gray-200/80 text-gray-600">
+                                                                Eksternal
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    {(contributor.role || contributor.prodi) && (
+                                                        <p className="text-xs text-gray-500 truncate">
+                                                            {[contributor.role, contributor.prodi]
+                                                                .filter(Boolean)
+                                                                .join(" • ")}
+                                                        </p>
+                                                    )}
+
+                                                    <SocialMediaIcons
+                                                        links={contributor.social_media}
+                                                        className="pt-1"
+                                                    />
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Share Card */}
                         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">

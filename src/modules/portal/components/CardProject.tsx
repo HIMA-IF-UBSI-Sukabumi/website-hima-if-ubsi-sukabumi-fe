@@ -9,6 +9,8 @@ type CardProjectProps = {
 
 const CardProject = ({ project }: CardProjectProps) => {
     const coverUrl = resolveImageUrl(project.cover_image);
+    const authorAvatarUrl = resolveImageUrl(project.author?.profile_picture);
+    const contributorsCount = project.contributors?.length ?? 0;
 
     // Clean description from HTML tags if any
     const cleanDesc = project.description
@@ -94,13 +96,26 @@ const CardProject = ({ project }: CardProjectProps) => {
 
                 {/* Card Footer */}
                 <div className="pt-4 mt-auto border-t border-gray-100 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
-                            {authorInitials}
-                        </div>
-                        <span className="text-xs font-semibold text-gray-700 truncate max-w-[130px]">
+                    <div className="flex items-center gap-2 min-w-0">
+                        {authorAvatarUrl ? (
+                            <img
+                                src={authorAvatarUrl}
+                                alt={project.author?.name ?? "Author"}
+                                className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-100"
+                            />
+                        ) : (
+                            <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                                {authorInitials}
+                            </div>
+                        )}
+                        <span className="text-xs font-semibold text-gray-700 truncate max-w-[115px]">
                             {project.author?.name ?? "Mahasiswa IF"}
                         </span>
+                        {contributorsCount > 0 && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">
+                                +{contributorsCount}
+                            </span>
+                        )}
                     </div>
 
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:text-primary transition-colors">

@@ -1,11 +1,25 @@
 import { simpleRequest } from "@/core/services/base.service";
+import type { SocialMediaLinks } from "@/core/types/social-media";
 import { AxiosInstance } from "axios";
 
 export interface ProjectAuthor {
     id: string;
     name: string;
-    email?: string;
-    avatar?: string;
+    prodi: string;
+    profile_picture: string | null;
+    social_media: SocialMediaLinks;
+}
+
+export interface ProjectContributor {
+    type: "internal" | "external";
+    user_id: string | null;
+    name: string;
+    nim: string | null;
+    prodi: string | null;
+    profile_picture: string | null;
+    role: string | null;
+    profile_url: string | null;
+    social_media: SocialMediaLinks | null;
 }
 
 export interface ProjectItem {
@@ -18,6 +32,7 @@ export interface ProjectItem {
     slug: string;
     cover_image: string | null;
     author: ProjectAuthor | null;
+    contributors?: ProjectContributor[];
     created_at: string;
     updated_at: string;
 }
