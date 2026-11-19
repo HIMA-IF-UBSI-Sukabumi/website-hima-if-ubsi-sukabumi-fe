@@ -1,6 +1,6 @@
 'use client'
 
-import { formatTimestamp } from "@/lib/utils";
+import { formatTimestampWithTime } from "@/lib/utils";
 import type { NglMessageItem } from "@/modules/ngl/services/api/ngl.service";
 import { FiClock, FiMail } from "react-icons/fi";
 import { HiOutlineEnvelopeOpen } from "react-icons/hi2";
@@ -62,7 +62,7 @@ const NglMailboxCard = ({ message, onOpen }: NglMailboxCardProps) => {
                 </p>
                 <p className="inline-flex items-center gap-1 text-[11px] text-gray-400">
                     <FiClock className="w-3 h-3" />
-                    {formatTimestamp(message.created_at)}
+                    {formatTimestampWithTime(message.created_at)}
                 </p>
             </div>
         </button>

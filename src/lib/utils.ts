@@ -33,6 +33,27 @@ export function formatTimestamp(timestamp: string) {
     }
 }
 
+export function formatTimestampWithTime(timestamp: string) {
+    try {
+        const isoStr = timestamp.includes(' ') ? timestamp.replace(' ', 'T') : timestamp;
+        const date = new Date(isoStr);
+        if (isNaN(date.getTime())) return timestamp;
+        const datePart = date.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+        const timePart = date.toLocaleTimeString('id-ID', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
+        return `${datePart}, ${timePart.replace(/\./g, ':')}`;
+    } catch {
+        return timestamp;
+    }
+}
+
 export const formatDate = (dateStr: string) => {
     try {
         const isoStr = dateStr.includes(' ') ? dateStr.replace(' ', 'T') : dateStr;
