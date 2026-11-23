@@ -29,10 +29,7 @@ const ElectionCard = ({ election, voterStatus }: ElectionCardProps) => {
     const badge = STATUS_BADGE[election.status] ?? STATUS_BADGE.closed;
 
     return (
-        <Link
-            href={`/${election.slug}`}
-            className="group flex flex-col justify-between bg-white rounded-2xl border border-gray-100 p-6 shadow-xs hover:shadow-md hover:border-primary/30:border-indigo-500/40 transition-all duration-200"
-        >
+        <div className="group relative flex flex-col justify-between bg-white rounded-2xl border border-gray-100 p-6 shadow-xs hover:shadow-md hover:border-primary/30 transition-all duration-200">
             <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <span
@@ -68,8 +65,13 @@ const ElectionCard = ({ election, voterStatus }: ElectionCardProps) => {
                     )}
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary:text-indigo-400 transition line-clamp-2 mb-2">
-                    {election.title}
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition line-clamp-2 mb-2">
+                    <Link
+                        href={`/${election.slug}`}
+                        className="after:absolute after:inset-0 after:z-0"
+                    >
+                        {election.title}
+                    </Link>
                 </h3>
 
                 {election.description && (
@@ -87,7 +89,7 @@ const ElectionCard = ({ election, voterStatus }: ElectionCardProps) => {
                     </span>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between gap-2 text-xs text-gray-500">
                     <div className="flex items-center gap-4">
                         <span className="inline-flex items-center gap-1.5">
                             <FiUsers className="w-3.5 h-3.5 text-primary/70" />
@@ -99,13 +101,24 @@ const ElectionCard = ({ election, voterStatus }: ElectionCardProps) => {
                         </span>
                     </div>
 
-                    <span className="inline-flex items-center gap-1 font-semibold text-primary group-hover:translate-x-0.5 transition">
-                        Detail
-                        <FiArrowRight className="w-3.5 h-3.5" />
-                    </span>
+                    <div className="relative z-10 flex items-center gap-3 shrink-0">
+                        {election.can_show_results && (
+                            <Link
+                                href={`/${election.slug}/results`}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary font-semibold hover:bg-primary hover:text-white transition"
+                            >
+                                <FiBarChart2 className="w-3.5 h-3.5" />
+                                Lihat Hasil
+                            </Link>
+                        )}
+                        <span className="inline-flex items-center gap-1 font-semibold text-primary group-hover:translate-x-0.5 transition">
+                            Detail
+                            <FiArrowRight className="w-3.5 h-3.5" />
+                        </span>
+                    </div>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 };
 

@@ -1,19 +1,114 @@
 'use client'
 
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { resolveImageUrl } from "@/lib/utils";
 import type { ElectionResultsResponse } from "@/modules/elections/services/api/elections.service";
 import { FiBarChart2, FiAward } from "react-icons/fi";
 
+gsap.registerPlugin(useGSAP);
+
 interface ElectionResultsSectionProps {
     data: ElectionResultsResponse;
+    animate?: boolean;
+    replayKey?: number;
 }
 
-const ElectionResultsSection = ({ data }: ElectionResultsSectionProps) => {
+const ElectionResultsSection = ({
+    data,
+    animate = false,
+    replayKey = 0,
+}: ElectionResultsSectionProps) => {
+    const containerRef = useRef<HTMLElement>(null);
+
     const sortedResults = [...data.results].sort((a, b) => b.votes - a.votes);
     const maxVotes = sortedResults[0]?.votes ?? 0;
 
+    useGSAP(
+        () => {
+            if (!animate || !containerRef.current) return;
+
+            const cards = gsap.utils.toArray<HTMLElement>(".result-card", containerRef.current);
+            const bars = gsap.utils.toArray<HTMLElement>(".result-bar", containerRef.current);
+            const voteEls = gsap.utils.toArray<HTMLElement>(".result-votes", containerRef.current);
+            const pctEls = gsap.utils.toArray<HTMLElement>(".result-pct", containerRef.current);
+            const leaderBadges = gsap.utils.toArray<HTMLElement>(".leader-badge", containerRef.current);
+
+            if (cards.length > 0) {
+                gsap.from(cards, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 0.5,
+                    ease: "power2.out",
+                });
+            }
+
+            bars.forEach((bar) => {
+                const targetWidth = bar.dataset.targetWidth ?? "0%";
+                gsap.fromTo(
+                    bar,
+                    { width: "0%" },
+                    {
+                        width: targetWidth,
+                        duration: 2.2,
+                        delay: 0.25,
+                        ease: "power2.out",
+                    }
+                );
+            });
+
+            voteEls.forEach((el) => {
+                const target = Number(el.dataset.targetVotes ?? 0);
+                const counter = { value: 0 };
+                gsap.to(counter, {
+                    value: target,
+                    duration: 2.2,
+                    delay: 0.25,
+                    ease: "power2.out",
+                    onUpdate: () => {
+                        el.textContent = `${Math.round(counter.value)} suara`;
+                    },
+                });
+            });
+
+            pctEls.forEach((el) => {
+                const target = Number(el.dataset.targetPct ?? 0);
+                const counter = { value: 0 };
+                gsap.to(counter, {
+                    value: target,
+                    duration: 2.2,
+                    delay: 0.25,
+                    ease: "power2.out",
+                    onUpdate: () => {
+                        const rounded = Math.round(counter.value * 10) / 10;
+                        el.textContent = `${rounded}%`;
+                    },
+                });
+            });
+
+            if (leaderBadges.length > 0) {
+                gsap.from(leaderBadges, {
+                    scale: 0,
+                    opacity: 0,
+                    duration: 0.5,
+                    delay: 2.1,
+                    ease: "back.out(1.8)",
+                });
+            }
+        },
+        {
+            scope: containerRef,
+            dependencies: [animate, replayKey, data.total_votes],
+            revertOnUpdate: true,
+        }
+    );
+
     return (
-        <section className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-xs">
+        <section
+            ref={containerRef}
+            className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-xs"
+        >
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <div className="flex items-center gap-2.5">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
@@ -42,7 +137,7 @@ const ElectionResultsSection = ({ data }: ElectionResultsSectionProps) => {
                     return (
                         <div
                             key={item.candidate_id}
-                            className={`p-4 rounded-xl border ${
+                            className={`result-card p-4 rounded-xl border ${
                                 isLeader
                                     ? "border-primary/40 bg-primary/5"
                                     : "border-gray-100 bg-gray-50/50"
@@ -70,26 +165,36 @@ const ElectionResultsSection = ({ data }: ElectionResultsSectionProps) => {
                                                 {item.name}
                                             </h3>
                                             {isLeader && (
-                                                <FiAward className="w-4 h-4 text-amber-500 shrink-0" />
+                                                <span className="leader-badge inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 shrink-0">
+                                                    <FiAward className="w-3.5 h-3.5" />
+                                                    Unggul
+                                                </span>
                                             )}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="text-right shrink-0">
-                                    <span className="text-sm font-extrabold text-gray-900">
-                                        {percentage}%
+                                    <span
+                                        data-target-pct={percentage}
+                                        className="result-pct text-sm font-extrabold text-gray-900"
+                                    >
+                                        {animate ? "0%" : `${percentage}%`}
                                     </span>
-                                    <p className="text-[11px] text-gray-500">
-                                        {item.votes} suara
+                                    <p
+                                        data-target-votes={item.votes}
+                                        className="result-votes text-[11px] text-gray-500"
+                                    >
+                                        {animate ? "0 suara" : `${item.votes} suara`}
                                     </p>
                                 </div>
                             </div>
 
                             <div className="w-full h-2.5 rounded-full bg-gray-200 overflow-hidden">
                                 <div
-                                    className="h-full rounded-full bg-primary transition-all duration-500"
-                                    style={{ width: `${percentage}%` }}
+                                    data-target-width={`${percentage}%`}
+                                    className="result-bar h-full rounded-full bg-primary"
+                                    style={{ width: animate ? "0%" : `${percentage}%` }}
                                 />
                             </div>
                         </div>
