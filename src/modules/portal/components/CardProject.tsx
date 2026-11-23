@@ -97,20 +97,44 @@ const CardProject = ({ project }: CardProjectProps) => {
                 {/* Card Footer */}
                 <div className="pt-4 mt-auto border-t border-gray-100 flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
-                        {authorAvatarUrl ? (
-                            <img
-                                src={authorAvatarUrl}
-                                alt={project.author?.name ?? "Author"}
-                                className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-100"
-                            />
+                        {project.author?.profile_slug ? (
+                            <Link
+                                href={`/p/${project.author.profile_slug}`}
+                                className="relative z-20 flex items-center gap-2 min-w-0 group/author hover:text-primary transition-colors"
+                            >
+                                {authorAvatarUrl ? (
+                                    <img
+                                        src={authorAvatarUrl}
+                                        alt={project.author.name}
+                                        className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-100"
+                                    />
+                                ) : (
+                                    <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                                        {authorInitials}
+                                    </div>
+                                )}
+                                <span className="text-xs font-semibold text-gray-700 group-hover/author:text-primary truncate max-w-[115px]">
+                                    {project.author.name}
+                                </span>
+                            </Link>
                         ) : (
-                            <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
-                                {authorInitials}
-                            </div>
+                            <>
+                                {authorAvatarUrl ? (
+                                    <img
+                                        src={authorAvatarUrl}
+                                        alt={project.author?.name ?? "Author"}
+                                        className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-100"
+                                    />
+                                ) : (
+                                    <div className="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                                        {authorInitials}
+                                    </div>
+                                )}
+                                <span className="text-xs font-semibold text-gray-700 truncate max-w-[115px]">
+                                    {project.author?.name ?? "Mahasiswa IF"}
+                                </span>
+                            </>
                         )}
-                        <span className="text-xs font-semibold text-gray-700 truncate max-w-[115px]">
-                            {project.author?.name ?? "Mahasiswa IF"}
-                        </span>
                         {contributorsCount > 0 && (
                             <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold shrink-0">
                                 +{contributorsCount}

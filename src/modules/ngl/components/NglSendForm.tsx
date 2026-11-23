@@ -26,7 +26,9 @@ const MAX_CONTENT_LENGTH = 2000;
 const NglSendForm = ({ initialNim }: NglSendFormProps) => {
     const axios = useAxios();
 
-    const [mode, setMode] = useState<SendMode>("general");
+    const [mode, setMode] = useState<SendMode>(
+        initialNim?.trim() ? "personal" : "general"
+    );
     const [nim, setNim] = useState(initialNim ?? "");
     const [resolved, setResolved] = useState<NglResolveResponse | null>(null);
     const [resolveError, setResolveError] = useState<string | null>(null);
