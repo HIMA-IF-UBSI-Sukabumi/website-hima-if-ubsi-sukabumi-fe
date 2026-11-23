@@ -186,9 +186,18 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
                                     <p className="text-[11px] uppercase tracking-wider text-gray-400 font-bold">
                                         Pengembang
                                     </p>
-                                    <p className="font-semibold text-gray-800">
-                                        {project.author?.name ?? "Mahasiswa Informatika"}
-                                    </p>
+                                    {project.author?.profile_slug ? (
+                                        <Link
+                                            href={`/p/${project.author.profile_slug}`}
+                                            className="font-semibold text-gray-800 hover:text-primary transition"
+                                        >
+                                            {project.author.name}
+                                        </Link>
+                                    ) : (
+                                        <p className="font-semibold text-gray-800">
+                                            {project.author?.name ?? "Mahasiswa Informatika"}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -359,9 +368,18 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
                                     </div>
                                 )}
                                 <div className="min-w-0">
-                                    <h3 className="font-bold text-gray-900 text-sm truncate">
-                                        {project.author?.name ?? "Mahasiswa Informatika"}
-                                    </h3>
+                                    {project.author?.profile_slug ? (
+                                        <Link
+                                            href={`/p/${project.author.profile_slug}`}
+                                            className="font-bold text-gray-900 hover:text-primary transition text-sm truncate block"
+                                        >
+                                            {project.author.name}
+                                        </Link>
+                                    ) : (
+                                        <h3 className="font-bold text-gray-900 text-sm truncate">
+                                            {project.author?.name ?? "Mahasiswa Informatika"}
+                                        </h3>
+                                    )}
                                     <p className="text-xs text-gray-500 truncate">
                                         {project.author?.prodi
                                             ? `${project.author.prodi} • UBSI PSDKU Sukabumi`
@@ -411,7 +429,14 @@ const ModulePortalProjectDetailPage = ({ slug }: ProjectDetailPageProps) => {
 
                                                 <div className="min-w-0 flex-1 space-y-1">
                                                     <div className="flex flex-wrap items-center gap-1.5">
-                                                        {contributor.profile_url ? (
+                                                        {contributor.profile_slug ? (
+                                                            <Link
+                                                                href={`/p/${contributor.profile_slug}`}
+                                                                className="font-bold text-sm text-gray-900 hover:text-primary transition inline-flex items-center gap-1 truncate"
+                                                            >
+                                                                <span className="truncate">{contributor.name}</span>
+                                                            </Link>
+                                                        ) : contributor.profile_url ? (
                                                             <a
                                                                 href={contributor.profile_url}
                                                                 target="_blank"

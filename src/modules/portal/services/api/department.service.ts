@@ -14,6 +14,7 @@ export interface DepartmentTeamMember {
   img: string | null;
   isLeader: boolean;
   division: string;
+  profile_slug?: string | null;
   social_media?: SocialMediaLinks | null;
 }
 

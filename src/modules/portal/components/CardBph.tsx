@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import SocialMediaIcons from "@/components/social-media-icons";
 import type { SocialMediaLinks } from "@/core/types/social-media";
 
@@ -6,10 +7,11 @@ type CardBphProps = {
   imageUrl: string;
   title: string;
   name: string;
+  profileHref?: string | null;
   socialMedia?: SocialMediaLinks | null;
 };
 
-const CardBph = ({ imageUrl, title, name, socialMedia }: CardBphProps) => {
+const CardBph = ({ imageUrl, title, name, profileHref, socialMedia }: CardBphProps) => {
   return (
     <div className="relative w-85 h-100 rounded-3xl overflow-hidden shadow-md group border border-primary">
       <img
@@ -30,20 +32,35 @@ const CardBph = ({ imageUrl, title, name, socialMedia }: CardBphProps) => {
         >
           {title}
         </h3>
-        <p
-          className="text-gray-200 font-light text-md md:text-lg text-center drop-shadow-sm"
-          style={{
-            textShadow:
-              "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
-          }}
-        >
-          {name}
-        </p>
-        <SocialMediaIcons
-          links={socialMedia}
-          variant="dark-overlay"
-          className="mt-2.5 justify-center"
-        />
+        {profileHref ? (
+          <Link
+            href={profileHref}
+            className="text-gray-200 hover:text-white font-light text-md md:text-lg text-center drop-shadow-sm after:absolute after:inset-0 after:z-0"
+            style={{
+              textShadow:
+                "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+            }}
+          >
+            {name}
+          </Link>
+        ) : (
+          <p
+            className="text-gray-200 font-light text-md md:text-lg text-center drop-shadow-sm"
+            style={{
+              textShadow:
+                "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+            }}
+          >
+            {name}
+          </p>
+        )}
+        <div className="relative z-20">
+          <SocialMediaIcons
+            links={socialMedia}
+            variant="dark-overlay"
+            className="mt-2.5 justify-center"
+          />
+        </div>
       </div>
     </div>
   );

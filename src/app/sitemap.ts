@@ -229,5 +229,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // ignore
     }
 
-    return [...portalStaticRoutes, ...departmentRoutes, ...projectRoutes, ...eventRoutes]
+    // Fetch public talent profiles
+    const talentRoutes: MetadataRoute.Sitemap = []
+    try {
+        let cursor: string | null = null
+        let collected = 0
+        const MAX_TALENTS = 500
+
+        while (collected < MAX_TALENTS) {
+            const url = new URL(`${apiUrl}/talents`)
+            url.searchParams.set('per_page', '50')
+            if (cursor) url.searchParams.set('cursor', cursor)
+
+            const res = await fetch(url.toString(), {
+                next: { revalidate: 60 * 60 },
+            })
+            if (!res.ok) break
+
+            const json = await res.json()
+            const items: Array<{ profile_slug?: string }> = json?.data ?? []
+            if (items.length === 0) break
+
+            for (const item of items) {
+                if (item.profile_slug) {
+                    talentRoutes.push({
+                        url: `${currentBaseUrl}/p/${item.profile_slug}`,
+                        lastModified: new Date(),
+                        changeFrequency: 'weekly',
+                        priority: 0.7,
+                    })
+                }
+            }
+
+            collected += items.length
+            cursor = json?.next_cursor ? String(json.next_cursor) : null
+            if (!cursor) break
+        }
+    } catch {
+        // ignore
+    }
+
+    return [...portalStaticRoutes, ...departmentRoutes, ...projectRoutes, ...eventRoutes, ...talentRoutes]
 }

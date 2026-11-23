@@ -6,6 +6,7 @@ export interface ProjectAuthor {
     id: string;
     name: string;
     prodi: string;
+    profile_slug?: string | null;
     profile_picture: string | null;
     social_media: SocialMediaLinks;
 }
@@ -16,6 +17,7 @@ export interface ProjectContributor {
     name: string;
     nim: string | null;
     prodi: string | null;
+    profile_slug?: string | null;
     profile_picture: string | null;
     role: string | null;
     profile_url: string | null;

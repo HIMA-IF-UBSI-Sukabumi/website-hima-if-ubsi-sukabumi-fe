@@ -37,6 +37,7 @@ const MemberDepartment = ({ data }: Props) => {
             imageUrl={resolveImage(leader.img)}
             title={leader.division}
             name={leader.name}
+            profileHref={leader.profile_slug ? `/p/${leader.profile_slug}` : null}
             socialMedia={leader.social_media}
           />
         </div>
@@ -65,6 +66,9 @@ const MemberDepartment = ({ data }: Props) => {
                     <CardMember
                       imageUrl={resolveImage(member.img)}
                       name={member.name}
+                      profileHref={
+                        member.profile_slug ? `/p/${member.profile_slug}` : null
+                      }
                       socialMedia={member.social_media}
                     />
                   </div>

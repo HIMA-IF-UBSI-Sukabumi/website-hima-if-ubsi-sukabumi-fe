@@ -12,5 +12,6 @@ export interface BphItem {
   title: string;
   name: string;
   image: string;
+  profile_slug?: string | null;
   social_media?: SocialMediaLinks | null;
 }
