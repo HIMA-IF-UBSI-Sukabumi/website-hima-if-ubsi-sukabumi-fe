@@ -68,7 +68,7 @@ const ModuleTalentsDetailPage = ({
                 </div>
                 <div className="space-y-2">
                     <h1 className="font-archivo text-2xl text-gray-900">
-                        Profil Talent Tidak Ditemukan
+                        Portfolio Tidak Ditemukan
                     </h1>
                     <p className="text-sm text-gray-600 leading-relaxed">
                         Profil mahasiswa dengan pengenal{" "}

@@ -130,7 +130,7 @@ const TalentHeroCard = ({
                             type="button"
                             onClick={() =>
                                 share({
-                                    title: `${profile.name} | HIMA-IF Talent`,
+                                    title: `${profile.name} | HIMA-IF Portfolio`,
                                     text:
                                         profile.headline ||
                                         `Lihat portofolio ${profile.name} di HIMA-IF UBSI PSDKU Sukabumi`,

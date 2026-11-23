@@ -33,7 +33,7 @@ const TalentNavbar = () => {
             <div className="bg-primary text-white text-xs py-1.5 px-4 hidden sm:flex items-center justify-between">
                 <div className="flex items-center gap-2 overflow-hidden flex-1">
                     <span className="bg-white text-primary font-extrabold text-[10px] px-2 py-0.5 rounded-sm uppercase tracking-wider shrink-0">
-                        Profil Talent
+                        Portfolio
                     </span>
                     <p className="truncate font-medium text-white/90">
                         Portofolio Publik Mahasiswa &amp; Alumni HIMA-IF UBSI PSDKU Sukabumi
@@ -75,7 +75,7 @@ const TalentNavbar = () => {
                                     HIMA<span className="text-secondary">-IF</span>
                                 </span>
                                 <span className="text-[10px] font-extrabold bg-primary text-white px-1.5 py-0.5 rounded tracking-wider uppercase">
-                                    Talent
+                                    Portfolio
                                 </span>
                             </div>
                             <p className="text-[10px] text-gray-500 font-medium">

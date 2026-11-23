@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { profile } = data;
     const canonicalSlug = profile.profile_slug || identifier;
     const canonicalPath = `/p/${canonicalSlug}`;
-    const title = `${profile.name} - Profil Talent`;
+    const title = `${profile.name} - Portfolio`;
     const description = buildDescription(data);
     const avatarUrl = resolveImageUrl(profile.avatar);
     const ogImage = avatarUrl || "/assets/logo-himaif.webp";
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             profile.name,
             profile.nim,
             ...profile.skills,
-            "Profil Talent HIMA-IF",
+            "Portfolio HIMA-IF",
             "Portofolio Mahasiswa Informatika",
             "UBSI PSDKU Sukabumi",
         ],
@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             type: "profile",
             locale: "id_ID",
             url: canonicalPath,
-            title: `${profile.name} | HIMA-IF Talent`,
+            title: `${profile.name} | HIMA-IF Portfolio`,
             description,
             images: [
                 {
@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
         twitter: {
             card: avatarUrl ? "summary_large_image" : "summary",
-            title: `${profile.name} | HIMA-IF Talent`,
+            title: `${profile.name} | HIMA-IF Portfolio`,
             description,
             images: [ogImage],
         },

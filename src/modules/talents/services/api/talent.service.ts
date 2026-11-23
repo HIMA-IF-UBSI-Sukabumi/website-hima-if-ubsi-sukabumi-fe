@@ -68,6 +68,7 @@ export interface TalentCertificateItem {
 export interface TalentCommitteeItem {
     id: string;
     role: string | null;
+    position?: string | null;
     event: {
         id: string;
         title: string;

@@ -26,15 +26,24 @@ const TalentCommitteesSection = ({
                 {committees.map((committee) => (
                     <div
                         key={committee.id}
-                        className="bg-white rounded-xl border border-gray-200/80 p-4 space-y-1"
+                        className="bg-white rounded-xl border border-gray-200/80 p-4 space-y-1.5"
                     >
                         <p className="text-sm font-bold text-gray-900">
                             {committee.event?.title ?? "Kegiatan HIMA-IF"}
                         </p>
-                        {committee.role && (
-                            <p className="text-xs font-semibold text-primary">
-                                {committee.role}
-                            </p>
+                        {(committee.position || committee.role) && (
+                            <div className="flex flex-wrap items-center gap-1.5">
+                                {committee.position && (
+                                    <span className="inline-flex items-center text-[11px] font-bold px-2 py-0.5 rounded-md bg-primary/10 text-primary">
+                                        {committee.position}
+                                    </span>
+                                )}
+                                {committee.role && (
+                                    <span className="text-xs font-medium text-gray-500">
+                                        {committee.role}
+                                    </span>
+                                )}
+                            </div>
                         )}
                     </div>
                 ))}

@@ -25,7 +25,7 @@ const TalentFooter = () => {
                                         HIMA<span className="opacity-70">-IF</span>
                                     </span>
                                     <span className="text-[10px] font-extrabold bg-white text-primary px-1.5 py-0.5 rounded tracking-wider uppercase">
-                                        Talent
+                                        Portfolio
                                     </span>
                                 </div>
                                 <p className="text-xs text-white/75 mt-0.5">UBSI PSDKU Sukabumi</p>

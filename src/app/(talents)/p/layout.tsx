@@ -4,8 +4,8 @@ import TalentFooter from "@/modules/talents/components/TalentFooter";
 
 export const metadata: Metadata = {
     title: {
-        default: "Profil Talent | HIMA-IF UBSI PSDKU Sukabumi",
-        template: "%s | HIMA-IF Talent",
+        default: "Portfolio | HIMA-IF UBSI PSDKU Sukabumi",
+        template: "%s | HIMA-IF Portfolio",
     },
     description:
         "Portofolio publik mahasiswa dan alumni Himpunan Mahasiswa Informatika UBSI PSDKU Sukabumi.",
