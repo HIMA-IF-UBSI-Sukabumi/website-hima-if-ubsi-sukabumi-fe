@@ -5,7 +5,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { FaInstagram } from "react-icons/fa6";
 import { HiOutlineEnvelope } from "react-icons/hi2";
 import { FiArrowLeft, FiCheck, FiShare2 } from "react-icons/fi";
-import ThemeToggle from "@/components/theme-toggle";
+import { useSharePage } from "@/modules/talents/hooks/use-share-page";
 
 const emptySubscribe = () => () => {};
 const getClientDate = () =>
@@ -16,9 +16,9 @@ const getClientDate = () =>
         year: "numeric",
     });
 
-const ProfileNavbar = () => {
+const TalentNavbar = () => {
     const [scrolled, setScrolled] = useState(false);
-    const [copied, setCopied] = useState(false);
+    const { share, copied } = useSharePage();
     const dateStr = useSyncExternalStore(emptySubscribe, getClientDate, () => "");
 
     useEffect(() => {
@@ -26,14 +26,6 @@ const ProfileNavbar = () => {
         window.addEventListener("scroll", handler, { passive: true });
         return () => window.removeEventListener("scroll", handler);
     }, []);
-
-    const handleShare = () => {
-        if (typeof window === "undefined" || !navigator.clipboard) return;
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        });
-    };
 
     return (
         <header className="w-full sticky top-0 z-50">
@@ -61,7 +53,7 @@ const ProfileNavbar = () => {
 
             {/* Main Header */}
             <div
-                className={`bg-white dark:bg-slate-900 border-b border-gray-200/80 dark:border-slate-800 transition-shadow duration-200 ${
+                className={`bg-white border-b border-gray-200/80 transition-shadow duration-200 ${
                     scrolled ? "shadow-sm" : ""
                 }`}
             >
@@ -79,14 +71,14 @@ const ProfileNavbar = () => {
                         />
                         <div className="leading-tight">
                             <div className="flex items-baseline gap-1.5">
-                                <span className="text-lg sm:text-xl font-black text-primary dark:text-white tracking-tight group-hover:opacity-80 transition">
+                                <span className="text-lg sm:text-xl font-black text-primary tracking-tight group-hover:opacity-80 transition">
                                     HIMA<span className="text-secondary">-IF</span>
                                 </span>
                                 <span className="text-[10px] font-extrabold bg-primary text-white px-1.5 py-0.5 rounded tracking-wider uppercase">
                                     Talent
                                 </span>
                             </div>
-                            <p className="text-[10px] text-gray-500 dark:text-slate-400 font-medium">
+                            <p className="text-[10px] text-gray-500 font-medium">
                                 UBSI PSDKU Sukabumi
                             </p>
                         </div>
@@ -98,31 +90,27 @@ const ProfileNavbar = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Instagram HIMA-IF"
-                            className="hidden md:flex w-10 h-10 items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition text-gray-600 dark:text-slate-300 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                            className="hidden md:flex w-10 h-10 items-center justify-center rounded-xl hover:bg-gray-100 transition text-gray-600 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
                         >
                             <FaInstagram className="w-4 h-4" aria-hidden="true" />
                         </a>
                         <a
                             href="mailto:himaif.ubsismi@gmail.com"
                             aria-label="Email HIMA-IF"
-                            className="hidden md:flex w-10 h-10 items-center justify-center rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition text-gray-600 dark:text-slate-300 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                            className="hidden md:flex w-10 h-10 items-center justify-center rounded-xl hover:bg-gray-100 transition text-gray-600 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
                         >
                             <HiOutlineEnvelope className="w-4 h-4" aria-hidden="true" />
                         </a>
 
-                        <div className="hidden sm:block">
-                            <ThemeToggle />
-                        </div>
-
                         <button
                             type="button"
-                            onClick={handleShare}
-                            className="inline-flex items-center gap-1.5 min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-semibold bg-primary/10 text-primary dark:bg-primary/20 dark:text-indigo-200 hover:bg-primary/15 transition cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
+                            onClick={() => share()}
+                            className="inline-flex items-center gap-1.5 min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-semibold bg-primary/10 text-primary hover:bg-primary/15 transition cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
                         >
                             {copied ? (
                                 <>
-                                    <FiCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-                                    <span className="text-emerald-700 dark:text-emerald-300">Tersalin</span>
+                                    <FiCheck className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+                                    <span className="text-emerald-700">Tersalin</span>
                                 </>
                             ) : (
                                 <>
@@ -146,4 +134,4 @@ const ProfileNavbar = () => {
     );
 };
 
-export default ProfileNavbar;
+export default TalentNavbar;

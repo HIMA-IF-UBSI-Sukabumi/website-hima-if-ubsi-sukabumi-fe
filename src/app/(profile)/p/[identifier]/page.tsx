@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import ModuleProfileTalentDetailPage from "@/modules/profile/pages/talent-detail.page";
-import type { TalentDetailResponse } from "@/modules/profile/services/api/talent.service";
+import ModuleTalentsDetailPage from "@/modules/talents/pages/talent-detail.page";
+import type { TalentDetailResponse } from "@/modules/talents/services/api/talent.service";
 import { resolveImageUrl } from "@/lib/utils";
 
 type Props = {
@@ -107,48 +106,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TalentProfilePage({ params }: Props) {
     const { identifier } = await params;
-    const data = await fetchTalentProfile(identifier);
-
-    if (data?.profile?.profile_slug && data.profile.profile_slug !== identifier) {
-        redirect(`/p/${data.profile.profile_slug}`);
-    }
-
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://himaifubsismi.or.id").replace(/\/$/, "");
-    const personJsonLd = data?.profile
-        ? {
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: data.profile.name,
-              identifier: data.profile.nim,
-              url: `${siteUrl}/p/${data.profile.profile_slug || identifier}`,
-              ...(data.profile.avatar ? { image: resolveImageUrl(data.profile.avatar) } : {}),
-              ...(data.profile.headline ? { jobTitle: data.profile.headline } : {}),
-              ...(data.profile.bio ? { description: data.profile.bio } : {}),
-              ...(data.profile.skills.length > 0 ? { knowsAbout: data.profile.skills } : {}),
-              sameAs: [
-                  data.profile.social_links?.github,
-                  data.profile.social_links?.linkedin,
-                  data.profile.social_links?.instagram,
-              ].filter(Boolean),
-              affiliation: {
-                  "@type": "Organization",
-                  name: "HIMA-IF UBSI PSDKU Sukabumi",
-                  url: siteUrl,
-              },
-          }
-        : null;
-
-    return (
-        <>
-            {personJsonLd && (
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{
-                        __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
-                    }}
-                />
-            )}
-            <ModuleProfileTalentDetailPage identifier={identifier} initialData={data} />
-        </>
-    );
+    return <ModuleTalentsDetailPage identifier={identifier} />;
 }

@@ -5,7 +5,7 @@ import { FaInstagram } from "react-icons/fa6";
 import { HiOutlineEnvelope } from "react-icons/hi2";
 import { getNewsUrl, getNglUrl, getSuaramuUrl } from "@/lib/utils";
 
-const ProfileFooter = () => {
+const TalentFooter = () => {
     return (
         <footer className="bg-primary text-white mt-auto">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
@@ -103,4 +103,4 @@ const ProfileFooter = () => {
     );
 };
 
-export default ProfileFooter;
+export default TalentFooter;

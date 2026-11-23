@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import ProfileNavbar from "@/modules/profile/components/ProfileNavbar";
-import ProfileFooter from "@/modules/profile/components/ProfileFooter";
+import TalentNavbar from "@/modules/talents/components/TalentNavbar";
+import TalentFooter from "@/modules/talents/components/TalentFooter";
 
 export const metadata: Metadata = {
     title: {
@@ -17,10 +17,10 @@ export default function ProfileLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="flex min-h-screen flex-col bg-gray-50/70 text-gray-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
-            <ProfileNavbar />
+        <div className="flex min-h-screen flex-col bg-gray-50/70 text-gray-900">
+            <TalentNavbar />
             <main className="flex-1">{children}</main>
-            <ProfileFooter />
+            <TalentFooter />
         </div>
     );
 }
