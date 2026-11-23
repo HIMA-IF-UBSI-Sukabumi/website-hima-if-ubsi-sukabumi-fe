@@ -113,3 +113,9 @@ export const getConsoleUrl = () => {
 export const getSsoLoginUrl = (audience: 'elections' | 'ngl') => {
     return `${getBackendBaseUrl()}/sso/${audience}`
 }
+
+export const getSsoLogoutUrl = (audience: 'elections' | 'ngl', redirectUrl?: string) => {
+    const base = `${getBackendBaseUrl()}/sso/logout?audience=${audience}`
+    if (!redirectUrl) return base
+    return `${base}&redirect=${encodeURIComponent(redirectUrl)}`
+}
