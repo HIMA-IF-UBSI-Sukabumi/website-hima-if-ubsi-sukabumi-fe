@@ -14,10 +14,10 @@ import {
 } from "@/modules/elections/services/api/elections.service";
 import CandidateCard from "@/modules/elections/components/CandidateCard";
 import VoteConfirmModal from "@/modules/elections/components/VoteConfirmModal";
-import ElectionResultsSection from "@/modules/elections/components/ElectionResultsSection";
 import { formatDate, getSsoLoginUrl } from "@/lib/utils";
 import {
     FiArrowLeft,
+    FiBarChart2,
     FiCalendar,
     FiCheckCircle,
     FiInfo,
@@ -52,12 +52,6 @@ const ModuleElectionDetailPage = ({ slug }: ModuleElectionDetailPageProps) => {
         queryKey: ["election-my-status", slug],
         queryFn: () => electionsService.findMyStatus(authAxios, slug),
         enabled: isLoggedIn && Boolean(election),
-    });
-
-    const resultsQuery = useQuery({
-        queryKey: ["election-results", slug],
-        queryFn: () => electionsService.findResults(publicAxios, slug),
-        enabled: Boolean(election?.can_show_results),
     });
 
     const voteMutation = useMutation({
@@ -167,11 +161,23 @@ const ModuleElectionDetailPage = ({ slug }: ModuleElectionDetailPageProps) => {
                     </p>
                 )}
 
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 pt-2">
-                    <FiCalendar className="w-4 h-4 text-primary shrink-0" />
-                    <span>
-                        {formatDate(election.starts_at)} – {formatDate(election.ends_at)}
-                    </span>
+                <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
+                        <FiCalendar className="w-4 h-4 text-primary shrink-0" />
+                        <span>
+                            {formatDate(election.starts_at)} – {formatDate(election.ends_at)}
+                        </span>
+                    </div>
+
+                    {election.can_show_results && (
+                        <Link
+                            href={`/${election.slug}/results`}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-xs sm:text-sm font-semibold hover:bg-primary/90 transition shadow-xs"
+                        >
+                            <FiBarChart2 className="w-4 h-4" />
+                            Lihat Hasil
+                        </Link>
+                    )}
                 </div>
             </section>
 
@@ -258,11 +264,6 @@ const ModuleElectionDetailPage = ({ slug }: ModuleElectionDetailPageProps) => {
                     ))}
                 </div>
             </section>
-
-            {/* Results Section */}
-            {election.can_show_results && resultsQuery.data && (
-                <ElectionResultsSection data={resultsQuery.data} />
-            )}
 
             <VoteConfirmModal
                 isOpen={Boolean(selectedCandidate)}
