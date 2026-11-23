@@ -1,10 +1,9 @@
 'use client'
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useAuthStore, useIsAuthenticated } from "@/core/stores/use-auth-store";
-import { useAuthAxios } from "@/core/hooks/use-auth-axios";
-import { authService } from "@/core/services/auth.service";
+import { useSsoLogout } from "@/core/hooks/use-sso-logout";
 import { getConsoleUrl, getSsoLoginUrl, resolveImageUrl } from "@/lib/utils";
 import { FaInstagram } from "react-icons/fa6";
 import { HiOutlineArrowTopRightOnSquare, HiOutlineEnvelope } from "react-icons/hi2";
@@ -16,31 +15,27 @@ const TICKER_MESSAGES = [
     "Masuk menggunakan akun SSO mahasiswa HIMA-IF untuk mengakses bilik suara",
 ];
 
+const emptySubscribe = () => () => {};
+const getClientDate = () =>
+    new Date().toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+
 const ElectionsNavbar = () => {
-    const authAxios = useAuthAxios();
     const user = useAuthStore((s) => s.user);
     const audience = useAuthStore((s) => s.audience);
-    const clearAuth = useAuthStore((s) => s.clearAuth);
     const { isLoggedIn } = useIsAuthenticated();
     const isSsoLoggedIn = isLoggedIn && Boolean(audience);
+    const { logout: handleLogout, loggingOut } = useSsoLogout("elections");
 
-    const [loggingOut, setLoggingOut] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [tickerIndex, setTickerIndex] = useState(0);
-    const [dateStr, setDateStr] = useState("");
+    const dateStr = useSyncExternalStore(emptySubscribe, getClientDate, () => "");
 
     const mainSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
-    useEffect(() => {
-        setDateStr(
-            new Date().toLocaleDateString("id-ID", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            })
-        );
-    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -54,18 +49,6 @@ const ElectionsNavbar = () => {
         window.addEventListener("scroll", handler);
         return () => window.removeEventListener("scroll", handler);
     }, []);
-
-    const handleLogout = async () => {
-        setLoggingOut(true);
-        try {
-            await authService.logout(authAxios);
-        } catch {
-            // Clear local auth even if token already expired
-        } finally {
-            clearAuth();
-            setLoggingOut(false);
-        }
-    };
 
     return (
         <header className="w-full sticky top-0 z-50">
