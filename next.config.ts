@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   output: "standalone",
+  htmlLimitedBots: /.*/,
   images: {
     remotePatterns: [
       // Local dev – API storage
