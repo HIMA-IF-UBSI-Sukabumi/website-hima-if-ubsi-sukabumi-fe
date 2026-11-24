@@ -154,7 +154,11 @@ const ModuleElectionResultsPage = ({ slug }: ModuleElectionResultsPageProps) => 
     const currentStep = COUNTDOWN_STEPS[countdownIndex] ?? COUNTDOWN_STEPS[0];
 
     return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+        <div
+            className={`${
+                stage === "revealed" ? "max-w-7xl" : "max-w-5xl"
+            } mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6 transition-all`}
+        >
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <Link
                     href={`/${slug}`}
@@ -253,9 +257,19 @@ const ModuleElectionResultsPage = ({ slug }: ModuleElectionResultsPageProps) => 
             )}
 
             {stage === "revealed" && (
-                <div className="space-y-5">
-                    <section className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-xs space-y-3">
-                        <div className="flex flex-wrap items-center gap-2.5">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    {/* Main Column: Podium & Tabulation */}
+                    <div className="lg:col-span-8 xl:col-span-9 min-w-0">
+                        <ElectionResultsSection
+                            data={resultsQuery.data}
+                            animate
+                            replayKey={replayKey}
+                        />
+                    </div>
+
+                    {/* Sticky Sidebar: Election Details */}
+                    <aside className="lg:col-span-4 xl:col-span-3 lg:sticky lg:top-28 space-y-4">
+                        <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-xs space-y-4">
                             <span
                                 className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full ${
                                     election.status === "active"
@@ -267,22 +281,33 @@ const ModuleElectionResultsPage = ({ slug }: ModuleElectionResultsPageProps) => 
                                     ? "Pemilu Berlangsung"
                                     : "Pemilu Selesai"}
                             </span>
-                            <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
-                                <FiCalendar className="w-3.5 h-3.5 text-primary" />
-                                {formatDate(election.starts_at)} – {formatDate(election.ends_at)}
-                            </span>
+
+                            <h1 className="font-archivo text-xl sm:text-2xl text-gray-900 leading-snug">
+                                {election.title}
+                            </h1>
+
+                            {election.description && (
+                                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                                    {election.description}
+                                </p>
+                            )}
+
+                            <div className="pt-3 border-t border-gray-100 space-y-2.5 text-xs text-gray-500">
+                                <div className="flex items-start gap-2">
+                                    <FiCalendar className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                                    <span>
+                                        {formatDate(election.starts_at)} – {formatDate(election.ends_at)}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <FiUsers className="w-4 h-4 text-primary shrink-0" />
+                                    <span>
+                                        <strong className="text-gray-800">{total_votes}</strong> Total Suara Masuk
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-
-                        <h1 className="font-archivo text-2xl sm:text-3xl text-gray-900">
-                            {election.title}
-                        </h1>
-                    </section>
-
-                    <ElectionResultsSection
-                        data={resultsQuery.data}
-                        animate
-                        replayKey={replayKey}
-                    />
+                    </aside>
                 </div>
             )}
         </div>
