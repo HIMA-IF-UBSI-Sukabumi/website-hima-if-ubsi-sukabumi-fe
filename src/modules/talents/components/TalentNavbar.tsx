@@ -57,34 +57,34 @@ const TalentNavbar = () => {
                     scrolled ? "shadow-sm" : ""
                 }`}
             >
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-4">
+                <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-2 sm:gap-4">
                     <Link
                         href="/"
-                        className="flex items-center gap-3 shrink-0 group focus-visible:outline-2 focus-visible:outline-primary rounded-lg"
+                        className="flex items-center gap-2 sm:gap-3 min-w-0 group focus-visible:outline-2 focus-visible:outline-primary rounded-lg"
                     >
                         <img
                             src="/assets/logo-himaif.webp"
                             alt="Logo HIMA-IF"
                             width={44}
                             height={44}
-                            className="w-10 h-10 sm:w-11 sm:h-11 object-contain"
+                            className="w-9 h-9 sm:w-11 sm:h-11 object-contain shrink-0"
                         />
-                        <div className="leading-tight">
-                            <div className="flex items-baseline gap-1.5">
-                                <span className="text-lg sm:text-xl font-black text-primary tracking-tight group-hover:opacity-80 transition">
+                        <div className="leading-tight min-w-0">
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-base sm:text-xl font-black text-primary tracking-tight group-hover:opacity-80 transition whitespace-nowrap">
                                     HIMA<span className="text-secondary">-IF</span>
                                 </span>
-                                <span className="text-[10px] font-extrabold bg-primary text-white px-1.5 py-0.5 rounded tracking-wider uppercase">
+                                <span className="text-[9px] sm:text-[10px] font-extrabold bg-primary text-white px-1.5 py-0.5 rounded tracking-wider uppercase shrink-0">
                                     Portfolio
                                 </span>
                             </div>
-                            <p className="text-[10px] text-gray-500 font-medium">
+                            <p className="text-[10px] text-gray-500 font-medium truncate">
                                 UBSI PSDKU Sukabumi
                             </p>
                         </div>
                     </Link>
 
-                    <nav aria-label="Navigasi profil" className="flex items-center gap-2 shrink-0">
+                    <nav aria-label="Navigasi profil" className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                         <a
                             href="https://www.instagram.com/himaif.ubsismi"
                             target="_blank"
@@ -105,24 +105,29 @@ const TalentNavbar = () => {
                         <button
                             type="button"
                             onClick={() => share()}
-                            className="inline-flex items-center gap-1.5 min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-semibold bg-primary/10 text-primary hover:bg-primary/15 transition cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
+                            aria-label={copied ? "Tautan tersalin" : "Bagikan portofolio"}
+                            className={`inline-flex items-center justify-center gap-1.5 h-10 w-10 sm:w-auto sm:px-3.5 rounded-xl text-xs font-semibold transition cursor-pointer focus-visible:outline-2 focus-visible:outline-primary ${
+                                copied
+                                    ? "bg-emerald-50 text-emerald-700"
+                                    : "bg-primary/10 text-primary hover:bg-primary/15"
+                            }`}
                         >
                             {copied ? (
                                 <>
-                                    <FiCheck className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
-                                    <span className="text-emerald-700">Tersalin</span>
+                                    <FiCheck className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-emerald-600" aria-hidden="true" />
+                                    <span className="hidden sm:inline text-emerald-700">Tersalin</span>
                                 </>
                             ) : (
                                 <>
-                                    <FiShare2 className="w-3.5 h-3.5" aria-hidden="true" />
-                                    <span>Bagikan</span>
+                                    <FiShare2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
+                                    <span className="hidden sm:inline">Bagikan</span>
                                 </>
                             )}
                         </button>
 
                         <Link
                             href="/"
-                            className="sm:hidden inline-flex items-center gap-1 min-h-[40px] px-3 py-2 rounded-xl text-xs font-semibold bg-primary text-white hover:bg-primary/90 transition focus-visible:outline-2 focus-visible:outline-primary"
+                            className="sm:hidden inline-flex items-center gap-1 h-10 px-3 rounded-xl text-xs font-semibold bg-primary text-white hover:bg-primary/90 transition focus-visible:outline-2 focus-visible:outline-primary"
                         >
                             <FiArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
                             <span>Portal</span>
